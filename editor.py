@@ -41,8 +41,8 @@ class Camera:
                 self.mouse_moving = 0
 
     def screen_to_world(self, pos):
-        return (((pos[0] * self.ratio[0]) - self.x),
-                ((pos[1] * self.ratio[1]) - self.y))
+        return (((pos[0] * self.ratio[0] / self.zoom) - self.x),
+                ((pos[1] * self.ratio[1] / self.zoom) - self.y))
 
 class MODE:
     Camera = 0
