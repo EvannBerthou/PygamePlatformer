@@ -91,6 +91,7 @@ class Game:
                     if self.mode == MODE.Editor:
                         if self.rect_started:
                             self.create_rect(mouse_position)
+                            self.rect_started = False
 
                 if event.type == KEYDOWN:
                     if event.key == K_TAB:
@@ -110,6 +111,16 @@ class Game:
 
             for r in self.rects:
                 self.camera.draw_rect(self.blitting_surface, (255,0,0), r)
+
+            if self.rect_started:
+                size = ((mouse_position[0] - self.rect_start[0]) * self.camera.ratio[0],
+                        (mouse_position[1] - self.rect_start[1]) * self.camera.ratio[1])
+                pos  = (self.rect_start[0] * self.camera.ratio[0], self.rect_start[1] * self.camera.ratio[1])
+                r = pygame.Rect(
+                        *pos,
+                        *size)
+                self.camera.draw_rect(self.blitting_surface, (0,255,0), r)
+
 
             blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
             self.win.blit(blit, blit.get_rect())
