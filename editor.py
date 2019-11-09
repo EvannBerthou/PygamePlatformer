@@ -102,6 +102,8 @@ class Game:
                     if event.key == K_TAB:
                         self.mode = (self.mode + 1) % 2
                         self.update_mode()
+                    if event.key == K_r:
+                        self.rects.clear()
 
 
             if self.camera.mouse_moving:
