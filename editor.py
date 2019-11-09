@@ -8,12 +8,14 @@ pygame.font.init()
 MODE_TEXT = pygame.font.SysFont("Arial Black", 46)
 
 class Camera:
-    def __init__(self):
+    def __init__(self, ws):
         self.x = 0
         self.y = 0
         self.zoom = 1
 
         self.mouse_moving = 0
+
+        self.ratio = (DESING_W / ws[0], DESING_H / ws[1])
 
     def draw_rect(self, surface, color, rect, size=0):
         pos = (self.x + rect[0], self.y + rect[1])
@@ -53,11 +55,16 @@ class Game:
 
         self.mouse_moving = 0
 
-        self.camera = Camera()
+        self.camera = Camera((self.w,self.h))
 
         self.mode_text = None
         self.mode = MODE.Camera
         self.update_mode()
+
+        self.rect_start = None
+        self.rect_started = False
+
+        self.rects = []
 
     def run(self):
         while self.running:
@@ -74,10 +81,16 @@ class Game:
                 if event.type == MOUSEBUTTONDOWN:
                     if self.mode == MODE.Camera:
                         self.camera.event_zoom(event)
+                    if self.mode == MODE.Editor:
+                        self.rect_started = True
+                        self.rect_start = mouse_position
 
                 if event.type == MOUSEBUTTONUP:
                     if self.mode == MODE.Camera:
                         self.camera.event_zoom(event)
+                    if self.mode == MODE.Editor:
+                        if self.rect_started:
+                            self.create_rect(mouse_position)
 
                 if event.type == KEYDOWN:
                     if event.key == K_TAB:
@@ -95,6 +108,9 @@ class Game:
             #DRAW
             self.camera.draw_rect(self.blitting_surface, (250,250,250), (0,0, DESING_W, DESING_H), 2)
 
+            for r in self.rects:
+                self.camera.draw_rect(self.blitting_surface, (255,0,0), r)
+
             blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
             self.win.blit(blit, blit.get_rect())
             self.win.blit(self.mode_text,(0,0))
@@ -105,6 +121,14 @@ class Game:
             self.mode_text = MODE_TEXT.render("Camera", 1, (255,255,255))
         if self.mode == MODE.Editor:
             self.mode_text = MODE_TEXT.render("Editor", 1, (255,255,255))
+
+    def create_rect(self, mouse_end):
+        size = ((mouse_end[0] - self.rect_start[0]) * self.camera.ratio[0], (mouse_end[1] - self.rect_start[1]) * self.camera.ratio[1])
+        pos  = (self.rect_start[0] * self.camera.ratio[0], self.rect_start[1] * self.camera.ratio[1])
+        r = pygame.Rect(
+                *pos,
+                *size)
+        self.rects.append(r)
 
 game = Game()
 game.run()
