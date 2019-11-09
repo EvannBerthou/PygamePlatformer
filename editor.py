@@ -18,7 +18,7 @@ class Camera:
         self.ratio = (DESING_W / ws[0], DESING_H / ws[1])
 
     def draw_rect(self, surface, color, rect, size=0):
-        pos = (self.x + rect[0], self.y + rect[1])
+        pos = ((self.x + rect[0]) * self.zoom, (self.y + rect[1]) * self.zoom)
         scl = (self.zoom * rect[2], self.zoom * rect[3])
         pygame.draw.rect(surface, color, (*pos, *scl), size)
 
@@ -39,6 +39,10 @@ class Camera:
         if event.type == MOUSEBUTTONUP:
             if event.button == 1:
                 self.mouse_moving = 0
+
+    def screen_to_world(self, pos):
+        rect = pygame.Rect(self.x, self.y, 1152,648)
+        return ((pos[0] - self.x)* self.ratio[0], (pos[1] - self.y) * self.ratio[1])
 
 class MODE:
     Camera = 0
@@ -83,14 +87,14 @@ class Game:
                         self.camera.event_zoom(event)
                     if self.mode == MODE.Editor:
                         self.rect_started = True
-                        self.rect_start = mouse_position
+                        self.rect_start = self.camera.screen_to_world(mouse_position)
 
                 if event.type == MOUSEBUTTONUP:
                     if self.mode == MODE.Camera:
                         self.camera.event_zoom(event)
                     if self.mode == MODE.Editor:
                         if self.rect_started:
-                            self.create_rect(mouse_position)
+                            self.create_rect(self.camera.screen_to_world(mouse_position))
                             self.rect_started = False
 
                 if event.type == KEYDOWN:
@@ -113,9 +117,10 @@ class Game:
                 self.camera.draw_rect(self.blitting_surface, (255,0,0), r)
 
             if self.rect_started:
-                size = ((mouse_position[0] - self.rect_start[0]) * self.camera.ratio[0],
-                        (mouse_position[1] - self.rect_start[1]) * self.camera.ratio[1])
-                pos  = (self.rect_start[0] * self.camera.ratio[0], self.rect_start[1] * self.camera.ratio[1])
+                mp = self.camera.screen_to_world(mouse_position)
+                size = ((mp[0] - self.rect_start[0]),
+                        (mp[1] - self.rect_start[1]))
+                pos  = (self.rect_start[0], self.rect_start[1])
                 r = pygame.Rect(
                         *pos,
                         *size)
@@ -134,8 +139,8 @@ class Game:
             self.mode_text = MODE_TEXT.render("Editor", 1, (255,255,255))
 
     def create_rect(self, mouse_end):
-        size = ((mouse_end[0] - self.rect_start[0]) * self.camera.ratio[0], (mouse_end[1] - self.rect_start[1]) * self.camera.ratio[1])
-        pos  = (self.rect_start[0] * self.camera.ratio[0], self.rect_start[1] * self.camera.ratio[1])
+        size = ((mouse_end[0] - self.rect_start[0]), (mouse_end[1] - self.rect_start[1]))
+        pos  = (self.rect_start[0], self.rect_start[1])
         r = pygame.Rect(
                 *pos,
                 *size)
