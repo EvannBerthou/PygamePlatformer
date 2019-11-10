@@ -7,6 +7,14 @@ pygame.font.init()
 
 MODE_TEXT = pygame.font.SysFont("Arial Black", 46)
 
+class Rect:
+    def __init__(self, x,y,w,h, color):
+        self.rect = (x,y,w,h)
+        self.color = color
+
+    def draw(self, camera, surface):
+        camera.draw_rect(surface, self.color, self.rect)
+
 class Camera:
     def __init__(self, ws):
         self.x = 0
@@ -117,12 +125,11 @@ class Game:
             self.camera.draw_rect(self.blitting_surface, (250,250,250), (0,0, DESING_W, DESING_H), 2)
 
             for r in self.rects:
-                self.camera.draw_rect(self.blitting_surface, (255,0,0), r)
+                r.draw(self.camera, self.blitting_surface)
 
             if self.rect_started:
                 mp = self.camera.screen_to_world(mouse_position)
-                r = self.get_rect_mouse_drag(mp)
-                self.camera.draw_rect(self.blitting_surface, (0,255,0), r)
+                self.get_rect_mouse_drag(mp,(0,255,0)).draw(self.camera, self.blitting_surface)
 
             blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
             self.win.blit(blit, blit.get_rect())
@@ -137,13 +144,11 @@ class Game:
 
     #TODO(#14): Rects should be custom objects instead of just pygame.Rect
     def create_rect(self, mouse_end):
-        self.rects.append(self.get_rect_mouse_drag(mouse_end))
+        self.rects.append(self.get_rect_mouse_drag(mouse_end, (255,0,0)))
 
-    def get_rect_mouse_drag(self, end):
+    def get_rect_mouse_drag(self, end, color):
         size = ((end[0] - self.rect_start[0]), (end[1] - self.rect_start[1]))
-        r = pygame.Rect(
-                *self.rect_start,
-                *size)
+        r = Rect(*self.rect_start,*size, color)
         return r
 
 game = Game()
