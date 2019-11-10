@@ -29,8 +29,8 @@ class Camera:
             if event.button == 5:
                 self.zoom -= 0.05
 
-                self.zoom = max(0.1, self.zoom)
-                self.zoom = min(2, self.zoom)
+                self.zoom = max(0.5, self.zoom)
+                self.zoom = min(1.5, self.zoom)
 
             if event.button == 1:
                 self.mouse_moving = 1
@@ -108,8 +108,8 @@ class Game:
 
             if self.camera.mouse_moving:
                 dx,dy = pygame.mouse.get_rel()
-                self.camera.x += dx
-                self.camera.y += dy
+                self.camera.x += dx * (1 / self.camera.zoom)
+                self.camera.y += dy * (1 / self.camera.zoom)
 
             #UPDATE
 
