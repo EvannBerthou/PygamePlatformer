@@ -135,6 +135,7 @@ class Game:
         if self.mode == MODE.Editor:
             self.mode_text = MODE_TEXT.render("Editor", 1, (255,255,255))
 
+    #TODO(#14): Rects should be custom objects instead of just pygame.Rect
     def create_rect(self, mouse_end):
         self.rects.append(self.get_rect_mouse_drag(mouse_end))
 
