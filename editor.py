@@ -208,7 +208,11 @@ class Game:
             self.mode_text = MODE_TEXT.render("Editor", 1, (255,255,255))
 
     def create_rect(self, mouse_end):
-        self.rects.append(self.get_rect_mouse_drag(mouse_end, (255,0,0)))
+        r = self.get_rect_mouse_drag(mouse_end, (255,0,0))
+        if r.rect[2] < 16 or r.rect[3] < 16:
+            print ("The rect is too smol")
+            return
+        self.rects.append(r)
 
     def get_rect_mouse_drag(self, end, color):
         size = ((end[0] - self.rect_start[0]), (end[1] - self.rect_start[1]))
