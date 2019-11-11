@@ -209,7 +209,7 @@ class Game:
 
     def create_rect(self, mouse_end):
         r = self.get_rect_mouse_drag(mouse_end, (255,0,0))
-        if r.rect[2] < 16 or r.rect[3] < 16:
+        if abs(r.rect[2]) < 16 or abs(r.rect[3]) < 16:
             print ("The rect is too smol")
             return
         self.rects.append(r)
