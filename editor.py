@@ -202,6 +202,7 @@ class Game:
             pygame.display.update()
 
     def update_mode(self):
+        self.selected_rect = -1
         if self.mode == MODE.Camera:
             self.mode_text = MODE_TEXT.render("Camera", 1, (255,255,255))
         if self.mode == MODE.Editor:
