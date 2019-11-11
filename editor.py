@@ -213,6 +213,19 @@ class Game:
         if abs(r.rect[2]) < 16 or abs(r.rect[3]) < 16:
             print ("The rect is too smol")
             return
+
+        rr = r.rect
+        #bottom left
+        if rr[2] > 0 and rr[3] < 0:
+            rr = (rr[0], rr[1] + rr[3], rr[2], abs(rr[3]))
+        #bottom right
+        if rr[2] < 0 and rr[3] < 0:
+            rr = (rr[0] + rr[2], rr[1] + rr[3], abs(rr[2]), abs(rr[3]))
+        #top right
+        if rr[2] < 0 and rr[3] > 0:
+            rr = (rr[0] + rr[2], rr[1], abs(rr[2]), rr[3])
+
+        r.rect = rr
         self.rects.append(r)
 
     def get_rect_mouse_drag(self, end, color):
