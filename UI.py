@@ -1,17 +1,35 @@
-class UIManager:
-    elements = []
+import pygame
 
-    def add(element):
-        if element in UIManager.elements:
+class UIManager:
+    def __init__(self):
+        self.elements = []
+        self.selected = -1
+
+    def add(self, element):
+        if element in self.elements:
             raise ValueError(f'{element} is already in the list')
 
-        UIManager.elements.append(element)
+        self.elements.append(element)
         print('New UI Element added')
+
+    def update(self, mouse_position, mouse_pressed):
+        for i,el in enumerate(self.elements):
+            if el.is_hovered(mouse_position) and mouse_pressed:
+                self.selected = i
+                break
+        else:
+            self.selected = -1
+
+        if self.selected != -1:
+            self.elements[self.selected].update(mouse_position, (mouse_pressed, 0))
+
+    def draw(self, surface):
+        for el in self.elements:
+            el.draw(surface)
 
 class UIElement:
     def __init__(self, x,y):
         self.x, self.y = x,y
-        UIManager.add(self)
 
     def draw(self, surface):
         raise NotImplementedError("UI Element draw")
@@ -19,3 +37,39 @@ class UIElement:
     def update(self):
         raise NotImplementedError("UI Element draw")
 
+class Slider(UIElement):
+    def __init__(self, x,y,w,h, min_value,max_value, bg_color, fg_color):
+        super().__init__(x,y)
+        self.w,self.h = w,h
+        self.min_value, self.max_value = min_value, max_value
+        self.value = self.max_value
+        self.draw_w = 0
+        self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
+        self.w_ratio = self.w / self.max_value
+        self.bg_color = bg_color
+        self.fg_color = fg_color
+
+        if self.min_value > self.max_value:
+            raise ValueError(f"Min value can't be superior to max value : {self}")
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, self.bg_color, self.rect)
+        pygame.draw.rect(surface, self.fg_color, (self.x, self.y, self.draw_w, self.h))
+
+    #Update is only called when the UI Element is the selected one
+    def update(self, mouse_position, mouse_pressed):
+        if mouse_pressed[0]:
+            #normalize
+            x = (mouse_position[0] - self.x) / self.w
+
+            #clamp self.draw_w in [0, self.w]
+            self.draw_w = max(0, min(x * self.w, self.w))
+
+            #denormalize
+            self.value = (x * (self.max_value - self.min_value) + self.min_value)
+
+            #clamp self.value in [self.min_value; self.max_value]
+            self.value = max(self.min_value, min(self.value, self.max_value))
+
+    def is_hovered(self, mouse_position):
+        return self.rect.collidepoint(mouse_position)
