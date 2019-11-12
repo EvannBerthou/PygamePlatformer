@@ -136,6 +136,9 @@ class Game:
                         self.update_mode()
                     if event.key == K_r:
                         self.rects.clear()
+                    if event.key == K_DELETE and self.selected_rect != -1:
+                        self.rects.pop(self.selected_rect)
+                        self.selected_rect = -1
 
                 if mouse_pressed[0] and self.selected_rect != -1:
                     r = self.rects[self.selected_rect]
