@@ -1,7 +1,10 @@
 import pygame
 from pygame.locals import *
 
+import UI
+
 DESING_W, DESING_H = 1920,1080
+
 
 pygame.font.init()
 
@@ -98,6 +101,11 @@ class Game:
         self.rects = []
         self.selected_rect = -1
 
+        self.UIManager = UI.UIManager()
+        self.UIManager.add(UI.Slider(200,200,200,50,0,255, (150,150,150), (255,0,0)))
+        self.UIManager.add(UI.Slider(200,275,200,50,0,255, (150,150,150), (0,255,0)))
+        self.UIManager.add(UI.Slider(200,350,200,50,0,255, (150,150,150), (0,0,255)))
+
     def run(self):
         while self.running:
             tick = self.clock.tick(60)
@@ -115,6 +123,7 @@ class Game:
                     if self.mode == MODE.Camera:
                         self.camera.event_zoom(event)
                     if self.mode == MODE.Editor:
+                        self.UIManager.update(mouse_position, event.button == 1)
                         self.selected_rect = self.inside_rect(mouse_position)
                         if self.selected_rect > -1:
                             pygame.mouse.get_rel()
@@ -126,6 +135,7 @@ class Game:
                     if self.mode == MODE.Camera:
                         self.camera.event_zoom(event)
                     if self.mode == MODE.Editor:
+                        self.UIManager.selected = -1
                         if self.rect_started:
                             self.create_rect(self.camera.screen_to_world(mouse_position))
                             self.rect_started = False
@@ -183,6 +193,10 @@ class Game:
                 self.camera.y += dy * (1 / self.camera.zoom)
 
             #UPDATE
+            if self.UIManager.selected != -1:
+                self.UIManager.elements[self.UIManager.selected].update(mouse_position, mouse_pressed)
+                self.rect_started = 0
+                self.selected_rect = -1
 
             #DRAW
             self.camera.draw_rect(self.blitting_surface, (250,250,250), (0,0, DESING_W, DESING_H), 2)
@@ -201,6 +215,10 @@ class Game:
 
             blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
             self.win.blit(blit, blit.get_rect())
+
+            if self.mode == MODE.Editor:
+                self.UIManager.draw(self.win)
+
             self.win.blit(self.mode_text,(0,0))
             pygame.display.update()
 
