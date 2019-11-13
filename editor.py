@@ -10,6 +10,36 @@ pygame.font.init()
 
 MODE_TEXT = pygame.font.SysFont("Arial Black", 46)
 
+class ColorPicker:
+    def __init__(self, x,y, UIManager):
+        self.x, self.y = x,y
+        self.w, self.h = 160,95
+        self.r = UI.Slider(self.x + 5, self.y + 5, self.w - 10, 25, 0,255, (150,150,150), (255,0,0))
+        self.g = UI.Slider(self.x + 5, self.y + 35, self.w - 10, 25, 0,255, (150,150,150), (0,255,0))
+        self.b = UI.Slider(self.x + 5, self.y + 65, self.w - 10, 25, 0,255, (150,150,150), (0,0,255))
+        UIManager.add(self.r)
+        UIManager.add(self.g)
+        UIManager.add(self.b)
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, (100,100,100), (self.x, self.y, self.w, self.h))
+        self.r.draw(surface)
+        self.g.draw(surface)
+        self.b.draw(surface)
+
+    def get_color(self):
+        return (self.r.value,self.g.value,self.b.value)
+
+    def set_color(self, color):
+        self.r.set_value(color[0] / 255)
+        self.g.set_value(color[1] / 255)
+        self.b.set_value(color[2] / 255)
+
+    def destroy(self, UIManager):
+        UIManager.remove(self.r)
+        UIManager.remove(self.g)
+        UIManager.remove(self.b)
+
 class Rect:
     def __init__(self, x,y,w,h, color):
         self.rect = (x,y,w,h)
@@ -102,9 +132,7 @@ class Game:
         self.selected_rect = -1
 
         self.UIManager = UI.UIManager()
-        self.UIManager.add(UI.Slider(200,200,200,50,0,255, (150,150,150), (255,0,0)))
-        self.UIManager.add(UI.Slider(200,275,200,50,0,255, (150,150,150), (0,255,0)))
-        self.UIManager.add(UI.Slider(200,350,200,50,0,255, (150,150,150), (0,0,255)))
+        self.color_picker = None
 
     def run(self):
         while self.running:
@@ -124,7 +152,8 @@ class Game:
                         self.camera.event_zoom(event)
                     if self.mode == MODE.Editor:
                         self.UIManager.update(mouse_position, event.button == 1)
-                        self.selected_rect = self.inside_rect(mouse_position)
+                        if self.color_picker == None:
+                            self.selected_rect = self.inside_rect(mouse_position)
                         if self.selected_rect > -1:
                             pygame.mouse.get_rel()
                         else:
@@ -149,15 +178,22 @@ class Game:
                     if event.key == K_DELETE and self.selected_rect != -1:
                         self.rects.pop(self.selected_rect)
                         self.selected_rect = -1
+                    if event.key == K_c and self.mode == MODE.Editor and self.selected_rect != -1:
+                        if self.color_picker:
+                            self.color_picker.destroy(self.UIManager)
+                            self.color_picker = None
+                        else:
+                            self.color_picker = ColorPicker(*mouse_position, self.UIManager)
+                            self.color_picker.set_color(self.rects[self.selected_rect].color)
 
-                if mouse_pressed[0] and self.selected_rect != -1:
+                if mouse_pressed[0] and self.selected_rect != -1 and self.color_picker == None:
                     r = self.rects[self.selected_rect]
                     dx,dy = (pygame.mouse.get_rel())
                     r.rect = (r.rect[0] + dx * (1 / self.camera.zoom) * self.camera.ratio[0],
                               r.rect[1] + dy * (1 / self.camera.zoom) * self.camera.ratio[1],
                               r.rect[2], r.rect[3])
 
-                if mouse_pressed[2] and self.selected_rect != -1:
+                if mouse_pressed[2] and self.selected_rect != -1 and self.color_picker == None:
                     r = self.rects[self.selected_rect]
                     corner = r.get_corner_point(self.camera.screen_to_world(mouse_position))
                     dx,dy = tuple(l*r for l,r in zip(pygame.mouse.get_rel(), self.camera.ratio))
@@ -196,7 +232,6 @@ class Game:
             if self.UIManager.selected != -1:
                 self.UIManager.elements[self.UIManager.selected].update(mouse_position, mouse_pressed)
                 self.rect_started = 0
-                self.selected_rect = -1
 
             #DRAW
             self.camera.draw_rect(self.blitting_surface, (250,250,250), (0,0, DESING_W, DESING_H), 2)
@@ -204,7 +239,10 @@ class Game:
             if self.selected_rect != -1:
                 r = self.rects[self.selected_rect].rect
                 border = (r[0] - 5, r[1] - 5, r[2] + 10, r[3] + 10)
-                self.camera.draw_rect(self.blitting_surface, (0,0,255), border)
+                self.camera.draw_rect(self.blitting_surface,(255,255,0),border)
+                if self.color_picker:
+                    color = self.color_picker.get_color()
+                    self.rects[self.selected_rect].color = color
 
             for r in self.rects:
                 r.draw(self.camera, self.blitting_surface)
@@ -218,6 +256,8 @@ class Game:
 
             if self.mode == MODE.Editor:
                 self.UIManager.draw(self.win)
+                if self.color_picker:
+                    self.color_picker.draw(self.win)
 
             self.win.blit(self.mode_text,(0,0))
             pygame.display.update()
