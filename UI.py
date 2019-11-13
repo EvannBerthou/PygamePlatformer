@@ -12,6 +12,14 @@ class UIManager:
         self.elements.append(element)
         print('New UI Element added')
 
+    def remove(self, element):
+        if not element in self.elements:
+            raise ValueError(f'{element} is not in the list')
+
+        self.elements.remove(element)
+        print(f'{element} removed')
+
+
     def update(self, mouse_position, mouse_pressed):
         for i,el in enumerate(self.elements):
             if el.is_hovered(mouse_position) and mouse_pressed:
@@ -61,15 +69,17 @@ class Slider(UIElement):
         if mouse_pressed[0]:
             #normalize
             x = (mouse_position[0] - self.x) / self.w
-
-            #clamp self.draw_w in [0, self.w]
-            self.draw_w = max(0, min(x * self.w, self.w))
-
-            #denormalize
-            self.value = (x * (self.max_value - self.min_value) + self.min_value)
-
-            #clamp self.value in [self.min_value; self.max_value]
-            self.value = max(self.min_value, min(self.value, self.max_value))
+            self.set_value(x)
 
     def is_hovered(self, mouse_position):
         return self.rect.collidepoint(mouse_position)
+
+    def set_value(self, value):
+        #clamp self.draw_w in [0, self.w]
+        self.draw_w = max(0, min(value * self.w, self.w))
+
+        #denormalize
+        self.value = (value * (self.max_value - self.min_value) + self.min_value)
+
+        #clamp self.value in [self.min_value; self.max_value]
+        self.value = max(self.min_value, min(self.value, self.max_value))
