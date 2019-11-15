@@ -10,6 +10,12 @@ pygame.font.init()
 
 MODE_TEXT = pygame.font.SysFont("Arial Black", 46)
 
+def invert_color(color):
+    r = color[0] / 255
+    g = color[1] / 255
+    b = color[2] / 255
+    return ((1 - r)*255, (1 - g)*255, (1 - b)*255)
+
 class ColorPicker:
     def __init__(self, x,y, UIManager):
         self.x, self.y = x,y
@@ -239,7 +245,8 @@ class Game:
             if self.selected_rect != -1:
                 r = self.rects[self.selected_rect].rect
                 border = (r[0] - 5, r[1] - 5, r[2] + 10, r[3] + 10)
-                self.camera.draw_rect(self.blitting_surface,(255,255,0),border)
+                color = invert_color(self.rects[self.selected_rect].color)
+                self.camera.draw_rect(self.blitting_surface,color,border)
                 if self.color_picker:
                     color = self.color_picker.get_color()
                     self.rects[self.selected_rect].color = color
