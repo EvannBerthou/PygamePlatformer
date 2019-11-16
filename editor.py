@@ -82,7 +82,7 @@ class Camera:
         scl = (self.zoom * rect[2], self.zoom * rect[3])
         pygame.draw.rect(surface, color, (*pos, *scl), size)
 
-    #TODO: Add draw_line function
+    #TODO(#59): Add draw_line function
 
     def event_zoom(self, event):
         if event.type == MOUSEBUTTONDOWN:
