@@ -149,7 +149,7 @@ class Game:
             self.win.fill((0,0,0,))
             self.blitting_surface.fill((0,0,0))
 
-            #TODO: Handle key in different function
+            #TODO(#60): Handle key in different function
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self.running = False
