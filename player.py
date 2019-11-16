@@ -4,13 +4,17 @@ from pygame.locals import *
 PLAYER_SIZE = 64
 
 class Player:
-    def __init__(self):
+    def __init__(self, left_key, right_key, jump_key):
         self.rect = pygame.Rect(400,375, PLAYER_SIZE, PLAYER_SIZE)
         self.grounded = True
         self.mvt = [0,0]
         self.speed = 0.5
         self.gravity = 0.5
         self.jump_force = 1
+
+        self.left_key  = left_key
+        self.right_key = right_key
+        self.jump_key  = jump_key
 
     def draw(self, game):
         pygame.draw.rect(game.blitting_surface, (255,255,255), self.rect)
@@ -21,7 +25,7 @@ class Player:
 
     def update(self, colliders, keys, dt):
         self.move()
-        self.mvt[0] = (keys[K_d] - keys[K_q]) * dt * self.speed
+        self.mvt[0] = (keys[self.right_key] - keys[self.left_key]) * dt * self.speed
         collisions = self.rect.collidelistall(colliders)
         dx = 0
         dy = 0
@@ -56,7 +60,7 @@ class Player:
         if not self.grounded:
             self.mvt[1] += float(dt / 10) * self.gravity
 
-        if keys[K_SPACE] and self.grounded:
+        if keys[self.jump_key] and self.grounded:
             self.mvt[1] -= self.jump_force * dt
             self.grounded = False
 
