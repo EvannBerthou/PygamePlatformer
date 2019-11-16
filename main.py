@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 
 from player import Player
+from Wall import Wall
 
 DESING_W, DESING_H = 1920,1080
 
@@ -14,11 +15,11 @@ class Game:
 
         self.player = Player()
 
-        self.sol = pygame.Rect(0,DESING_H - 300,DESING_W,300)
+        self.sol = Wall(0,DESING_H - 300,DESING_W,300)
 
         self.colliders = [
-                pygame.Rect(-10,0,10,DESING_H), #MUR GAUCHE
-                pygame.Rect(DESING_W,0,20,DESING_H), #MUR DROIT
+                Wall(-10,0,10,DESING_H), #MUR GAUCHE
+                Wall(DESING_W,0,20,DESING_H), #MUR DROIT
                 self.sol]
 
         self.clock = pygame.time.Clock()
@@ -42,7 +43,7 @@ class Game:
             #DRAW
             self.player.draw(self)
             for col in self.colliders:
-                pygame.draw.rect(self.blitting_surface, (255,0,0), col)
+                col.draw(self.blitting_surface)
 
             blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
             self.win.blit(blit, blit.get_rect())
