@@ -3,6 +3,7 @@ from pygame.locals import *
 
 import UI
 from Wall import Wall
+from Door import Door
 
 DESING_W, DESING_H = 1920,1080
 
@@ -133,6 +134,8 @@ class Game:
         self.UIManager = UI.UIManager()
         self.color_picker = None
 
+        self.selected_object = Door
+
     def run(self):
         while self.running:
             tick = self.clock.tick(60)
@@ -184,6 +187,10 @@ class Game:
                         else:
                             self.color_picker = ColorPicker(*mouse_position, self.UIManager)
                             self.color_picker.set_color(self.rects[self.selected_rect].color)
+                    if event.key == K_F1:
+                        self.selected_object = Wall
+                    if event.key == K_F2:
+                        self.selected_object = Door
 
                 if mouse_pressed[0] and self.selected_rect != -1 and self.color_picker == None:
                     r = self.rects[self.selected_rect]
@@ -272,7 +279,7 @@ class Game:
 
     def create_rect(self, mouse_end):
         size = ((mouse_end[0] - self.rect_start[0]), (mouse_end[1] - self.rect_start[1]))
-        r = Wall(*self.rect_start, *size, (255,0,0))
+        r = self.selected_object(*self.rect_start, *size, (255,0,0))
 
         if abs(r.rect[2]) < 16 or abs(r.rect[3]) < 16:
             print ("The rect is too smol")

@@ -20,7 +20,7 @@ class Door:
                 ((self.rect.x,self.rect.y+self.rect.h), (self.rect.x+self.rect.w,self.rect.y+self.rect.h))
         ]
 
-    def draw(self, surface):
+    def draw(self, surface, camera = None):
         for l in self.lines:
             pygame.draw.line(surface, self.color, l[0], l[1], self.border)
 
