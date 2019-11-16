@@ -82,7 +82,6 @@ class Camera:
         scl = (self.zoom * rect[2], self.zoom * rect[3])
         pygame.draw.rect(surface, color, (*pos, *scl), size)
 
-    #TODO(#59): Add draw_line function
     def draw_line(self, surface, color, pt1, pt2, width = 1):
         pos_1 = ((self.x + pt1[0]) * self.zoom, (self.y + pt1[1]) * self.zoom)
         pos_2 = ((self.x + pt2[0]) * self.zoom, (self.y + pt2[1]) * self.zoom)
@@ -206,6 +205,8 @@ class Game:
                     r.rect = (r.rect[0] + dx * (1 / self.camera.zoom) * self.camera.ratio[0],
                               r.rect[1] + dy * (1 / self.camera.zoom) * self.camera.ratio[1],
                               r.rect[2], r.rect[3])
+                    if isinstance(r, Door):
+                        r.lines = r.get_lines()
 
                 if mouse_pressed[2] and self.selected_rect != -1 and self.color_picker == None:
                     r = self.rects[self.selected_rect]
@@ -236,6 +237,8 @@ class Game:
                                   r.rect[1],
                                   r.rect[2] + dx * (1 / self.camera.zoom),
                                   r.rect[3] + dy * (1 / self.camera.zoom))
+                    if isinstance(r, Door):
+                        r.lines = r.get_lines()
 
             if self.camera.mouse_moving:
                 dx,dy = pygame.mouse.get_rel()
