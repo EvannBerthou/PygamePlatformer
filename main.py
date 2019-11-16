@@ -42,8 +42,8 @@ class Game:
                     self.running = False
 
             #UPDATE
-            self.player_1.update(self.colliders, keyboard_input, tick)
-            self.player_2.update(self.colliders, keyboard_input, tick)
+            self.player_1.update(self.colliders + [self.player_2], keyboard_input, tick)
+            self.player_2.update(self.colliders + [self.player_1], keyboard_input, tick)
 
             #DRAW
             self.player_1.draw(self)
