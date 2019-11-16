@@ -22,7 +22,10 @@ class Door:
 
     def draw(self, surface, camera = None):
         for l in self.lines:
-            pygame.draw.line(surface, self.color, l[0], l[1], self.border)
+            if camera:
+                camera.draw_line(surface, self.color, l[0], l[1], self.border)
+            else:
+                pygame.draw.line(surface, self.color, l[0], l[1], self.border)
 
     def has_collision(self, player_id):
         return self.player_id == player_id
