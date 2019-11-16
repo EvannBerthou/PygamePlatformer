@@ -28,21 +28,25 @@ class Player:
         if collisions:
             for i in collisions:
                 col = colliders[i]
+                #If the collider is traversable don't check collisions
+                if not col.collide:
+                    continue
+                rect = col.rect
                 #Collision en dessous du joueur
-                if self.collision_bottom(col):
-                    dy -= (self.rect.bottom - col.top) #Correction pour éviter que le joueur traverse le sol
+                if self.collision_bottom(rect):
+                    dy -= (self.rect.bottom - rect.top) #Correction pour éviter que le joueur traverse le sol
                     self.grounded = True
                     self.mvt[1] = 0
-                elif self.collision_top(col) and col.w > self.rect.w:
-                    dy -= (self.rect.top - col.bottom) #Correction pour éviter que le joueur traverse le sol
+                elif self.collision_top(rect) and rect.w > self.rect.w:
+                    dy -= (self.rect.top - rect.bottom) #Correction pour éviter que le joueur traverse le sol
                     self.grounded = False
                     self.mvt[1] = 0
-                elif self.collision_right(col):
+                elif self.collision_right(rect):
                     self.mvt[0] = 0
-                    dx -= (self.rect.right - col.left)
-                elif self.collision_left(col) and not self.collision_top(col):
+                    dx -= (self.rect.right - rect.left)
+                elif self.collision_left(rect) and not self.collision_top(rect):
                     self.mvt[0] = 0
-                    dx -= (self.rect.left - col.right)
+                    dx -= (self.rect.left - rect.right)
         else:
             self.grounded = False
 
