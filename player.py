@@ -4,18 +4,19 @@ from pygame.locals import *
 PLAYER_SIZE = 64
 
 class Player:
-    def __init__(self, left_key, right_key, jump_key):
+    def __init__(self, left_key, right_key, jump_key, player_id):
         self.rect = pygame.Rect(400,375, PLAYER_SIZE, PLAYER_SIZE)
         self.grounded = True
         self.mvt = [0,0]
         self.speed = 0.5
         self.gravity = 0.5
         self.jump_force = 1
-        self.collide = True
 
         self.left_key  = left_key
         self.right_key = right_key
         self.jump_key  = jump_key
+
+        self.player_id = player_id
 
     def draw(self, game):
         pygame.draw.rect(game.blitting_surface, (255,255,255), self.rect)
@@ -34,7 +35,7 @@ class Player:
             for i in collisions:
                 col = colliders[i]
                 #If the collider is traversable don't check collisions
-                if not col.collide:
+                if not col.has_collision(self.player_id):
                     continue
                 rect = col.rect
                 #Collision en dessous du joueur
@@ -93,3 +94,6 @@ class Player:
         m = col.collidepoint(self.rect.midright)
         b = col.collidepoint(self.rect.bottomright)
         return t or m or b
+
+    def has_collision(self, player_id):
+        return True

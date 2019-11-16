@@ -8,3 +8,6 @@ class Wall:
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
+
+    def has_collision(self, player_id):
+        return self.collide

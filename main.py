@@ -14,8 +14,8 @@ class Game:
         self.blitting_surface = pygame.Surface((DESING_W,DESING_H))
         self.running = True
 
-        self.player_1 = Player(K_q, K_d, K_SPACE)
-        self.player_2 = Player(K_LEFT, K_RIGHT, K_UP)
+        self.player_1 = Player(K_q, K_d, K_SPACE, 0)
+        self.player_2 = Player(K_LEFT, K_RIGHT, K_UP, 1)
         self.player_2.rect.x += 105
 
         self.sol = Wall(0,DESING_H - 300,DESING_W,300)
@@ -23,7 +23,7 @@ class Game:
         self.colliders = [
                 Wall(-10,0,10,DESING_H), #MUR GAUCHE
                 Wall(DESING_W,0,20,DESING_H), #MUR DROIT
-                Door(100, DESING_H - 372,70,70),
+                Door(100, DESING_H - 372,70,70, 0),
                 self.sol]
 
         self.clock = pygame.time.Clock()
