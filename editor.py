@@ -11,10 +11,7 @@ pygame.font.init()
 MODE_TEXT = pygame.font.SysFont("Arial Black", 46)
 
 def invert_color(color):
-    r = color[0] / 255
-    g = color[1] / 255
-    b = color[2] / 255
-    return ((1 - r)*255, (1 - g)*255, (1 - b)*255)
+    return (255 - color[0], 255 - color[1], 255 - color[2])
 
 class ColorPicker:
     def __init__(self, x,y, UIManager):
