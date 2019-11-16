@@ -14,7 +14,9 @@ class Game:
         self.blitting_surface = pygame.Surface((DESING_W,DESING_H))
         self.running = True
 
-        self.player = Player()
+        self.player_1 = Player(K_q, K_d, K_SPACE)
+        self.player_2 = Player(K_LEFT, K_RIGHT, K_UP)
+        self.player_2.rect.x += 105
 
         self.sol = Wall(0,DESING_H - 300,DESING_W,300)
 
@@ -40,10 +42,12 @@ class Game:
                     self.running = False
 
             #UPDATE
-            self.player.update(self.colliders, keyboard_input, tick)
+            self.player_1.update(self.colliders, keyboard_input, tick)
+            self.player_2.update(self.colliders, keyboard_input, tick)
 
             #DRAW
-            self.player.draw(self)
+            self.player_1.draw(self)
+            self.player_2.draw(self)
             for col in self.colliders:
                 col.draw(self.blitting_surface)
 
