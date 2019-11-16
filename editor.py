@@ -250,7 +250,7 @@ class Game:
                 r = self.rects[self.selected_rect].rect
                 border = (r[0] - 5, r[1] - 5, r[2] + 10, r[3] + 10)
                 color = invert_color(self.rects[self.selected_rect].color)
-                #TODO: When the selected object has an inside border, it fills it
+                #TODO(#62): When the selected object has an inside border, it fills it
                 self.camera.draw_rect(self.blitting_surface,color,border)
                 if self.color_picker:
                     color = self.color_picker.get_color()
