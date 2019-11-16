@@ -66,6 +66,7 @@ class ColorPicker:
         UIManager.remove(self.b)
 
 
+#TODO(#58): Move camera in another file
 class Camera:
     def __init__(self, ws):
         self.x = 0
@@ -80,6 +81,8 @@ class Camera:
         pos = ((self.x + rect[0]) * self.zoom, (self.y + rect[1]) * self.zoom)
         scl = (self.zoom * rect[2], self.zoom * rect[3])
         pygame.draw.rect(surface, color, (*pos, *scl), size)
+
+    #TODO: Add draw_line function
 
     def event_zoom(self, event):
         if event.type == MOUSEBUTTONDOWN:
@@ -146,6 +149,7 @@ class Game:
             self.win.fill((0,0,0,))
             self.blitting_surface.fill((0,0,0))
 
+            #TODO: Handle key in different function
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self.running = False
@@ -246,6 +250,7 @@ class Game:
                 r = self.rects[self.selected_rect].rect
                 border = (r[0] - 5, r[1] - 5, r[2] + 10, r[3] + 10)
                 color = invert_color(self.rects[self.selected_rect].color)
+                #TODO: When the selected object has an inside border, it fills it
                 self.camera.draw_rect(self.blitting_surface,color,border)
                 if self.color_picker:
                     color = self.color_picker.get_color()
