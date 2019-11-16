@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 
 import UI
+from Wall import Wall
 
 DESING_W, DESING_H = 1920,1080
 
@@ -12,6 +13,26 @@ MODE_TEXT = pygame.font.SysFont("Arial Black", 46)
 
 def invert_color(color):
     return (255 - color[0], 255 - color[1], 255 - color[2])
+
+def get_corner_point(rect, point):
+    pr = pygame.Rect(rect)
+    sub_rects = [
+            pygame.Rect(pr.x, pr.y, pr.w / 2, pr.h / 2),
+            pygame.Rect(pr.x + pr.w / 2, pr.y, pr.w / 2, pr.h / 2),
+            pygame.Rect(pr.x, pr.y + pr.h / 2, pr.w / 2, pr.h / 2),
+            pygame.Rect(pr.x + pr.w / 2, pr.y + pr.h / 2, pr.w / 2, pr.h / 2)
+            ]
+    for i, sr in enumerate(sub_rects):
+        if sr.collidepoint(point):
+            return i
+
+class DragRect:
+    def __init__(self, x,y,w,h, color):
+        self.rect = pygame.Rect(x,y,w,h)
+        self.color = color
+
+    def draw(self,camera,surface):
+        camera.draw_rect(surface, self.color, self.rect)
 
 class ColorPicker:
     def __init__(self, x,y, UIManager):
@@ -43,31 +64,6 @@ class ColorPicker:
         UIManager.remove(self.g)
         UIManager.remove(self.b)
 
-class Rect:
-    def __init__(self, x,y,w,h, color):
-        self.rect = (x,y,w,h)
-        self.color = color
-
-    def draw(self, camera, surface):
-        camera.draw_rect(surface, self.color, self.rect)
-
-    '''
-    0:  top     right
-    1:  top     left
-    2:  bottom  right
-    3:  bottom  left
-    '''
-    def get_corner_point(self, point):
-        pr = pygame.Rect(self.rect)
-        sub_rects = [
-                pygame.Rect(pr.x, pr.y, pr.w / 2, pr.h / 2),
-                pygame.Rect(pr.x + pr.w / 2, pr.y, pr.w / 2, pr.h / 2),
-                pygame.Rect(pr.x, pr.y + pr.h / 2, pr.w / 2, pr.h / 2),
-                pygame.Rect(pr.x + pr.w / 2, pr.y + pr.h / 2, pr.w / 2, pr.h / 2)
-                ]
-        for i, sr in enumerate(sub_rects):
-            if sr.collidepoint(point):
-                return i
 
 class Camera:
     def __init__(self, ws):
@@ -198,7 +194,7 @@ class Game:
 
                 if mouse_pressed[2] and self.selected_rect != -1 and self.color_picker == None:
                     r = self.rects[self.selected_rect]
-                    corner = r.get_corner_point(self.camera.screen_to_world(mouse_position))
+                    corner = get_corner_point(r, self.camera.screen_to_world(mouse_position))
                     dx,dy = tuple(l*r for l,r in zip(pygame.mouse.get_rel(), self.camera.ratio))
 
                     #TODO: Extract this code in its own function and think of a refactor
@@ -249,11 +245,12 @@ class Game:
                     self.rects[self.selected_rect].color = color
 
             for r in self.rects:
-                r.draw(self.camera, self.blitting_surface)
+                r.draw(self.blitting_surface, self.camera)
 
             if self.rect_started:
                 mp = self.camera.screen_to_world(mouse_position)
-                self.get_rect_mouse_drag(mp,(0,255,0)).draw(self.camera, self.blitting_surface)
+                size = ((mp[0] - self.rect_start[0]), (mp[1] - self.rect_start[1]))
+                DragRect(*self.rect_start, *size, (0,255,0)).draw(self.camera, self.blitting_surface)
 
             blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
             self.win.blit(blit, blit.get_rect())
@@ -274,7 +271,9 @@ class Game:
             self.mode_text = MODE_TEXT.render("Editor", 1, (255,255,255))
 
     def create_rect(self, mouse_end):
-        r = self.get_rect_mouse_drag(mouse_end, (255,0,0))
+        size = ((mouse_end[0] - self.rect_start[0]), (mouse_end[1] - self.rect_start[1]))
+        r = Wall(*self.rect_start, *size, (255,0,0))
+
         if abs(r.rect[2]) < 16 or abs(r.rect[3]) < 16:
             print ("The rect is too smol")
             return
@@ -292,11 +291,6 @@ class Game:
 
         r.rect = rr
         self.rects.append(r)
-
-    def get_rect_mouse_drag(self, end, color):
-        size = ((end[0] - self.rect_start[0]), (end[1] - self.rect_start[1]))
-        r = Rect(*self.rect_start,*size, color)
-        return r
 
     def inside_rect(self, mouse_position):
         for i,r in enumerate(self.rects):
