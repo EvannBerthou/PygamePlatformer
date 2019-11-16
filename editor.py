@@ -208,7 +208,7 @@ class Game:
                     corner = get_corner_point(r, self.camera.screen_to_world(mouse_position))
                     dx,dy = tuple(l*r for l,r in zip(pygame.mouse.get_rel(), self.camera.ratio))
 
-                    #TODO: Extract this code in its own function and think of a refactor
+                    #TODO(#61): Extract this code in its own function and think of a refactor
                     if corner == 0:
                         r.rect = (r.rect[0] + dx * (1 / self.camera.zoom),
                                   r.rect[1] + dy * (1 / self.camera.zoom),
