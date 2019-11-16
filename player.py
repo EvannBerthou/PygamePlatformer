@@ -11,6 +11,7 @@ class Player:
         self.speed = 0.5
         self.gravity = 0.5
         self.jump_force = 1
+        self.collide = True
 
         self.left_key  = left_key
         self.right_key = right_key
