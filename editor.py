@@ -147,11 +147,14 @@ class Game:
         self.color_picker = None
 
         self.selected_object = Door
-        default_button = UI.Button(2,100,100,30, "Wall", (255,0,0), self.change_object, Wall)
-        self.selected_button = default_button
 
-        self.UIManager.add(default_button)
-        self.UIManager.add(UI.Button(2,140,100,30, "Door", (150,150,150), self.change_object, Door))
+        self.wall_button = UI.Button(2,100,100,30, "Wall", (255,0,0), self.change_object, Wall)
+        self.door_button = UI.Button(2,140,100,30, "Door", (150,150,150), self.change_object, Door)
+
+        self.selected_button = self.wall_button
+
+        self.UIManager.add(self.wall_button)
+        self.UIManager.add(self.door_button)
 
     def run(self):
         while self.running:
@@ -206,9 +209,9 @@ class Game:
                             self.color_picker = ColorPicker(*mouse_position, self.UIManager)
                             self.color_picker.set_color(self.rects[self.selected_rect].color)
                     if event.key == K_F1:
-                        self.selected_object = Wall
+                        self.change_object(self.wall_button, Wall)
                     if event.key == K_F2:
-                        self.selected_object = Door
+                        self.change_object(self.door_button, Door)
 
                 if mouse_pressed[0] and self.selected_rect != -1 and self.color_picker == None:
                     r = self.rects[self.selected_rect]
