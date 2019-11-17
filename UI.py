@@ -1,5 +1,7 @@
 import pygame
 
+pygame.font.init()
+
 class UIManager:
     def __init__(self):
         self.elements = []
@@ -83,3 +85,25 @@ class Slider(UIElement):
 
         #clamp self.value in [self.min_value; self.max_value]
         self.value = max(self.min_value, min(self.value, self.max_value))
+
+BUTTON_TEXT = pygame.font.SysFont("Arial Black", 42)
+
+class Button(UIElement):
+    def __init__(self, x,y,w,h, text, color, callback, args):
+        super().__init__(x,y)
+        self.rect = pygame.Rect(self.x, self.y, w, h)
+        self.color = color
+        self.callback = callback
+        self.args = args
+        self.text = BUTTON_TEXT.render(text, 1, (255,255,255))
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, self.color, self.rect)
+        surface.blit(self.text, (self.x, self.y))
+
+    def update(self, mouse_position, mouse_pressed):
+        if mouse_pressed[0]:
+            self.callback(self.args)
+
+    def is_hovered(self, mouse_position):
+        return self.rect.collidepoint(mouse_position)
