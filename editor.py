@@ -114,8 +114,11 @@ class MODE:
     Editor = 1
 
 class Game:
-    def change_object(self, obj):
+    def change_object(self, button, obj):
         self.selected_object = obj
+        self.selected_button.color = (150,150,150)
+        button.color = (255,0,0)
+        self.selected_button = button
 
     def __init__(self):
         self.w, self.h = 1152,648
@@ -144,9 +147,11 @@ class Game:
         self.color_picker = None
 
         self.selected_object = Door
+        default_button = UI.Button(2,100,100,30, "Wall", (255,0,0), self.change_object, Wall)
+        self.selected_button = default_button
 
-        self.UIManager.add(UI.Button(2,100,100,30, "Wall", (0,150,255), self.change_object, Wall))
-        self.UIManager.add(UI.Button(2,140,100,30, "Door", (0,150,255), self.change_object, Door))
+        self.UIManager.add(default_button)
+        self.UIManager.add(UI.Button(2,140,100,30, "Door", (150,150,150), self.change_object, Door))
 
     def run(self):
         while self.running:
