@@ -103,7 +103,7 @@ class Button(UIElement):
 
     def update(self, mouse_position, mouse_pressed):
         if mouse_pressed[0]:
-            self.callback(self.args)
+            self.callback(self, self.args)
 
     def is_hovered(self, mouse_position):
         return self.rect.collidepoint(mouse_position)
