@@ -114,6 +114,9 @@ class MODE:
     Editor = 1
 
 class Game:
+    def change_object(self, obj):
+        self.selected_object = obj
+
     def __init__(self):
         self.w, self.h = 1152,648
         # self.w, self.h = 1920,1080
@@ -141,6 +144,9 @@ class Game:
         self.color_picker = None
 
         self.selected_object = Door
+
+        self.UIManager.add(UI.Button(2,100,100,30, "Wall", (0,150,255), self.change_object, Wall))
+        self.UIManager.add(UI.Button(2,140,100,30, "Door", (0,150,255), self.change_object, Door))
 
     def run(self):
         while self.running:
