@@ -199,11 +199,12 @@ class Game:
                 if mouse_pressed[2] and self.selected_rect != -1 and self.property_panel == None:
                     r = self.rects[self.selected_rect]
                     corner = get_corner_point(r, self.camera.screen_to_world(mouse_position))
-                    dx,dy = tuple(l*r for l,r in zip(pygame.mouse.get_rel(), self.camera.ratio))
+                    if corner != None:
+                        dx,dy = tuple(l*r for l,r in zip(pygame.mouse.get_rel(), self.camera.ratio))
 
-                    r.rect = self.resize_rect(r.rect, corner, dx,dy)
-                    if isinstance(r, Door):
-                        r.lines = r.get_lines()
+                        r.rect = self.resize_rect(r.rect, corner, dx,dy)
+                        if isinstance(r, Door):
+                            r.lines = r.get_lines()
 
             if self.camera.mouse_moving:
                 dx,dy = pygame.mouse.get_rel()
@@ -307,7 +308,7 @@ class Game:
                         rect[1],
                         rect[2] + dx * (1 / self.camera.zoom),
                         rect[3] + dy * (1 / self.camera.zoom))
-        return pygame.Rect(new_rect) if new_rect else rect
+        return new_rect
 
 game = Game()
 game.run()
