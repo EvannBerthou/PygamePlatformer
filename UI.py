@@ -1,4 +1,5 @@
 import pygame
+from pygame.locals import *
 
 pygame.font.init()
 
@@ -20,7 +21,7 @@ class UIManager:
         self.elements.remove(element)
 
 
-    def update(self, mouse_position, mouse_pressed):
+    def update(self, mouse_position, mouse_pressed, events):
         for i,el in enumerate(self.elements):
             if el.is_hovered(mouse_position) and mouse_pressed:
                 self.selected = i
@@ -29,7 +30,7 @@ class UIManager:
             self.selected = -1
 
         if self.selected != -1:
-            self.elements[self.selected].update(mouse_position, (mouse_pressed, 0))
+            self.elements[self.selected].update(mouse_position, (mouse_pressed, 0), events)
 
     def draw(self, surface):
         for el in self.elements:
@@ -88,6 +89,7 @@ BUTTON_TEXT = pygame.font.SysFont("Arial Black", 42)
 
 class Button(UIElement):
     def __init__(self, x,y,w,h, text, color, callback, args):
+        print(text, callback)
         super().__init__(x,y)
         self.rect = pygame.Rect(self.x, self.y, w, h)
         self.color = color
@@ -99,9 +101,14 @@ class Button(UIElement):
         pygame.draw.rect(surface, self.color, self.rect)
         surface.blit(self.text, (self.x, self.y))
 
-    def update(self, mouse_position, mouse_pressed):
-        if mouse_pressed[0]:
-            self.callback(self, self.args)
+    def update(self, mouse_position, mouse_pressed, events):
+        for event in events:
+            if event.type == MOUSEBUTTONDOWN:
+                if mouse_pressed[0]:
+                    self.callback(self, self.args)
 
     def is_hovered(self, mouse_position):
         return self.rect.collidepoint(mouse_position)
+
+    def destroy(self, UIManager):
+        return

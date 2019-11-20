@@ -1,19 +1,25 @@
 import pygame
 from ColorPicker import ColorPicker
+from UI import Button
 
 class PropertyPanel:
-    def get_obj_from_str(self, string):
-        return {"ColorPicker": ColorPicker }[string]
-
-    def __init__(self, x,y, properties, UIManager):
+    def __init__(self, x,y, properties, UIManager, selected_obj):
         self.x, self.y = x,y
-        self.w, self.h = 160,95 #TEMP
+        self.w, self.h = 160,0 #TEMP
         self.properties_obj = {}
 
+        self.padding = 5
+
         for p in properties:
-            obj = self.get_obj_from_str(p)
-            print(p, obj)
-            self.properties_obj[p] = obj(self.x,self.y, UIManager)
+            if p == "ColorPicker":
+                cp = ColorPicker(self.x,self.y, UIManager)
+                self.properties_obj[p] = cp
+                self.h += cp.h + self.padding
+            if p == "Player_Id":
+                b = Button(self.x+5,self.y+95, 150,35,"player", (170,170,170), selected_obj.switch_player_id, [])
+                UIManager.add(b)
+                self.properties_obj[p] = b
+                self.h += b.rect.h + self.padding
 
     def draw(self, surface):
         pygame.draw.rect(surface, (100,100,100), (self.x, self.y, self.w, self.h))
