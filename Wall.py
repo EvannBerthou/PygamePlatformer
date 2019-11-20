@@ -15,5 +15,5 @@ class Wall:
     def has_collision(self, player_id):
         return self.collide
 
-    def get_properties():
+    def get_properties(self):
         return ["ColorPicker"]

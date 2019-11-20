@@ -31,7 +31,7 @@ class Door:
     def has_collision(self, player_id):
         return self.player_id == player_id
 
-    def get_properties():
+    def get_properties(self):
         return ["ColorPicker", "Player_Id"]
 
     def switch_player_id(self, btn, args):

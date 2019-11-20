@@ -178,8 +178,9 @@ class Game:
                             self.property_panel.destroy(self.UIManager)
                             self.property_panel = None
                         else:
-                            self.property_panel = PropertyPanel(*mouse_position, self.selected_object.get_properties(),
-                                                                  self.UIManager, self.rects[self.selected_rect])
+                            self.property_panel = PropertyPanel(*mouse_position,
+                                                                self.rects[self.selected_rect].get_properties(),
+                                                                self.UIManager, self.rects[self.selected_rect])
                             self.property_panel.set_color(self.rects[self.selected_rect].color)
                     if event.key == K_F1:
                         self.change_object(self.wall_button, Wall)
