@@ -36,4 +36,4 @@ class Door:
 
     def switch_player_id(self, btn, args):
         self.player_id = (self.player_id + 1) % 2
-        print(self.player_id)
+        btn.set_text(f"player : {self.player_id}")

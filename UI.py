@@ -66,7 +66,7 @@ class Slider(UIElement):
         pygame.draw.rect(surface, self.fg_color, (self.x, self.y, self.draw_w, self.h))
 
     #Update is only called when the UI Element is the selected one
-    def update(self, mouse_position, mouse_pressed):
+    def update(self, mouse_position, mouse_pressed, events):
         if mouse_pressed[0]:
             #normalize
             x = (mouse_position[0] - self.x) / self.w
@@ -88,14 +88,16 @@ class Slider(UIElement):
 BUTTON_TEXT = pygame.font.SysFont("Arial Black", 42)
 
 class Button(UIElement):
+    def set_text(self, text):
+        self.text = BUTTON_TEXT.render(text, 1, (255,255,255))
+
     def __init__(self, x,y,w,h, text, color, callback, args):
-        print(text, callback)
         super().__init__(x,y)
         self.rect = pygame.Rect(self.x, self.y, w, h)
         self.color = color
         self.callback = callback
         self.args = args
-        self.text = BUTTON_TEXT.render(text, 1, (255,255,255))
+        self.set_text(text)
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
@@ -111,4 +113,4 @@ class Button(UIElement):
         return self.rect.collidepoint(mouse_position)
 
     def destroy(self, UIManager):
-        return
+        UIManager.remove(self)
