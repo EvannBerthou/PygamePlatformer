@@ -16,7 +16,8 @@ class PropertyPanel:
                 self.properties_obj[p] = cp
                 self.h += cp.h + self.padding
             if p == "Player_Id":
-                b = Button(self.x+5,self.y+95, 150,35,"player", (170,170,170), selected_obj.switch_player_id, [])
+                text = f"player : {selected_obj.player_id}"
+                b = Button(self.x+5,self.y+95, 150,35,text, (170,170,170), selected_obj.switch_player_id, [])
                 UIManager.add(b)
                 self.properties_obj[p] = b
                 self.h += b.rect.h + self.padding
