@@ -201,30 +201,7 @@ class Game:
                     corner = get_corner_point(r, self.camera.screen_to_world(mouse_position))
                     dx,dy = tuple(l*r for l,r in zip(pygame.mouse.get_rel(), self.camera.ratio))
 
-                    #TODO(#61): Extract this code in its own function and think of a refactor
-                    if corner == 0:
-                        r.rect = (r.rect[0] + dx * (1 / self.camera.zoom),
-                                  r.rect[1] + dy * (1 / self.camera.zoom),
-                                  r.rect[2] - dx * (1 / self.camera.zoom),
-                                  r.rect[3] - dy * (1 / self.camera.zoom))
-
-                    elif corner == 1:
-                        r.rect = (r.rect[0],
-                                  r.rect[1] + dy * (1 / self.camera.zoom),
-                                  r.rect[2] + dx * (1 / self.camera.zoom),
-                                  r.rect[3] - dy * (1 / self.camera.zoom))
-
-                    elif corner == 2:
-                        r.rect = (r.rect[0] + dx * (1 / self.camera.zoom),
-                                  r.rect[1],
-                                  r.rect[2] - dx * (1 / self.camera.zoom),
-                                  r.rect[3] + dy * (1 / self.camera.zoom))
-
-                    elif corner == 3:
-                        r.rect = (r.rect[0],
-                                  r.rect[1],
-                                  r.rect[2] + dx * (1 / self.camera.zoom),
-                                  r.rect[3] + dy * (1 / self.camera.zoom))
+                    r.rect = self.resize_rect(r.rect, corner, dx,dy)
                     if isinstance(r, Door):
                         r.lines = r.get_lines()
 
@@ -304,6 +281,33 @@ class Game:
             if pygame.Rect(r.rect).collidepoint(self.camera.screen_to_world(mouse_position)):
                 return i
         return -1
+
+    def resize_rect(self, rect, corner, dx,dy):
+        new_rect = None
+        if corner == 0:
+            new_rect = (rect[0] + dx * (1 / self.camera.zoom),
+                        rect[1] + dy * (1 / self.camera.zoom),
+                        rect[2] - dx * (1 / self.camera.zoom),
+                        rect[3] - dy * (1 / self.camera.zoom))
+
+        elif corner == 1:
+            new_rect = (rect[0],
+                        rect[1] + dy * (1 / self.camera.zoom),
+                        rect[2] + dx * (1 / self.camera.zoom),
+                        rect[3] - dy * (1 / self.camera.zoom))
+
+        elif corner == 2:
+            new_rect = (rect[0] + dx * (1 / self.camera.zoom),
+                        rect[1],
+                        rect[2] - dx * (1 / self.camera.zoom),
+                        rect[3] + dy * (1 / self.camera.zoom))
+
+        elif corner == 3:
+            new_rect = (rect[0],
+                        rect[1],
+                        rect[2] + dx * (1 / self.camera.zoom),
+                        rect[3] + dy * (1 / self.camera.zoom))
+        return pygame.Rect(new_rect) if new_rect else rect
 
 game = Game()
 game.run()
