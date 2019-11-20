@@ -13,12 +13,12 @@ class Door:
                 # BOTTOM
                 ((self.rect[0],self.rect[1]+self.rect[3]), (self.rect[0]+self.rect[2],self.rect[1]+self.rect[3]))
         ]
-    def __init__(self, x,y,w,h, player_id, color = (0,255,0)):
+    def __init__(self, x,y,w,h, color = (0,255,0)):
         self.rect = (x,y,w,h)
         self.color = color
         self.collide = False
         self.border = 10
-        self.player_id = player_id
+        self.player_id = 0
         self.lines = self.get_lines()
 
     def draw(self, surface, camera = None):
@@ -30,3 +30,10 @@ class Door:
 
     def has_collision(self, player_id):
         return self.player_id == player_id
+
+    def get_properties():
+        return ["ColorPicker", "Player_Id"]
+
+    def switch_player_id(self, btn, args):
+        self.player_id = (self.player_id + 1) % 2
+        print(self.player_id)

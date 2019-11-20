@@ -138,14 +138,15 @@ class Game:
             self.blitting_surface.fill((0,0,0))
 
             #TODO(#60): Handle key in different function
-            for event in pygame.event.get():
+            events = pygame.event.get()
+            for event in events:
                 if event.type == QUIT:
                     self.running = False
                 if event.type == MOUSEBUTTONDOWN:
                     if self.mode == MODE.Camera:
                         self.camera.event_zoom(event)
                     if self.mode == MODE.Editor:
-                        self.UIManager.update(mouse_position, event.button == 1)
+                        self.UIManager.update(mouse_position, event.button == 1, events)
                         if self.property_panel == None:
                             self.selected_rect = self.inside_rect(mouse_position)
                         if self.selected_rect > -1:
@@ -178,7 +179,7 @@ class Game:
                             self.property_panel = None
                         else:
                             self.property_panel = PropertyPanel(*mouse_position, self.selected_object.get_properties(),
-                                                                  self.UIManager)
+                                                                  self.UIManager, self.rects[self.selected_rect])
                             self.property_panel.set_color(self.rects[self.selected_rect].color)
                     if event.key == K_F1:
                         self.change_object(self.wall_button, Wall)
@@ -233,7 +234,7 @@ class Game:
 
             #UPDATE
             if self.UIManager.selected != -1:
-                self.UIManager.elements[self.UIManager.selected].update(mouse_position, mouse_pressed)
+                self.UIManager.elements[self.UIManager.selected].update(mouse_position, mouse_pressed, events)
                 self.rect_started = 0
 
             #DRAW
