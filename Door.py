@@ -1,4 +1,5 @@
 import pygame
+from Color import invert_color
 
 class Door:
     def get_lines(self):
@@ -27,6 +28,19 @@ class Door:
                 camera.draw_line(surface, self.color, l[0], l[1], self.border)
             else:
                 pygame.draw.line(surface, self.color, l[0], l[1], self.border)
+
+    def outline(self, surface, camera):
+        color = invert_color(self.color)
+        b = self.border
+        #create lines for the border
+        pts = [
+            ((self.lines[0][0][0]-b,self.lines[0][0][1]-b),(self.lines[0][1][0]+b,self.lines[0][1][1]-b)),
+            ((self.lines[1][0][0]-b,self.lines[1][0][1]-b),(self.lines[1][1][0]-b,self.lines[1][1][1]+b)),
+            ((self.lines[2][0][0]+b,self.lines[2][0][1]-b),(self.lines[2][1][0]+b,self.lines[2][1][1]+b)),
+            ((self.lines[3][0][0]-b,self.lines[3][0][1]+b),(self.lines[3][1][0]+b,self.lines[3][1][1]+b)),
+        ]
+        for pt in pts:
+            camera.draw_line(surface, color, pt[0], pt[1], self.border)
 
     def has_collision(self, player_id):
         return self.player_id == player_id

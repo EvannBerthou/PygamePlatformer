@@ -14,9 +14,6 @@ pygame.font.init()
 
 MODE_TEXT = pygame.font.SysFont("Arial Black", 46)
 
-def invert_color(color):
-    return (255 - color[0], 255 - color[1], 255 - color[2])
-
 def get_corner_point(rect, point):
     pr = pygame.Rect(rect)
     sub_rects = [
@@ -220,11 +217,7 @@ class Game:
             self.camera.draw_rect(self.blitting_surface, (250,250,250), (0,0, DESING_W, DESING_H), 2)
 
             if self.selected_rect != -1:
-                r = self.rects[self.selected_rect].rect
-                border = (r[0] - 5, r[1] - 5, r[2] + 10, r[3] + 10)
-                color = invert_color(self.rects[self.selected_rect].color)
-                #TODO(#62): When the selected object has an inside border, it fills it
-                self.camera.draw_rect(self.blitting_surface,color,border)
+                self.rects[self.selected_rect].outline(self.blitting_surface, self.camera)
                 if self.property_panel:
                     color = self.property_panel.get_color()
                     self.rects[self.selected_rect].color = color
