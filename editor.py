@@ -4,6 +4,8 @@ from pygame.locals import *
 import UI
 from Wall import Wall
 from Door import Door
+from PropertyPanel import PropertyPanel
+
 
 DESING_W, DESING_H = 1920,1080
 
@@ -34,37 +36,6 @@ class DragRect:
 
     def draw(self,camera,surface):
         camera.draw_rect(surface, self.color, self.rect)
-
-class ColorPicker:
-    def __init__(self, x,y, UIManager):
-        self.x, self.y = x,y
-        self.w, self.h = 160,95
-        self.r = UI.Slider(self.x + 5, self.y + 5, self.w - 10, 25, 0,255, (150,150,150), (255,0,0))
-        self.g = UI.Slider(self.x + 5, self.y + 35, self.w - 10, 25, 0,255, (150,150,150), (0,255,0))
-        self.b = UI.Slider(self.x + 5, self.y + 65, self.w - 10, 25, 0,255, (150,150,150), (0,0,255))
-        UIManager.add(self.r)
-        UIManager.add(self.g)
-        UIManager.add(self.b)
-
-    def draw(self, surface):
-        pygame.draw.rect(surface, (100,100,100), (self.x, self.y, self.w, self.h))
-        self.r.draw(surface)
-        self.g.draw(surface)
-        self.b.draw(surface)
-
-    def get_color(self):
-        return (self.r.value,self.g.value,self.b.value)
-
-    def set_color(self, color):
-        self.r.set_value(color[0] / 255)
-        self.g.set_value(color[1] / 255)
-        self.b.set_value(color[2] / 255)
-
-    def destroy(self, UIManager):
-        UIManager.remove(self.r)
-        UIManager.remove(self.g)
-        UIManager.remove(self.b)
-
 
 #TODO(#58): Move camera in another file
 class Camera:
@@ -144,9 +115,9 @@ class Game:
         self.selected_rect = -1
 
         self.UIManager = UI.UIManager()
-        self.color_picker = None
+        self.property_panel = None
 
-        self.selected_object = Door
+        self.selected_object = Wall
 
         self.wall_button = UI.Button(2,100,100,30, "Wall", (255,0,0), self.change_object, Wall)
         self.door_button = UI.Button(2,140,100,30, "Door", (150,150,150), self.change_object, Door)
@@ -175,7 +146,7 @@ class Game:
                         self.camera.event_zoom(event)
                     if self.mode == MODE.Editor:
                         self.UIManager.update(mouse_position, event.button == 1)
-                        if self.color_picker == None:
+                        if self.property_panel == None:
                             self.selected_rect = self.inside_rect(mouse_position)
                         if self.selected_rect > -1:
                             pygame.mouse.get_rel()
@@ -202,18 +173,19 @@ class Game:
                         self.rects.pop(self.selected_rect)
                         self.selected_rect = -1
                     if event.key == K_c and self.mode == MODE.Editor and self.selected_rect != -1:
-                        if self.color_picker:
-                            self.color_picker.destroy(self.UIManager)
-                            self.color_picker = None
+                        if self.property_panel:
+                            self.property_panel.destroy(self.UIManager)
+                            self.property_panel = None
                         else:
-                            self.color_picker = ColorPicker(*mouse_position, self.UIManager)
-                            self.color_picker.set_color(self.rects[self.selected_rect].color)
+                            self.property_panel = PropertyPanel(*mouse_position, self.selected_object.get_properties(),
+                                                                  self.UIManager)
+                            self.property_panel.set_color(self.rects[self.selected_rect].color)
                     if event.key == K_F1:
                         self.change_object(self.wall_button, Wall)
                     if event.key == K_F2:
                         self.change_object(self.door_button, Door)
 
-                if mouse_pressed[0] and self.selected_rect != -1 and self.color_picker == None:
+                if mouse_pressed[0] and self.selected_rect != -1 and self.property_panel == None:
                     r = self.rects[self.selected_rect]
                     dx,dy = (pygame.mouse.get_rel())
                     r.rect = (r.rect[0] + dx * (1 / self.camera.zoom) * self.camera.ratio[0],
@@ -222,7 +194,7 @@ class Game:
                     if isinstance(r, Door):
                         r.lines = r.get_lines()
 
-                if mouse_pressed[2] and self.selected_rect != -1 and self.color_picker == None:
+                if mouse_pressed[2] and self.selected_rect != -1 and self.property_panel == None:
                     r = self.rects[self.selected_rect]
                     corner = get_corner_point(r, self.camera.screen_to_world(mouse_position))
                     dx,dy = tuple(l*r for l,r in zip(pygame.mouse.get_rel(), self.camera.ratio))
@@ -273,8 +245,8 @@ class Game:
                 color = invert_color(self.rects[self.selected_rect].color)
                 #TODO(#62): When the selected object has an inside border, it fills it
                 self.camera.draw_rect(self.blitting_surface,color,border)
-                if self.color_picker:
-                    color = self.color_picker.get_color()
+                if self.property_panel:
+                    color = self.property_panel.get_color()
                     self.rects[self.selected_rect].color = color
 
             for r in self.rects:
@@ -290,8 +262,8 @@ class Game:
 
             if self.mode == MODE.Editor:
                 self.UIManager.draw(self.win)
-                if self.color_picker:
-                    self.color_picker.draw(self.win)
+                if self.property_panel:
+                    self.property_panel.draw(self.win)
 
             self.win.blit(self.mode_text,(0,0))
             pygame.display.update()

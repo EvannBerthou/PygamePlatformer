@@ -12,14 +12,12 @@ class UIManager:
             raise ValueError(f'{element} is already in the list')
 
         self.elements.append(element)
-        print('New UI Element added')
 
     def remove(self, element):
         if not element in self.elements:
             raise ValueError(f'{element} is not in the list')
 
         self.elements.remove(element)
-        print(f'{element} removed')
 
 
     def update(self, mouse_position, mouse_pressed):
