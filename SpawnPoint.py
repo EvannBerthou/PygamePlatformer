@@ -3,14 +3,15 @@ import pygame
 from Color import invert_color
 
 class SpawnPoint:
-    def get_points(self):
+    def get_points(self, lenght = None):
         x,y = self.rect.x, self.rect.y
-        sqrt3 = (math.sqrt(3) / 3) * self.lenght
-        sqrt6 = (math.sqrt(3) / 6) * self.lenght
+        if lenght == None: lenght = self.lenght
+        sqrt3 = (math.sqrt(3) / 3) * lenght
+        sqrt6 = (math.sqrt(3) / 6) * lenght
         return [
                 (x, y + sqrt3),
-                (x - self.lenght / 2, y - sqrt6),
-                (x + self.lenght / 2, y - sqrt6)
+                (x - lenght / 2, y - sqrt6),
+                (x + lenght / 2, y - sqrt6)
         ]
 
     def __init__(self, x,y, lenght, color, player_id):
@@ -29,8 +30,9 @@ class SpawnPoint:
             pygame.draw.polygon(surface, self.color, self.points)
 
     def outline(self, surface, camera):
-        color = invert_color(self.color)
-        pygame.draw.polygon(surface, color, self.points)
+        color = (255,0,0)
+        pts = self.get_points(self.lenght + 10)
+        camera.draw_polygon(surface, color, pts, 5)
 
     def get_properties(self):
         return ["Player_Id"]

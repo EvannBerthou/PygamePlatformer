@@ -57,6 +57,7 @@ class Camera:
         pygame.draw.line(surface, color, pos_1, pos_2, width)
 
     def draw_polygon(self, surface, color, points, width = 0):
+        camera.draw_rect(surface, (0,255,0), self.rect)
         pts = []
         for pt in points:
             pts.append(((self.x + pt[0]) * self.zoom, (self.y + pt[1]) * self.zoom))
