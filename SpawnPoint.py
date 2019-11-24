@@ -4,7 +4,7 @@ from Color import invert_color
 
 class SpawnPoint:
     def get_points(self, lenght = None):
-        x,y = self.rect.x, self.rect.y
+        x,y = self.rect.center
         if lenght == None: lenght = self.lenght
         sqrt3 = (math.sqrt(3) / 3) * lenght
         sqrt6 = (math.sqrt(3) / 6) * lenght
@@ -16,7 +16,7 @@ class SpawnPoint:
 
     def __init__(self, x,y, lenght, color, player_id):
         self.lenght = lenght
-        self.rect = pygame.Rect(x,y,lenght,lenght)
+        self.rect = pygame.Rect(x - lenght / 2, y - lenght / 2,lenght,lenght)
         self.color = color
         self.player_id = player_id
 
