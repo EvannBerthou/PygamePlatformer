@@ -43,4 +43,4 @@ class SpawnPoint:
 
     def as_string(self):
         center_int = (int(v) for v in self.rect.center)
-        return 'Spawn {},{}, {}\n'.format(*center_int, self.player_id)
+        return 'Spawn, {},{}, {}\n'.format(*center_int, self.player_id)

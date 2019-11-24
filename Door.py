@@ -53,7 +53,5 @@ class Door:
         btn.set_text(f"player : {self.player_id}")
 
     def as_string(self):
-        color_int = (int(v) for v in self.color)
         rect_int = [ int(self.rect.x), int(self.rect.y), int(self.rect.w), int(self.rect.h) ]
-        print(rect_int)
-        return 'Door {},{},{},{}, {},{},{}, {}\n'.format(*rect_int, *color_int, self.player_id)
+        return 'Door, {},{},{},{}, {}\n'.format(*rect_int, self.player_id)

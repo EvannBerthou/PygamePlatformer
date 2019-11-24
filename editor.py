@@ -1,3 +1,4 @@
+import os
 import pygame
 from pygame.locals import *
 
@@ -162,6 +163,8 @@ class Game:
                         self.change_object(self.door_button, Door)
                     if event.key == K_s:
                         self.save_to_file()
+                    if event.key == K_l:
+                        self.load_map()
 
                 if mouse_pressed[0] and self.selected_rect != -1 and self.property_panel == None:
                     r = self.rects[self.selected_rect]
@@ -302,9 +305,59 @@ class Game:
             f.write('map:\n')
             for obj in self.rects:
                 string = obj.as_string()
-                print(string)
                 f.write(string)
             f.write('endmap\n')
+
+    def obj_from_str(self, string):
+        objs = {
+            "Wall": Wall,
+            "Door": Door,
+            "Spawn": SpawnPoint
+        }
+        return objs[string]
+
+    def create_obj(self, obj, args):
+        if obj == Wall:
+            pos = []
+            color = []
+            for v in args[:4]:
+                pos.append(int(v))
+            for v in args[4:]:
+                color.append(int(v))
+
+            wall = Wall(*pos, color)
+            self.rects.append(wall)
+
+        if obj == Door:
+            pos = []
+            for v in args[:4]:
+                pos.append(int(v))
+
+            door = Door(*pos, int(args[4]))
+            self.rects.append(door)
+
+    def load_map(self, file_name = 'map'):
+        print('Loading map')
+        if not os.path.exists(file_name):
+            print(f'No file named : {file_name}')
+            return
+
+        self.rects.clear()
+        self.selected_rect = -1
+        in_map = False
+        with open('map', 'r') as f:
+            for l in f:
+                if l == "endmap\n":
+                    in_map = False
+
+                if in_map:
+                    parts = l.strip().split(',')
+                    obj = self.obj_from_str(parts[0])
+                    self.create_obj(obj, parts[1:])
+
+                if l == "map:\n":
+                    in_map = True
+        print('Map loaded')
 
 
 game = Game()
