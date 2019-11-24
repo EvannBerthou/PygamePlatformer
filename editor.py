@@ -4,6 +4,7 @@ from pygame.locals import *
 import UI
 from Wall import Wall
 from Door import Door
+from SpawnPoint import SpawnPoint
 from PropertyPanel import PropertyPanel
 
 
@@ -118,11 +119,13 @@ class Game:
 
         self.wall_button = UI.Button(2,100,100,30, "Wall", (255,0,0), self.change_object, Wall)
         self.door_button = UI.Button(2,140,100,30, "Door", (150,150,150), self.change_object, Door)
+        self.spawn_button= UI.Button(2,180,100,30, "Spawn", (150,150,150), self.change_object, SpawnPoint)
 
         self.selected_button = self.wall_button
 
         self.UIManager.add(self.wall_button)
         self.UIManager.add(self.door_button)
+        self.UIManager.add(self.spawn_button)
 
     def run(self):
         while self.running:
@@ -149,8 +152,13 @@ class Game:
                         if self.selected_rect > -1:
                             pygame.mouse.get_rel()
                         else:
-                            self.rect_started = True
-                            self.rect_start = self.camera.screen_to_world(mouse_position)
+                            #If the selected object is a spawn point, don't drag and create the spawnpoint
+                            if self.selected_object == SpawnPoint:
+                                x,y = self.camera.screen_to_world(mouse_position)
+                                self.rects.append(SpawnPoint(x,y, 50, (255,255,255), 0))
+                            else:
+                                self.rect_started = True
+                                self.rect_start = self.camera.screen_to_world(mouse_position)
 
                 if event.type == MOUSEBUTTONUP:
                     if self.mode == MODE.Camera:
