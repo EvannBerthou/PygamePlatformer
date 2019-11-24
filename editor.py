@@ -160,6 +160,8 @@ class Game:
                         self.change_object(self.wall_button, Wall)
                     if event.key == K_F2:
                         self.change_object(self.door_button, Door)
+                    if event.key == K_s:
+                        self.save_to_file()
 
                 if mouse_pressed[0] and self.selected_rect != -1 and self.property_panel == None:
                     r = self.rects[self.selected_rect]
@@ -236,7 +238,7 @@ class Game:
 
     def create_rect(self, mouse_end):
         size = ((mouse_end[0] - self.rect_start[0]), (mouse_end[1] - self.rect_start[1]))
-        r = self.selected_object(*self.rect_start, *size, (255,0,0))
+        r = self.selected_object(*self.rect_start, *size, color=(255,0,0))
 
         if abs(r.rect[2]) < 16 or abs(r.rect[3]) < 16:
             print ("The rect is too smol")
@@ -291,7 +293,19 @@ class Game:
         area = new_rect[2] * new_rect[3]
         if area < AREA_LIMIT:
             return rect
-        return new_rect
+        return pygame.Rect(new_rect)
+
+    def save_to_file(self):
+        with open('map', 'w') as f:
+            f.write('name : FOO\n')
+            f.write('author : BAR\n')
+            f.write('map:\n')
+            for obj in self.rects:
+                string = obj.as_string()
+                print(string)
+                f.write(string)
+            f.write('endmap\n')
+
 
 game = Game()
 game.run()

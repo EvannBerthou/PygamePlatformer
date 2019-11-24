@@ -40,3 +40,7 @@ class SpawnPoint:
     def switch_player_id(self, btn, args):
         self.player_id = (self.player_id + 1) % 2
         btn.set_text(f"player : {self.player_id}")
+
+    def as_string(self):
+        center_int = (int(v) for v in self.rect.center)
+        return 'Spawn {},{}, {}\n'.format(*center_int, self.player_id)
