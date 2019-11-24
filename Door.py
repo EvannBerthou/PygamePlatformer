@@ -15,6 +15,7 @@ class Door:
                 ((self.rect[0],self.rect[1]+self.rect[3]), (self.rect[0]+self.rect[2],self.rect[1]+self.rect[3]))
         ]
     def __init__(self, x,y,w,h, color, player_id = 0):
+        print("id",player_id)
         self.rect = pygame.Rect(x,y,w,h)
         self.player_id = player_id
         self.color = (255,0,0) if self.player_id == 1 else (0,0,255)
@@ -46,11 +47,12 @@ class Door:
         return not self.player_id == player_id
 
     def get_properties(self):
-        return ["ColorPicker", "Player_Id"]
+        return ["Player_Id"]
 
     def switch_player_id(self, btn, args):
         self.player_id = (self.player_id + 1) % 2
         btn.set_text(f"player : {self.player_id}")
+        self.color = (255,0,0) if self.player_id == 1 else (0,0,255)
 
     def as_string(self):
         rect_int = [ int(self.rect.x), int(self.rect.y), int(self.rect.w), int(self.rect.h) ]
