@@ -23,7 +23,8 @@ class Game:
         self.colliders = [
                 Wall(-10,0,10,DESING_H), #MUR GAUCHE
                 Wall(DESING_W,0,20,DESING_H), #MUR DROIT
-                Door(100, DESING_H - 372,70,70),
+                Door(100, DESING_H - 372,70,70, 0),
+                Door(600, DESING_H - 372,70,70, 1),
                 self.sol]
 
         self.clock = pygame.time.Clock()

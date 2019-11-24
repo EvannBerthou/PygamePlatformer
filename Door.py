@@ -14,12 +14,12 @@ class Door:
                 # BOTTOM
                 ((self.rect[0],self.rect[1]+self.rect[3]), (self.rect[0]+self.rect[2],self.rect[1]+self.rect[3]))
         ]
-    def __init__(self, x,y,w,h, color = (0,255,0)):
+    def __init__(self, x,y,w,h, player_id):
         self.rect = pygame.Rect(x,y,w,h)
-        self.color = color
+        self.player_id = player_id
+        self.color = (255,0,0) if self.player_id == 1 else (0,0,255)
         self.collide = False
         self.border = 10
-        self.player_id = 0
         self.lines = self.get_lines()
 
     def draw(self, surface, camera = None):
@@ -43,7 +43,7 @@ class Door:
             camera.draw_line(surface, color, pt[0], pt[1], self.border)
 
     def has_collision(self, player_id):
-        return self.player_id == player_id
+        return not self.player_id == player_id
 
     def get_properties(self):
         return ["ColorPicker", "Player_Id"]
