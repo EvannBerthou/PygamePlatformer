@@ -3,6 +3,16 @@ from Wall import Wall
 from Door import Door
 from SpawnPoint import SpawnPoint
 
+def save_to_file(rects, file_path = 'map'):
+    with open(file_path, 'w') as f:
+        f.write('name : FOO\n')
+        f.write('author : BAR\n')
+        f.write('map:\n')
+        for obj in rects:
+            string = obj.as_string()
+            f.write(string)
+        f.write('endmap\n')
+
 def obj_from_str(string):
     objs = {
         "Wall": Wall,
