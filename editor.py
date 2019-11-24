@@ -195,12 +195,18 @@ class Game:
 
                 if mouse_pressed[0] and self.selected_rect != -1 and self.property_panel == None:
                     r = self.rects[self.selected_rect]
-                    dx,dy = (pygame.mouse.get_rel())
-                    r.rect = (r.rect[0] + dx * (1 / self.camera.zoom) * self.camera.ratio[0],
-                              r.rect[1] + dy * (1 / self.camera.zoom) * self.camera.ratio[1],
-                              r.rect[2], r.rect[3])
-                    if isinstance(r, Door):
-                        r.lines = r.get_lines()
+
+                    if isinstance(r, SpawnPoint):
+                        mp = self.camera.screen_to_world(mouse_position)
+                        r.rect = pygame.Rect(mp[0], mp[1], r.lenght, r.lenght)
+                        r.points = r.get_points()
+                    else:
+                        dx,dy = (pygame.mouse.get_rel())
+                        r.rect = pygame.Rect(r.rect[0] + dx * (1 / self.camera.zoom) * self.camera.ratio[0],
+                                             r.rect[1] + dy * (1 / self.camera.zoom) * self.camera.ratio[1],
+                                             r.rect[2], r.rect[3])
+                        if isinstance(r, Door):
+                            r.lines = r.get_lines()
 
                 if mouse_pressed[2] and self.selected_rect != -1 and self.property_panel == None:
                     r = self.rects[self.selected_rect]
