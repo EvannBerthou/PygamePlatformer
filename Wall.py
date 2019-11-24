@@ -24,3 +24,7 @@ class Wall:
     def get_properties(self):
         return ["ColorPicker"]
 
+    def as_string(self):
+        color_int = (int(v) for v in self.color)
+        rect_int = [ int(self.rect.x), int(self.rect.y), int(self.rect.w), int(self.rect.h) ]
+        return 'Wall {},{},{},{}, {},{},{}\n'.format(*rect_int, *color_int)

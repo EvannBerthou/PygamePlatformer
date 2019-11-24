@@ -14,7 +14,7 @@ class Door:
                 # BOTTOM
                 ((self.rect[0],self.rect[1]+self.rect[3]), (self.rect[0]+self.rect[2],self.rect[1]+self.rect[3]))
         ]
-    def __init__(self, x,y,w,h, player_id):
+    def __init__(self, x,y,w,h, color, player_id = 0):
         self.rect = pygame.Rect(x,y,w,h)
         self.player_id = player_id
         self.color = (255,0,0) if self.player_id == 1 else (0,0,255)
@@ -51,3 +51,9 @@ class Door:
     def switch_player_id(self, btn, args):
         self.player_id = (self.player_id + 1) % 2
         btn.set_text(f"player : {self.player_id}")
+
+    def as_string(self):
+        color_int = (int(v) for v in self.color)
+        rect_int = [ int(self.rect.x), int(self.rect.y), int(self.rect.w), int(self.rect.h) ]
+        print(rect_int)
+        return 'Door {},{},{},{}, {},{},{}, {}\n'.format(*rect_int, *color_int, self.player_id)
