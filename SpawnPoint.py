@@ -23,7 +23,10 @@ class SpawnPoint:
 
 
     def draw(self, surface, camera = None):
-        pygame.draw.polygon(surface, self.color, self.points)
+        if camera:
+            camera.draw_polygon(surface, self.color, self.points)
+        else:
+            pygame.draw.polygon(surface, self.color, self.points)
 
     def outline(self, surface, camera):
         color = invert_color(self.color)
