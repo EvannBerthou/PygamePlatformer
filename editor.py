@@ -186,7 +186,8 @@ class Game:
                             self.property_panel = PropertyPanel(*mouse_position,
                                                                 self.rects[self.selected_rect].get_properties(),
                                                                 self.UIManager, self.rects[self.selected_rect])
-                            self.property_panel.set_color(self.rects[self.selected_rect].color)
+                            if "ColorPicker" in self.property_panel.properties_obj:
+                                self.property_panel.set_color(self.rects[self.selected_rect].color)
                     if event.key == K_F1:
                         self.change_object(self.wall_button, Wall)
                     if event.key == K_F2:
@@ -227,8 +228,9 @@ class Game:
             if self.selected_rect != -1:
                 self.rects[self.selected_rect].outline(self.blitting_surface, self.camera)
                 if self.property_panel:
-                    color = self.property_panel.get_color()
-                    self.rects[self.selected_rect].color = color
+                    if "ColorPicker" in self.property_panel.properties_obj:
+                        color = self.property_panel.get_color()
+                        self.rects[self.selected_rect].color = color
 
             for r in self.rects:
                 r.draw(self.blitting_surface, self.camera)

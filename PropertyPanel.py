@@ -5,7 +5,7 @@ from UI import Button
 class PropertyPanel:
     def __init__(self, x,y, properties, UIManager, selected_obj):
         self.x, self.y = x,y
-        self.w, self.h = 160,0 #TEMP
+        self.w, self.h = 160,5 #TEMP
         self.properties_obj = {}
 
         self.padding = 5
@@ -17,7 +17,8 @@ class PropertyPanel:
                 self.h += cp.h + self.padding
             if p == "Player_Id":
                 text = f"player : {selected_obj.player_id}"
-                b = Button(self.x+5,self.y+95, 150,35,text, (170,170,170), selected_obj.switch_player_id, [])
+                b = Button(self.x+5,self.y+self.h,
+                            150,35,text, (170,170,170), selected_obj.switch_player_id, [])
                 UIManager.add(b)
                 self.properties_obj[p] = b
                 self.h += b.rect.h + self.padding
