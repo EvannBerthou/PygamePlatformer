@@ -15,7 +15,7 @@ class Door:
                 ((self.rect[0],self.rect[1]+self.rect[3]), (self.rect[0]+self.rect[2],self.rect[1]+self.rect[3]))
         ]
     def __init__(self, x,y,w,h, color = (0,255,0)):
-        self.rect = (x,y,w,h)
+        self.rect = pygame.Rect(x,y,w,h)
         self.color = color
         self.collide = False
         self.border = 10
