@@ -142,6 +142,7 @@ class Game:
                         self.update_mode()
                     if event.key == K_r:
                         self.rects.clear()
+                        self.selected_rect = -1
                     if event.key == K_DELETE and self.selected_rect != -1:
                         if isinstance(self.rects[self.selected_rect], SpawnPoint):
                             self.spawn_points_count -= 1
