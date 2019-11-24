@@ -1,5 +1,6 @@
 name : FOO
 author : BAR
 map:
-Door, 713,136,660,648, 1
+Wall, -61,751,2159,338, 255,0,0
+Wall, 835,581,68,203, 255,0,0
 endmap

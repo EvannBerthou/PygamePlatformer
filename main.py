@@ -1,9 +1,12 @@
+import os
 import pygame
 from pygame.locals import *
 
 from player import Player
 from Wall import Wall
 from Door import Door
+
+from SaveManager import load_map
 
 DESING_W, DESING_H = 1920,1080
 
@@ -28,6 +31,8 @@ class Game:
                 self.sol]
 
         self.clock = pygame.time.Clock()
+
+        self.load_map()
 
     def run(self):
         while self.running:
@@ -55,6 +60,10 @@ class Game:
             blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
             self.win.blit(blit, blit.get_rect())
             pygame.display.update()
+
+    def load_map(self, file_path = 'map'):
+        self.colliders.clear()
+        self.colliders = load_map(file_path)
 
 game = Game()
 game.run()
