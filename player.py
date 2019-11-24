@@ -17,9 +17,10 @@ class Player:
         self.jump_key  = jump_key
 
         self.player_id = player_id
+        self.color = (255,0,0) if self.player_id == 1 else (0,0,255)
 
     def draw(self, game):
-        pygame.draw.rect(game.blitting_surface, (255,255,255), self.rect)
+        pygame.draw.rect(game.blitting_surface, self.color, self.rect)
 
     def move(self):
         self.rect.x += self.mvt[0]
