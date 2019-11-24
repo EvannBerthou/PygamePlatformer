@@ -57,7 +57,6 @@ class Camera:
         pygame.draw.line(surface, color, pos_1, pos_2, width)
 
     def draw_polygon(self, surface, color, points, width = 0):
-        camera.draw_rect(surface, (0,255,0), self.rect)
         pts = []
         for pt in points:
             pts.append(((self.x + pt[0]) * self.zoom, (self.y + pt[1]) * self.zoom))
@@ -206,7 +205,7 @@ class Game:
 
                     if isinstance(r, SpawnPoint):
                         mp = self.camera.screen_to_world(mouse_position)
-                        r.rect = pygame.Rect(mp[0], mp[1], r.lenght, r.lenght)
+                        r.rect = pygame.Rect(mp[0] - r.lenght / 2, mp[1] - r.lenght / 2, r.lenght, r.lenght)
                         r.points = r.get_points()
                     else:
                         dx,dy = (pygame.mouse.get_rel())
