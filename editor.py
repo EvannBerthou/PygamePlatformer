@@ -134,6 +134,8 @@ class Game:
         self.UIManager.add(self.door_button)
         self.UIManager.add(self.spawn_button)
 
+        self.spawn_points_count = 0
+
     def run(self):
         while self.running:
             tick = self.clock.tick(60)
@@ -162,8 +164,12 @@ class Game:
                         else:
                             #If the selected object is a spawn point, don't drag and create the spawnpoint
                             if self.selected_object == SpawnPoint:
-                                x,y = self.camera.screen_to_world(mouse_position)
-                                self.rects.append(SpawnPoint(x,y, 50, (255,255,255), 0))
+                                if self.spawn_points_count < 2:
+                                    x,y = self.camera.screen_to_world(mouse_position)
+                                    self.rects.append(SpawnPoint(x,y, 50, (255,255,255), 0))
+                                    self.spawn_points_count += 1
+                                else:
+                                    print('Already 2 spawn points on the map')
                             else:
                                 self.rect_started = True
                                 self.rect_start = self.camera.screen_to_world(mouse_position)
@@ -184,6 +190,8 @@ class Game:
                     if event.key == K_r:
                         self.rects.clear()
                     if event.key == K_DELETE and self.selected_rect != -1:
+                        if isinstance(self.rects[self.selected_rect], SpawnPoint):
+                            self.spawn_points_count -= 1
                         self.rects.pop(self.selected_rect)
                         self.selected_rect = -1
                     if event.key == K_c and self.mode == MODE.Editor and self.selected_rect != -1:
@@ -235,7 +243,8 @@ class Game:
             if self.UIManager.selected != -1:
                 self.UIManager.elements[self.UIManager.selected].update(mouse_position, mouse_pressed, events)
                 self.rect_started = 0
-                self.selected_rect = -1
+                if self.property_panel == None:
+                    self.selected_rect = -1
 
             #DRAW
             self.camera.draw_rect(self.blitting_surface, (250,250,250), (0,0, DESING_W, DESING_H), 2)
