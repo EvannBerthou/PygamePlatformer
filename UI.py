@@ -31,6 +31,7 @@ class UIManager:
 
         if self.selected != -1:
             self.elements[self.selected].update(mouse_position, (mouse_pressed, 0), events)
+        return self.selected
 
     def draw(self, surface):
         for el in self.elements:
