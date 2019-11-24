@@ -333,7 +333,7 @@ class Game:
             for v in args[:4]:
                 pos.append(int(v))
 
-            door = Door(*pos, int(args[4]))
+            door = Door(*pos, 0, int(args[4]))
             self.rects.append(door)
 
     def load_map(self, file_name = 'map'):
