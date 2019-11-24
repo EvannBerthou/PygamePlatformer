@@ -186,7 +186,7 @@ class Game:
                 if mouse_pressed[2] and self.selected_rect != -1 and self.property_panel == None:
                     r = self.rects[self.selected_rect]
                     corner = get_corner_point(r, self.camera.screen_to_world(mouse_position))
-                    if corner != None:
+                    if corner != None and not isinstance(r, SpawnPoint):
                         dx,dy = tuple(l*r for l,r in zip(pygame.mouse.get_rel(), self.camera.ratio))
 
                         r.rect = self.resize_rect(r.rect, corner, dx,dy)
