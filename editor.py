@@ -56,6 +56,13 @@ class Camera:
         pos_2 = ((self.x + pt2[0]) * self.zoom, (self.y + pt2[1]) * self.zoom)
         pygame.draw.line(surface, color, pos_1, pos_2, width)
 
+    def draw_polygon(self, surface, color, points, width = 0):
+        pts = []
+        for pt in points:
+            pts.append(((self.x + pt[0]) * self.zoom, (self.y + pt[1]) * self.zoom))
+        pygame.draw.polygon(surface, color, pts, width)
+
+
     def event_zoom(self, event):
         if event.type == MOUSEBUTTONDOWN:
             if event.button == 4:
