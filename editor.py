@@ -311,6 +311,7 @@ class Game:
         return -1
 
     def resize_rect(self, rect, corner, dx,dy):
+        AREA_LIMIT = 2000
         new_rect = None
         if corner == 0:
             new_rect = (rect[0] + dx * (1 / self.camera.zoom),
@@ -335,6 +336,9 @@ class Game:
                         rect[1],
                         rect[2] + dx * (1 / self.camera.zoom),
                         rect[3] + dy * (1 / self.camera.zoom))
+        area = new_rect[2] * new_rect[3]
+        if area < AREA_LIMIT:
+            return rect
         return new_rect
 
 game = Game()
