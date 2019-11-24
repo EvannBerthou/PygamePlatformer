@@ -7,6 +7,7 @@ from Wall import Wall
 from Door import Door
 from SpawnPoint import SpawnPoint
 from PropertyPanel import PropertyPanel
+from SaveManager import load_map, save_to_file
 
 from Camera import Camera
 
@@ -163,7 +164,7 @@ class Game:
                     if event.key == K_F2:
                         self.change_object(self.door_button, Door)
                     if event.key == K_s:
-                        self.save_to_file()
+                        save_to_file(self.rects)
                     if event.key == K_l:
                         self.load_map()
 
@@ -299,66 +300,9 @@ class Game:
             return rect
         return pygame.Rect(new_rect)
 
-    def save_to_file(self):
-        with open('map', 'w') as f:
-            f.write('name : FOO\n')
-            f.write('author : BAR\n')
-            f.write('map:\n')
-            for obj in self.rects:
-                string = obj.as_string()
-                f.write(string)
-            f.write('endmap\n')
-
-    def obj_from_str(self, string):
-        objs = {
-            "Wall": Wall,
-            "Door": Door,
-            "Spawn": SpawnPoint
-        }
-        return objs[string]
-
-    def create_obj(self, obj, args):
-        if obj == Wall:
-            pos = []
-            color = []
-            for v in args[:4]:
-                pos.append(int(v))
-            for v in args[4:]:
-                color.append(int(v))
-
-            wall = Wall(*pos, color)
-            self.rects.append(wall)
-
-        if obj == Door:
-            pos = []
-            for v in args[:4]:
-                pos.append(int(v))
-
-            door = Door(*pos, 0, int(args[4]))
-            self.rects.append(door)
-
     def load_map(self, file_name = 'map'):
-        print('Loading map')
-        if not os.path.exists(file_name):
-            print(f'No file named : {file_name}')
-            return
-
         self.rects.clear()
-        self.selected_rect = -1
-        in_map = False
-        with open('map', 'r') as f:
-            for l in f:
-                if l == "endmap\n":
-                    in_map = False
-
-                if in_map:
-                    parts = l.strip().split(',')
-                    obj = self.obj_from_str(parts[0])
-                    self.create_obj(obj, parts[1:])
-
-                if l == "map:\n":
-                    in_map = True
-        print('Map loaded')
+        self.rects = load_map()
 
 
 game = Game()
