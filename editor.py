@@ -153,7 +153,8 @@ class Game:
                     if self.mode == MODE.Camera:
                         self.camera.event_zoom(event)
                     if self.mode == MODE.Editor:
-                        self.UIManager.update(mouse_position, event.button == 1, events)
+                        if self.UIManager.update(mouse_position, event.button == 1, events) > 0:
+                            continue
                         if self.property_panel == None:
                             self.selected_rect = self.inside_rect(mouse_position)
                         if self.selected_rect > -1:
@@ -234,6 +235,7 @@ class Game:
             if self.UIManager.selected != -1:
                 self.UIManager.elements[self.UIManager.selected].update(mouse_position, mouse_pressed, events)
                 self.rect_started = 0
+                self.selected_rect = -1
 
             #DRAW
             self.camera.draw_rect(self.blitting_surface, (250,250,250), (0,0, DESING_W, DESING_H), 2)
