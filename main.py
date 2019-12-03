@@ -5,6 +5,7 @@ from pygame.locals import *
 from player import Player
 from Wall import Wall
 from Door import Door
+from SpawnPoint import SpawnPoint
 
 from SaveManager import load_map
 
@@ -19,7 +20,6 @@ class Game:
 
         self.player_1 = Player(K_q, K_d, K_SPACE, 0)
         self.player_2 = Player(K_LEFT, K_RIGHT, K_UP, 1)
-        self.player_2.rect.x += 105
 
         self.sol = Wall(0,DESING_H - 300,DESING_W,300)
 
@@ -64,6 +64,16 @@ class Game:
     def load_map(self, file_path = 'map'):
         self.colliders.clear()
         self.colliders = load_map(file_path)
+        for col in self.colliders.copy():
+            if isinstance(col, SpawnPoint):
+                player = col.player_id
+                if player == 0:
+                    self.player_1.set_position(col.get_position())
+                elif player == 1:
+                    self.player_2.set_position(col.get_position())
+                else:
+                    raise ValueError("Spawn point's Player_id is not valid")
+                self.colliders.remove(col)
 
 game = Game()
 game.run()

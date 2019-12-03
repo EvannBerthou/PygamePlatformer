@@ -38,6 +38,11 @@ def create_obj(obj, args):
             pos.append(int(v))
 
         return Door(*pos, 0, int(args[4]))
+    if obj == SpawnPoint:
+        pos = []
+        for v in args[:2]:
+            pos.append(int(v))
+        return SpawnPoint(*pos, 50, (255,255,255), int(args[2]))
 
 def load_map(file_name = 'map'):
     print('Loading map')
