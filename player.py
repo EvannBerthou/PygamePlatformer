@@ -98,3 +98,6 @@ class Player:
 
     def has_collision(self, player_id):
         return True
+
+    def set_position(self, position):
+        self.rect.center = position
