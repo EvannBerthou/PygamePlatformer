@@ -192,9 +192,19 @@ class Game:
                     if corner != None and not isinstance(r, SpawnPoint):
                         dx,dy = tuple(l*r for l,r in zip(pygame.mouse.get_rel(), self.camera.ratio))
 
-                        r.rect = self.resize_rect(r.rect, corner, dx,dy)
-                        if isinstance(r, Door):
-                            r.lines = r.get_lines()
+                        if isinstance(r, Plate):
+                            if corner == 0 or corner == 2:
+                                r.rect = (r.rect[0] + dx * (1 / self.camera.zoom),
+                                          r.rect[1],
+                                          r.rect[2] - dx * (1 / self.camera.zoom), r.rect[3])
+
+                            if corner == 1 or corner == 3:
+                                r.rect = (r.rect[0], r.rect[1],
+                                          r.rect[2] + dx * (1 / self.camera.zoom), r.rect[3])
+                        else:
+                            r.rect = self.resize_rect(r.rect, corner, dx,dy)
+                            if isinstance(r, Door):
+                                r.lines = r.get_lines()
 
             if self.camera.mouse_moving:
                 dx,dy = pygame.mouse.get_rel()

@@ -3,7 +3,7 @@ from Color import invert_color
 
 class Plate:
     def __init__(self, x,y,w,h, color = (255,0,0)):
-        self.rect = pygame.Rect(x,y,w,h)
+        self.rect = pygame.Rect(x,y,w,30)
         self.color = color
         self.collide = False
 
