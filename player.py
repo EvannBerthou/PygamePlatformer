@@ -45,14 +45,28 @@ class Player:
                     self.grounded = True
                     self.mvt[1] = 0
                 elif self.collision_top(rect) and rect.w > self.rect.w:
-                    dy -= (self.rect.top - rect.bottom) #Correction pour éviter que le joueur traverse le sol
+                    dy -= (self.rect.top - rect.bottom) #Correction pour éviter que le joueur traverse le plafond
                     self.grounded = False
                     self.mvt[1] = 0
+                    if isinstance(col, Player):
+                        other_player_col = col
                 elif self.collision_right(rect):
                     self.mvt[0] = 0
+                    #check if only the topright corner is colliding in order to avoid teleporting
+                    #the player when there is no need to
+                    tr = rect.collidepoint(self.rect.topright)
+                    mr = rect.collidepoint(self.rect.midright)
+                    if tr and not mr:
+                        continue
                     dx -= (self.rect.right - rect.left)
                 elif self.collision_left(rect) and not self.collision_top(rect):
                     self.mvt[0] = 0
+                    #check if only the topleft corner is colliding in order to avoid teleporting
+                    #the player when there is no need to
+                    tl = rect.collidepoint(self.rect.topleft)
+                    ml = rect.collidepoint(self.rect.midleft)
+                    if tl and not ml:
+                        continue
                     dx -= (self.rect.left - rect.right)
         else:
             self.grounded = False
