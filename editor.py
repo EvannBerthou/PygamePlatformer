@@ -166,6 +166,7 @@ class Game:
                     if event.key == K_s:
                         print(save_to_file(self.rects))
                     if event.key == K_l:
+                        self.selected_rect = -1
                         self.load_map()
 
                 if mouse_pressed[0] and self.selected_rect != -1 and self.property_panel == None:
