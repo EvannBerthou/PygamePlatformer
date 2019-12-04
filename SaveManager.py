@@ -4,6 +4,18 @@ from Door import Door
 from SpawnPoint import SpawnPoint
 
 def save_to_file(rects, file_path = 'map'):
+
+    spawn_points = []
+    for obj in rects:
+        if type(obj) == SpawnPoint:
+            if spawn_points: #if there is already a spawn point in the list
+                if spawn_points[0].player_id == obj.player_id: #if the spawn point in the list has the same player_id
+                    return "Both spawn points have the same player_id"
+            spawn_points.append(obj)
+    if len(spawn_points) < 2:
+        return "Missing {} spawn point(s)".format(2 - len(spawn_points))
+
+
     with open(file_path, 'w') as f:
         f.write('name : FOO\n')
         f.write('author : BAR\n')
@@ -12,6 +24,7 @@ def save_to_file(rects, file_path = 'map'):
             string = obj.as_string()
             f.write(string)
         f.write('endmap\n')
+    return "map saved"
 
 def obj_from_str(string):
     objs = {

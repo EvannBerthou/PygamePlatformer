@@ -164,7 +164,7 @@ class Game:
                     if event.key == K_F2:
                         self.change_object(self.door_button, Door)
                     if event.key == K_s:
-                        save_to_file(self.rects)
+                        print(save_to_file(self.rects))
                     if event.key == K_l:
                         self.load_map()
 
