@@ -1,11 +1,11 @@
 import os
 import pygame
 from pygame.locals import *
-
 import UI
 from Wall import Wall
 from Door import Door
 from SpawnPoint import SpawnPoint
+from Plate import Plate
 from PropertyPanel import PropertyPanel
 from SaveManager import load_map, save_to_file
 
@@ -81,12 +81,14 @@ class Game:
         self.wall_button = UI.Button(2,100,100,30, "Wall", (255,0,0), self.change_object, Wall)
         self.door_button = UI.Button(2,140,100,30, "Door", (150,150,150), self.change_object, Door)
         self.spawn_button= UI.Button(2,180,100,30, "Spawn", (150,150,150), self.change_object, SpawnPoint)
+        self.plate_button= UI.Button(2,220,100,30, "Plate", (150,150,150), self.change_object, Plate)
 
         self.selected_button = self.wall_button
 
         self.UIManager.add(self.wall_button)
         self.UIManager.add(self.door_button)
         self.UIManager.add(self.spawn_button)
+        self.UIManager.add(self.plate_button)
 
         self.spawn_points_count = 0
 
