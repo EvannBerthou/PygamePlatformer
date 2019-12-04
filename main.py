@@ -18,6 +18,9 @@ class Game:
         self.blitting_surface = pygame.Surface((DESING_W,DESING_H))
         self.running = True
 
+        background_img = pygame.image.load('Resources/background.png')
+        self.background = pygame.transform.scale(background_img, (DESING_W, DESING_H))
+
         self.player_1 = Player(K_q, K_d, K_SPACE, 0)
         self.player_2 = Player(K_LEFT, K_RIGHT, K_UP, 1)
 
@@ -42,6 +45,7 @@ class Game:
 
             self.win.fill((0,0,0,))
             self.blitting_surface.fill((0,0,0))
+            self.blitting_surface.blit(self.background, (0,0))
 
             for event in pygame.event.get():
                 if event.type == QUIT:
