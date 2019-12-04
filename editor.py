@@ -130,6 +130,18 @@ class Game:
                                 self.rect_started = True
                                 self.rect_start = self.camera.screen_to_world(mouse_position)
 
+                        if self.property_panel != None:
+                            if self.property_panel.linking:
+                                world_pos = self.camera.screen_to_world(mouse_position)
+                                hover_objs = pygame.Rect(*world_pos, 1,1).collidelistall(self.rects)
+                                if hover_objs:
+                                    obj = hover_objs[0]
+                                    self.rects[self.selected_rect].linked_to_id = obj
+                                    print("linked to", obj)
+                                else:
+                                    print("no link")
+                                self.property_panel.linking = False
+
                 if event.type == MOUSEBUTTONUP:
                     if self.mode == MODE.Camera:
                         self.camera.event_zoom(event)
@@ -218,23 +230,36 @@ class Game:
                 if self.property_panel == None:
                     self.selected_rect = -1
 
+
             #DRAW
             self.camera.draw_rect(self.blitting_surface, (250,250,250), (0,0, DESING_W, DESING_H), 2)
 
+
             if self.selected_rect != -1:
-                self.rects[self.selected_rect].outline(self.blitting_surface, self.camera)
+                rect = self.rects[self.selected_rect]
+                rect.outline(self.blitting_surface, self.camera)
                 if self.property_panel:
                     if "ColorPicker" in self.property_panel.properties_obj:
                         color = self.property_panel.get_color()
-                        self.rects[self.selected_rect].color = color
+                        rect.color = color
 
             for r in self.rects:
                 r.draw(self.blitting_surface, self.camera)
 
+            if self.selected_rect != -1 and isinstance(rect, Plate) and rect.linked_to_id != -1:
+                self.camera.draw_line(self.blitting_surface, (0,0,255),
+                                        (rect.rect.center[:2]),
+                                        (self.rects[rect.linked_to_id].rect.center[:2]), 10)
             if self.rect_started:
                 mp = self.camera.screen_to_world(mouse_position)
                 size = ((mp[0] - self.rect_start[0]), (mp[1] - self.rect_start[1]))
                 DragRect(*self.rect_start, *size, (0,255,0)).draw(self.camera, self.blitting_surface)
+
+            if self.property_panel:
+                if self.property_panel.linking:
+                    self.camera.draw_line(self.blitting_surface, (0,255,0),
+                                            (self.rects[self.selected_rect].rect.center[:2]),
+                                            self.camera.screen_to_world(mouse_position), 10)
 
             blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
             self.win.blit(blit, blit.get_rect())

@@ -6,6 +6,7 @@ class Plate:
         self.rect = pygame.Rect(x,y,w,30)
         self.color = color
         self.collide = False
+        self.linked_to_id = -1
 
     def draw(self, surface, camera = None):
         if camera:
@@ -22,9 +23,10 @@ class Plate:
         return self.collide
 
     def get_properties(self):
-        return []
+        return ["Linker"]
 
     def as_string(self):
         color_int = (int(v) for v in self.color)
         rect_int = [ int(self.rect.x), int(self.rect.y), int(self.rect.w), int(self.rect.h) ]
-        return 'Plate, {},{},{},{}, {},{},{}\n'.format(*rect_int, *color_int)
+        print(self.linked_to_id)
+        return 'Plate, {},{},{},{}, {},{},{}, {}\n'.format(*rect_int, *color_int, self.linked_to_id)

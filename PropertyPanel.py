@@ -10,6 +10,8 @@ class PropertyPanel:
 
         self.padding = 5
 
+        self.linking = False
+
         for p in properties:
             if p == "ColorPicker":
                 cp = ColorPicker(self.x,self.y, UIManager)
@@ -19,6 +21,12 @@ class PropertyPanel:
                 text = f"player : {selected_obj.player_id}"
                 b = Button(self.x+5,self.y+self.h,
                             150,35,text, (170,170,170), selected_obj.switch_player_id, [])
+                UIManager.add(b)
+                self.properties_obj[p] = b
+                self.h += b.rect.h + self.padding
+            if p == "Linker":
+                b = Button(self.x + 5, self.y + self.h,
+                            150,35,"Link", (170,170,170), self.toggle_linker, [])
                 UIManager.add(b)
                 self.properties_obj[p] = b
                 self.h += b.rect.h + self.padding
@@ -40,3 +48,5 @@ class PropertyPanel:
         if "ColorPicker" in self.properties_obj:
             return self.properties_obj["ColorPicker"].get_color()
 
+    def toggle_linker(self, btn, player_id):
+        self.linking = not self.linking
