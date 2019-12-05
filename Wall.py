@@ -24,6 +24,12 @@ class Wall:
     def get_properties(self):
         return ["ColorPicker"]
 
+    def on_collision(self, collider):
+        return
+
+    def on_collision_exit(self, collider):
+        return
+
     def as_string(self):
         color_int = (int(v) for v in self.color)
         rect_int = [ int(self.rect.x), int(self.rect.y), int(self.rect.w), int(self.rect.h) ]
