@@ -2,6 +2,7 @@ import os
 from Wall import Wall
 from Door import Door
 from SpawnPoint import SpawnPoint
+from Plate import Plate
 
 def save_to_file(rects, file_path = 'map'):
 
@@ -30,7 +31,8 @@ def obj_from_str(string):
     objs = {
         "Wall": Wall,
         "Door": Door,
-        "Spawn": SpawnPoint
+        "Spawn": SpawnPoint,
+        "Plate": Plate
     }
     return objs[string]
 
@@ -56,6 +58,12 @@ def create_obj(obj, args):
         for v in args[:2]:
             pos.append(int(v))
         return SpawnPoint(*pos, 50, (255,255,255), int(args[2]))
+
+    if obj == Plate:
+        pos = []
+        for v in args[:4]:
+            pos.append(int(v))
+        return Plate(*pos, (255,255,255), int(args[4]))
 
 def load_map(file_name = 'map'):
     print('Loading map')

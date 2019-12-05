@@ -6,6 +6,7 @@ from player import Player
 from Wall import Wall
 from Door import Door
 from SpawnPoint import SpawnPoint
+from Plate import Plate
 
 from SaveManager import load_map
 
@@ -68,7 +69,13 @@ class Game:
     def load_map(self, file_path = 'map'):
         self.colliders.clear()
         self.colliders = load_map(file_path)
+        temp_col = self.colliders.copy()
         for col in self.colliders.copy():
+            if isinstance(col, Plate):
+                print("plate id",col.linked_to_id)
+                if col.linked_to_id != -1:
+                    linked_to = self.colliders[col.linked_to_id]
+                    col.linked_to = linked_to
             if isinstance(col, SpawnPoint):
                 player = col.player_id
                 if player == 0:
@@ -77,7 +84,8 @@ class Game:
                     self.player_2.set_position(col.get_position())
                 else:
                     raise ValueError("Spawn point's Player_id is not valid")
-                self.colliders.remove(col)
+                temp_col.remove(col)
+        self.colliders = temp_col
 
 game = Game()
 game.run()

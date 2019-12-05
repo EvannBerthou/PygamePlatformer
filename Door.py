@@ -50,9 +50,18 @@ class Door:
         return ["Player_Id"]
 
     def switch_player_id(self, btn, args):
-        self.player_id = (self.player_id + 1) % 2
+        self.switch_status()
         btn.set_text(f"player : {self.player_id}")
+
+    def switch_status(self):
+        self.player_id = (self.player_id + 1) % 2
         self.color = (255,0,0) if self.player_id == 1 else (0,0,255)
+
+    def on_collision(self, collider):
+        return
+
+    def on_collision_exit(self, collider):
+        return
 
     def as_string(self):
         rect_int = [ int(self.rect.x), int(self.rect.y), int(self.rect.w), int(self.rect.h) ]

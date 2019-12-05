@@ -19,6 +19,8 @@ class Player:
         self.player_id = player_id
         self.color = (255,0,0) if self.player_id == 1 else (0,0,255)
 
+        self.prev_colliders = []
+
     def draw(self, game):
         pygame.draw.rect(game.blitting_surface, self.color, self.rect)
 
@@ -32,12 +34,22 @@ class Player:
         collisions = self.rect.collidelistall(colliders)
         dx = 0
         dy = 0
+
+        for col in self.prev_colliders.copy():
+            if not col in collisions: #si le joueur n'a plus de collision avec un objet qu'il touchait avant
+                colliders[col].on_collision_exit(self)
+                self.prev_colliders.remove(col)
+
         if collisions:
             for i in collisions:
                 col = colliders[i]
+                if not i in self.prev_colliders:
+                    self.prev_colliders.append(i)
+                col.on_collision(self)
                 #If the collider is traversable don't check collisions
                 if not col.has_collision(self.player_id):
                     continue
+
                 rect = col.rect
                 #Collision en dessous du joueur
                 if self.collision_bottom(rect):
@@ -81,6 +93,7 @@ class Player:
             self.mvt[1] -= self.jump_force * dt
             self.grounded = False
 
+
     def collision_bottom(self, col):
         bl = col.collidepoint(self.rect.bottomleft)
         bm = col.collidepoint(self.rect.midbottom)
@@ -112,6 +125,12 @@ class Player:
 
     def has_collision(self, player_id):
         return True
+
+    def on_collision(self, collider):
+        return
+
+    def on_collision_exit(self, collider):
+        return
 
     def set_position(self, position):
         self.rect.center = position
