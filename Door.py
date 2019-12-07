@@ -1,34 +1,35 @@
 import pygame
+from pygame.locals import SRCALPHA
 from Color import invert_color
 
-class Door:
+class Door(pygame.sprite.Sprite):
     def get_lines(self):
         return [
-                # TOP
-                ((self.rect[0],self.rect[1]), (self.rect[0]+self.rect[2],self.rect[1])),
-                # LEFT
-                ((self.rect[0],self.rect[1]-(self.border/2-1)), (self.rect[0],self.rect[1]+self.rect[3])),
-                # RIGHT
-                ((self.rect[0]+self.rect[2],self.rect[1]-(self.border/2-1)),
-                    (self.rect[0]+self.rect[2],self.rect[1]+self.rect[3])),
-                # BOTTOM
-                ((self.rect[0],self.rect[1]+self.rect[3]), (self.rect[0]+self.rect[2],self.rect[1]+self.rect[3]))
+                ((0, 0), (self.rect.w, 0)),
+                ((0, 0), (0, self.rect.h)),
+                ((0, self.rect.h), (self.rect.w, self.rect.h)),
+                ((self.rect.w, 0), (self.rect.w, self.rect.h))
         ]
+
     def __init__(self, x,y,w,h, color, player_id = 0):
-        print("id",player_id)
+        super().__init__()
         self.rect = pygame.Rect(x,y,w,h)
         self.player_id = player_id
         self.color = (255,0,0) if self.player_id == 1 else (0,0,255)
         self.collide = False
         self.border = 10
         self.lines = self.get_lines()
+        self.image = pygame.Surface((w,h), SRCALPHA)
+        for l in self.lines:
+            pygame.draw.line(self.image, self.color, l[0], l[1], self.border)
+
+    def update(self):
+        return
 
     def draw(self, surface, camera = None):
         for l in self.lines:
             if camera:
                 camera.draw_line(surface, self.color, l[0], l[1], self.border)
-            else:
-                pygame.draw.line(surface, self.color, l[0], l[1], self.border)
 
     def outline(self, surface, camera):
         color = invert_color(self.color)
@@ -55,7 +56,9 @@ class Door:
 
     def switch_status(self):
         self.player_id = (self.player_id + 1) % 2
-        self.color = (255,0,0) if self.player_id == 1 else (0,0,255)
+        color = (255,0,0) if self.player_id == 1 else (0,0,255)
+        for l in self.lines:
+            pygame.draw.line(self.image, color, l[0], l[1], self.border)
 
     def on_collision(self, collider):
         return

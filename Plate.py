@@ -1,20 +1,24 @@
 import pygame
 from Color import invert_color
 
-class Plate:
+class Plate(pygame.sprite.Sprite):
     def __init__(self, x,y,w,h, color = (255,0,0), linked_to_id = -1):
+        super().__init__()
         self.rect = pygame.Rect(x,y,w,30)
         self.color = color
         self.collide = False
         self.linked_to_id = linked_to_id
         self.linked_to = None
         self.players_on = []
+        self.image = pygame.Surface((w,h))
+        self.image.fill(self.color)
+
+    def update(self):
+        return
 
     def draw(self, surface, camera = None):
         if camera:
             camera.draw_rect(surface, self.color, self.rect)
-        else:
-            pygame.draw.rect(surface, self.color, self.rect)
 
     def outline(self, surface, camera):
         border = (self.rect[0] - 5,self.rect[1] - 5,self.rect[2] + 10,self.rect[3] + 10)

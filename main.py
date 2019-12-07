@@ -12,27 +12,33 @@ from SaveManager import load_map
 
 DESING_W, DESING_H = 1920,1080
 
+class Background(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        background_img = pygame.image.load('Resources/background.png').convert()
+        self.image = pygame.transform.scale(background_img,(DESING_W,DESING_H))
+        self.rect = self.image.get_rect()
+
+    def on_collision(self, collider):
+        return
+
+    def has_collision(self, player_id):
+        return False
+
 class Game:
     def __init__(self):
         self.w, self.h =  1152,648
         self.win = pygame.display.set_mode((self.w,self.h))
-        self.blitting_surface = pygame.Surface((DESING_W,DESING_H))
+        self.blitting_surface = pygame.Surface((DESING_W,DESING_H), HWSURFACE)
         self.running = True
-
-        background_img = pygame.image.load('Resources/background.png')
-        self.background = pygame.transform.scale(background_img, (DESING_W, DESING_H))
 
         self.player_1 = Player(K_q, K_d, K_SPACE, 0)
         self.player_2 = Player(K_LEFT, K_RIGHT, K_UP, 1)
 
         self.sol = Wall(0,DESING_H - 300,DESING_W,300)
 
-        self.colliders = [
-                Wall(-10,0,10,DESING_H), #MUR GAUCHE
-                Wall(DESING_W,0,20,DESING_H), #MUR DROIT
-                Door(100, DESING_H - 372,70,70, 0),
-                Door(600, DESING_H - 372,70,70, 1),
-                self.sol]
+        self.all_colliders = pygame.sprite.Group(
+                Background(), self.player_1, self.player_2)
 
         self.clock = pygame.time.Clock()
 
@@ -40,41 +46,36 @@ class Game:
 
     def run(self):
         while self.running:
-            tick = self.clock.tick(60)
+            tick = self.clock.tick()
+            print(self.clock.get_fps())
 
             keyboard_input = pygame.key.get_pressed()
 
-            self.win.fill((0,0,0,))
             self.blitting_surface.fill((0,0,0))
-            self.blitting_surface.blit(self.background, (0,0))
 
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self.running = False
 
+            self.all_colliders.update()
+
             #UPDATE
-            self.player_1.update(self.colliders + [self.player_2], keyboard_input, tick)
-            self.player_2.update(self.colliders + [self.player_1], keyboard_input, tick)
+            self.player_1.c_update(self.all_colliders.sprites(), keyboard_input, tick)
+            self.player_2.c_update(self.all_colliders.sprites(), keyboard_input, tick)
 
             #DRAW
-            self.player_1.draw(self)
-            self.player_2.draw(self)
-            for col in self.colliders:
-                col.draw(self.blitting_surface)
-
+            self.all_colliders.draw(self.blitting_surface)
             blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
             self.win.blit(blit, blit.get_rect())
             pygame.display.update()
 
     def load_map(self, file_path = 'map'):
-        self.colliders.clear()
-        self.colliders = load_map(file_path)
-        temp_col = self.colliders.copy()
-        for col in self.colliders.copy():
+        colliders = load_map(file_path)
+        for col in colliders:
             if isinstance(col, Plate):
                 print("plate id",col.linked_to_id)
                 if col.linked_to_id != -1:
-                    linked_to = self.colliders[col.linked_to_id]
+                    linked_to = colliders[col.linked_to_id]
                     col.linked_to = linked_to
             if isinstance(col, SpawnPoint):
                 player = col.player_id
@@ -84,8 +85,8 @@ class Game:
                     self.player_2.set_position(col.get_position())
                 else:
                     raise ValueError("Spawn point's Player_id is not valid")
-                temp_col.remove(col)
-        self.colliders = temp_col
+            else:
+                self.all_colliders.add(col)
 
 game = Game()
 game.run()

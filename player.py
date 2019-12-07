@@ -3,8 +3,9 @@ from pygame.locals import *
 
 PLAYER_SIZE = 64
 
-class Player:
+class Player(pygame.sprite.Sprite):
     def __init__(self, left_key, right_key, jump_key, player_id):
+        super().__init__()
         self.rect = pygame.Rect(400,375, PLAYER_SIZE, PLAYER_SIZE)
         self.grounded = True
         self.mvt = [0,0]
@@ -17,18 +18,20 @@ class Player:
         self.jump_key  = jump_key
 
         self.player_id = player_id
-        self.color = (255,0,0) if self.player_id == 1 else (0,0,255)
+        self.image = pygame.Surface((PLAYER_SIZE,PLAYER_SIZE))
+        color = (255,0,0) if self.player_id == 1 else (0,0,255)
+        self.image.fill(color)
 
         self.prev_colliders = []
-
-    def draw(self, game):
-        pygame.draw.rect(game.blitting_surface, self.color, self.rect)
 
     def move(self):
         self.rect.x += self.mvt[0]
         self.rect.y += self.mvt[1]
 
-    def update(self, colliders, keys, dt):
+    def update(self):
+        return
+
+    def c_update(self, colliders, keys, dt):
         self.move()
         self.mvt[0] = (keys[self.right_key] - keys[self.left_key]) * dt * self.speed
         collisions = self.rect.collidelistall(colliders)
@@ -40,9 +43,11 @@ class Player:
                 colliders[col].on_collision_exit(self)
                 self.prev_colliders.remove(col)
 
-        if collisions:
+        if len(collisions) > 2:
             for i in collisions:
                 col = colliders[i]
+                if col == self: #don't collide with itself
+                    continue
                 if not i in self.prev_colliders:
                     self.prev_colliders.append(i)
                 col.on_collision(self)
