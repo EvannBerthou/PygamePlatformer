@@ -46,7 +46,7 @@ class Game:
 
     def run(self):
         while self.running:
-            tick = self.clock.tick(60)
+            tick = self.clock.tick()
 
             keyboard_input = pygame.key.get_pressed()
 
