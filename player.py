@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite):
         self.mvt = [0,0]
         self.speed = 0.5
         self.gravity = 0.0035
-        self.jump_force = 1.25
+        self.jump_force = 1.2
 
         self.left_key  = left_key
         self.right_key = right_key
@@ -43,6 +43,7 @@ class Player(pygame.sprite.Sprite):
                 colliders[col].on_collision_exit(self)
                 self.prev_colliders.remove(col)
 
+
         if len(collisions) > 2:
             for i in collisions:
                 col = colliders[i]
@@ -65,8 +66,6 @@ class Player(pygame.sprite.Sprite):
                     dy -= (self.rect.top - rect.bottom) #Correction pour éviter que le joueur traverse le plafond
                     self.grounded = False
                     self.mvt[1] = 0
-                    if isinstance(col, Player):
-                        other_player_col = col
                 elif self.collision_right(rect):
                     self.mvt[0] = 0
                     #check if only the topright corner is colliding in order to avoid teleporting
@@ -105,6 +104,9 @@ class Player(pygame.sprite.Sprite):
         br = col.collidepoint(self.rect.bottomright)
         ml = col.collidepoint(self.rect.midleft)
         mr = col.collidepoint(self.rect.midright)
+        #if the player is atleast half inside the ground, detect as a collision
+        if bl and bm and br and ml and mr:
+            return True
         return (bl or br or bm) and not ml and not mr
 
     def collision_top(self, col):
@@ -120,13 +122,17 @@ class Player(pygame.sprite.Sprite):
         t = col.collidepoint(self.rect.topleft)
         m = col.collidepoint(self.rect.midleft)
         b = col.collidepoint(self.rect.bottomleft)
-        return t or m or b
+        bm = col.collidepoint(self.rect.midbottom)
+        br = col.collidepoint(self.rect.bottomright)
+        return (t or m or b) and not bm and not br
 
     def collision_right(self, col):
         t = col.collidepoint(self.rect.topright)
         m = col.collidepoint(self.rect.midright)
         b = col.collidepoint(self.rect.bottomright)
-        return t or m or b
+        bm = col.collidepoint(self.rect.midbottom)
+        bl = col.collidepoint(self.rect.bottomleft)
+        return (t or m or b) and not bm and not bl
 
     def has_collision(self, player_id):
         return True
