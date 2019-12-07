@@ -10,8 +10,8 @@ class Player(pygame.sprite.Sprite):
         self.grounded = True
         self.mvt = [0,0]
         self.speed = 0.5
-        self.gravity = 0.5
-        self.jump_force = 1
+        self.gravity = 0.0035
+        self.jump_force = 1.25
 
         self.left_key  = left_key
         self.right_key = right_key
@@ -24,16 +24,16 @@ class Player(pygame.sprite.Sprite):
 
         self.prev_colliders = []
 
-    def move(self):
-        self.rect.x += self.mvt[0]
-        self.rect.y += self.mvt[1]
+    def move(self, dt):
+        self.rect.x += self.mvt[0] * dt
+        self.rect.y += self.mvt[1] * dt
 
     def update(self):
         return
 
     def c_update(self, colliders, keys, dt):
-        self.move()
-        self.mvt[0] = (keys[self.right_key] - keys[self.left_key]) * dt * self.speed
+        self.move(dt)
+        self.mvt[0] = (keys[self.right_key] - keys[self.left_key]) * self.speed
         collisions = self.rect.collidelistall(colliders)
         dx = 0
         dy = 0
@@ -92,10 +92,10 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += dy
 
         if not self.grounded:
-            self.mvt[1] += float(dt / 10) * self.gravity
+            self.mvt[1] += self.gravity * dt
 
         if keys[self.jump_key] and self.grounded:
-            self.mvt[1] -= self.jump_force * dt
+            self.mvt[1] -= self.jump_force
             self.grounded = False
 
 
