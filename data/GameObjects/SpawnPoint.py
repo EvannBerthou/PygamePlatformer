@@ -1,6 +1,6 @@
 import math
 import pygame
-from Color import invert_color
+from ..editor import *
 
 class SpawnPoint:
     def get_points(self, lenght = None):

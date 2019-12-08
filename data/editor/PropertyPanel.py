@@ -1,5 +1,5 @@
 import pygame
-from ColorPicker import ColorPicker
+from . import ColorPicker
 from UI import Button
 
 class PropertyPanel:

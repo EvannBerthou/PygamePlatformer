@@ -1,12 +1,15 @@
 import pygame
-from Color import invert_color
+from ..editor import *
 
-class Wall(pygame.sprite.Sprite):
-    def __init__(self, x,y,w,h, color = (255,0,0)):
+class Plate(pygame.sprite.Sprite):
+    def __init__(self, x,y,w,h, color = (255,0,0), linked_to_id = -1):
         super().__init__()
-        self.rect = pygame.Rect(x,y,w,h)
+        self.rect = pygame.Rect(x,y,w,30)
         self.color = color
-        self.collide = True
+        self.collide = False
+        self.linked_to_id = linked_to_id
+        self.linked_to = None
+        self.players_on = []
         self.image = pygame.Surface((w,h))
         self.image.fill(self.color)
 
@@ -26,15 +29,20 @@ class Wall(pygame.sprite.Sprite):
         return self.collide
 
     def get_properties(self):
-        return ["ColorPicker"]
+        return ["Linker"]
 
     def on_collision(self, collider):
-        return
+        if not self.players_on: #s'il n'y a aucun joueur sur la plaque
+            self.linked_to.switch_status()
+        if not collider in self.players_on:
+            self.players_on.append(collider)
 
     def on_collision_exit(self, collider):
-        return
+        print('exit')
+        self.players_on.remove(collider)
+        if not self.players_on:
+            self.linked_to.switch_status()
 
     def as_string(self):
-        color_int = (int(v) for v in self.color)
         rect_int = [ int(self.rect.x), int(self.rect.y), int(self.rect.w), int(self.rect.h) ]
-        return 'Wall, {},{},{},{}, {},{},{}\n'.format(*rect_int, *color_int)
+        return 'Plate, {},{},{},{}, {}\n'.format(*rect_int, self.linked_to_id)
