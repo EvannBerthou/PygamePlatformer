@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import SRCALPHA
-from Color import invert_color
+from ..editor import *
 
 class Door(pygame.sprite.Sprite):
     def get_lines(self):

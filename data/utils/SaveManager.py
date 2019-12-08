@@ -1,8 +1,5 @@
 import os
-from Wall import Wall
-from Door import Door
-from SpawnPoint import SpawnPoint
-from Plate import Plate
+from ..GameObjects import *
 
 def save_to_file(rects, file_path = 'map'):
 

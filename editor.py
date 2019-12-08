@@ -2,14 +2,9 @@ import os
 import pygame
 from pygame.locals import *
 import UI
-from Wall import Wall
-from Door import Door
-from SpawnPoint import SpawnPoint
-from Plate import Plate
-from PropertyPanel import PropertyPanel
-from SaveManager import load_map, save_to_file
 
-from Camera import Camera
+from data.utils import *
+from data.editor import *
 
 
 DESING_W, DESING_H = 1920,1080
