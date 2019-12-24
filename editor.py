@@ -26,10 +26,11 @@ def get_corner_point(rect, point):
         if sr.collidepoint(point):
             return i
 
-class DragRect:
+class DragRect(pygame.sprite.Sprite):
     def __init__(self, x,y,w,h, color):
         self.rect = pygame.Rect(x,y,w,h)
         self.color = color
+        self.image = pygame.Surface((w,h))
 
     def draw(self,camera,surface):
         camera.draw_rect(surface, self.color, self.rect)
@@ -65,9 +66,6 @@ class Game:
         self.rect_start = None
         self.rect_started = False
 
-        self.rects = []
-        self.selected_rect = -1
-
         self.UIManager = UI.UIManager()
         self.property_panel = None
 
@@ -87,9 +85,12 @@ class Game:
 
         self.spawn_points_count = 0
 
+        self.rects = pygame.sprite.Group()
+        self.selected_rect = -1
+
     def run(self):
         while self.running:
-            tick = self.clock.tick(60)
+            tick = self.clock.tick()
 
             mouse_position = pygame.mouse.get_pos()
             mouse_pressed  = pygame.mouse.get_pressed()
@@ -117,7 +118,7 @@ class Game:
                             if self.selected_object == SpawnPoint:
                                 if self.spawn_points_count < 2:
                                     x,y = self.camera.screen_to_world(mouse_position)
-                                    self.rects.append(SpawnPoint(x,y, 50, (255,255,255), 0))
+                                    self.rects.add(SpawnPoint(x,y, 50, (255,255,255), 0))
                                     self.spawn_points_count += 1
                                 else:
                                     print('Already 2 spawn points on the map')
@@ -128,10 +129,10 @@ class Game:
                         if self.property_panel != None:
                             if self.property_panel.linking:
                                 world_pos = self.camera.screen_to_world(mouse_position)
-                                hover_objs = pygame.Rect(*world_pos, 1,1).collidelistall(self.rects)
+                                hover_objs = pygame.Rect(*world_pos, 1,1).collidelistall(self.rects.sprites())
                                 if hover_objs:
                                     obj = hover_objs[0]
-                                    self.rects[self.selected_rect].linked_to_id = obj
+                                    self.rects.sprites()[self.selected_rect].linked_to_id = obj
                                     print("linked to", obj)
                                 else:
                                     print("no link")
@@ -154,7 +155,7 @@ class Game:
                         self.rects.clear()
                         self.selected_rect = -1
                     if event.key == K_DELETE and self.selected_rect != -1:
-                        if isinstance(self.rects[self.selected_rect], SpawnPoint):
+                        if isinstance(self.rects.sprites()[self.selected_rect], SpawnPoint):
                             self.spawn_points_count -= 1
                         self.rects.pop(self.selected_rect)
                         self.selected_rect = -1
@@ -164,10 +165,10 @@ class Game:
                             self.property_panel = None
                         else:
                             self.property_panel = PropertyPanel(*mouse_position,
-                                                                self.rects[self.selected_rect].get_properties(),
-                                                                self.UIManager, self.rects[self.selected_rect])
+                                                                self.rects.sprites()[self.selected_rect].get_properties(),
+                                                                self.UIManager, self.rects.sprites()[self.selected_rect])
                             if "ColorPicker" in self.property_panel.properties_obj:
-                                self.property_panel.set_color(self.rects[self.selected_rect].color)
+                                self.property_panel.set_color(self.rects.sprites()[self.selected_rect].color)
                     if event.key == K_F1:
                         self.change_object(self.wall_button, Wall)
                     if event.key == K_F2:
@@ -179,22 +180,20 @@ class Game:
                         self.load_map()
 
                 if mouse_pressed[0] and self.selected_rect != -1 and self.property_panel == None:
-                    r = self.rects[self.selected_rect]
+                    r = self.rects.sprites()[self.selected_rect]
 
                     if isinstance(r, SpawnPoint):
                         mp = self.camera.screen_to_world(mouse_position)
-                        r.rect = pygame.Rect(mp[0] - r.lenght / 2, mp[1] - r.lenght / 2, r.lenght, r.lenght)
+                        r.move(mp)
                         r.points = r.get_points()
                     else:
                         dx,dy = (pygame.mouse.get_rel())
-                        r.rect = pygame.Rect(r.rect[0] + dx * (1 / self.camera.zoom) * self.camera.ratio[0],
-                                             r.rect[1] + dy * (1 / self.camera.zoom) * self.camera.ratio[1],
-                                             r.rect[2], r.rect[3])
+                        r.move(dx,dy, self.camera.zoom, self.camera.ratio)
                         if isinstance(r, Door):
                             r.lines = r.get_lines()
 
                 if mouse_pressed[2] and self.selected_rect != -1 and self.property_panel == None:
-                    r = self.rects[self.selected_rect]
+                    r = self.rects.sprites()[self.selected_rect]
                     corner = get_corner_point(r, self.camera.screen_to_world(mouse_position))
                     if corner != None and not isinstance(r, SpawnPoint):
                         dx,dy = tuple(l*r for l,r in zip(pygame.mouse.get_rel(), self.camera.ratio))
@@ -209,7 +208,7 @@ class Game:
                                 r.rect = (r.rect[0], r.rect[1],
                                           r.rect[2] + dx * (1 / self.camera.zoom), r.rect[3])
                         else:
-                            r.rect = self.resize_rect(r.rect, corner, dx,dy)
+                            r.org_rect = self.resize_rect(r.org_rect, corner, dx,dy)
                             if isinstance(r, Door):
                                 r.lines = r.get_lines()
 
@@ -225,26 +224,23 @@ class Game:
                 if self.property_panel == None:
                     self.selected_rect = -1
 
+            self.rects.update(cam = self.camera)
 
             #DRAW
-            self.camera.draw_rect(self.blitting_surface, (250,250,250), (0,0, DESING_W, DESING_H), 2)
 
 
             if self.selected_rect != -1:
-                rect = self.rects[self.selected_rect]
+                rect = self.rects.sprites()[self.selected_rect]
                 rect.outline(self.blitting_surface, self.camera)
                 if self.property_panel:
                     if "ColorPicker" in self.property_panel.properties_obj:
                         color = self.property_panel.get_color()
                         rect.color = color
 
-            for r in self.rects:
-                r.draw(self.blitting_surface, self.camera)
-
             if self.selected_rect != -1 and isinstance(rect, Plate) and rect.linked_to_id != -1:
                 self.camera.draw_line(self.blitting_surface, (0,0,255),
                                         (rect.rect.center[:2]),
-                                        (self.rects[rect.linked_to_id].rect.center[:2]), 10)
+                                        (self.rects.sprites()[rect.linked_to_id].rect.center[:2]), 10)
             if self.rect_started:
                 mp = self.camera.screen_to_world(mouse_position)
                 size = ((mp[0] - self.rect_start[0]), (mp[1] - self.rect_start[1]))
@@ -253,9 +249,10 @@ class Game:
             if self.property_panel:
                 if self.property_panel.linking:
                     self.camera.draw_line(self.blitting_surface, (0,255,0),
-                                            (self.rects[self.selected_rect].rect.center[:2]),
+                                            (self.rects.sprites()[self.selected_rect].rect.center[:2]),
                                             self.camera.screen_to_world(mouse_position), 10)
 
+            self.rects.draw(self.blitting_surface)
             blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
             self.win.blit(blit, blit.get_rect())
 
@@ -294,10 +291,10 @@ class Game:
             rr = (rr[0] + rr[2], rr[1], abs(rr[2]), rr[3])
 
         r.rect = rr
-        self.rects.append(r)
+        self.rects.add(r)
 
     def inside_rect(self, mouse_position):
-        for i,r in enumerate(self.rects):
+        for i,r in enumerate(self.rects.sprites()):
             if pygame.Rect(r.rect).collidepoint(self.camera.screen_to_world(mouse_position)):
                 return i
         return -1

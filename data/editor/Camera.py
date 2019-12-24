@@ -10,6 +10,12 @@ class Camera:
         self.mouse_moving = 0
 
         self.ratio = (ds[0] / ws[0], ds[1] / ws[1])
+        self.last_offset = (0,0)
+
+    def get_offset(self, rect):
+        offset = ((self.x + rect.x) * self.zoom, (self.y + rect.y) * self.zoom,
+                  self.zoom * rect.w, self.zoom * rect.h)
+        return offset
 
     def draw_rect(self, surface, color, rect, size=0):
         pos = ((self.x + rect[0]) * self.zoom, (self.y + rect[1]) * self.zoom)

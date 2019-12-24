@@ -2,9 +2,9 @@ import math
 import pygame
 from ..editor import *
 
-class SpawnPoint:
+class SpawnPoint(pygame.sprite.Sprite):
     def get_points(self, lenght = None):
-        x,y = self.rect.center
+        x,y = (30,26)
         if lenght == None: lenght = self.lenght
         sqrt3 = (math.sqrt(3) / 3) * lenght
         sqrt6 = (math.sqrt(3) / 6) * lenght
@@ -15,24 +15,30 @@ class SpawnPoint:
         ]
 
     def __init__(self, x,y, lenght, color, player_id):
+        super().__init__()
         self.lenght = lenght
         self.rect = pygame.Rect(x - lenght / 2, y - lenght / 2,lenght,lenght)
+        self.org_rect = self.rect.copy()
         self.color = color
         self.player_id = player_id
+        self.image = pygame.Surface((self.rect.w + 10, self.rect.h + 10))
 
         self.points = self.get_points()
 
-
-    def draw(self, surface, camera = None):
-        if camera:
-            camera.draw_polygon(surface, self.color, self.points)
-        else:
-            pygame.draw.polygon(surface, self.color, self.points)
+    def update(self, cam = None):
+        self.rect = pygame.Rect(*(cam.get_offset(self.org_rect)))
+        self.points = self.get_points()
+        pygame.draw.polygon(self.image, self.color, self.points)
 
     def outline(self, surface, camera):
         color = (255,0,0)
         pts = self.get_points(self.lenght + 10)
-        camera.draw_polygon(surface, color, pts, 5)
+        camera.draw_polygon(self.image, color, pts, 5)
+
+    def move(self, mp):
+        self.org_rect = pygame.Rect(mp[0] - self.lenght / 2,
+                                    mp[1] - self.lenght / 2,
+                                    self.org_rect[2], self.org_rect[3])
 
     def get_properties(self):
         return ["Player_Id"]

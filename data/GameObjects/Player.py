@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 
-from ..utils import clamp
+from ..utils.utils import clamp
 
 PLAYER_SIZE = 64
 
@@ -30,9 +30,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.mvt[0] * dt
         self.rect.y += self.mvt[1] * dt
         self.rect.x = clamp(self.rect.x, 0, 1920 - PLAYER_SIZE)
-
-    def update(self):
-        return
 
     def c_update(self, colliders, keys, dt):
         self.move(dt)
