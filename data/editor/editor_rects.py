@@ -54,6 +54,7 @@ def resize_rect(rect, corner, dx,dy, zoom):
 
 def inside_rect(rects, mouse_position, camera):
     for i,r in enumerate(rects.sprites()):
+        if r.selectable == False: continue
         if pygame.Rect(r.rect).collidepoint(camera.screen_to_world(mouse_position)):
             return i
     return -1
@@ -64,7 +65,7 @@ def create_rect(rect_start, mouse_end, obj):
 
     if abs(r.rect[2]) < 16 or abs(r.rect[3]) < 16:
         print ("The rect is too smol")
-        return
+        return None
 
     rr = r.rect
     #bottom left

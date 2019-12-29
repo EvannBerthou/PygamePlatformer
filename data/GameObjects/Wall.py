@@ -10,6 +10,7 @@ class Wall(pygame.sprite.Sprite):
         self.collide = True
         self.image = pygame.Surface((w,h))
         self.image.fill(self.color)
+        self.selectable = True
 
     def update(self, cam = None):
         if cam:
@@ -18,9 +19,9 @@ class Wall(pygame.sprite.Sprite):
             self.image.fill(self.color)
 
     def outline(self, surface, camera):
-        border = (self.rect[0] - 5,self.rect[1] - 5,self.rect[2] + 10,self.rect[3] + 10)
+        border = (self.rect[0],self.rect[1],self.rect[2],self.rect[3])
         color = invert_color(self.color)
-        camera.draw_rect(surface,color,border)
+        camera.draw_rect(surface, color, border, 5)
 
     def move(self, dx,dy,zoom,ratio):
         self.org_rect = pygame.Rect(self.org_rect[0] + dx * (1 / zoom) * ratio[0],

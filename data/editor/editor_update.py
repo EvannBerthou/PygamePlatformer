@@ -3,6 +3,9 @@ from pygame.locals import *
 
 from data.editor import *
 from data.GameObjects.SpawnPoint import SpawnPoint
+from data.GameObjects.Door import Door
+from data.GameObjects.Plate import Plate
+
 
 pygame.font.init()
 MODE_TEXT = pygame.font.SysFont("Arial Black", 46)
@@ -59,8 +62,9 @@ def mode_editor_mouse_up(editor, mouse_position):
     editor.UIManager.selected = -1
     if editor.rect_started:
         rect = create_rect(editor.rect_start, editor.camera.screen_to_world(mouse_position), editor.selected_object)
-        editor.rects.add(rect)
-        editor.rect_started = False
+        if rect != None:
+            editor.rects.add(rect)
+            editor.rect_started = False
 
 def on_key_down(editor, event, mouse_position):
     if event.key == K_TAB:
@@ -102,7 +106,7 @@ def update_mode(editor):
         editor.mode_text = MODE_TEXT.render("Editor", 1, (255,255,255))
 
 
-def move_rect(editor):
+def move_rect(editor, mouse_position):
     r = editor.rects.sprites()[editor.selected_rect]
     if isinstance(r, SpawnPoint):
         mp = editor.camera.screen_to_world(mouse_position)
@@ -114,7 +118,7 @@ def move_rect(editor):
         if isinstance(r, Door):
             r.lines = r.get_lines()
 
-def on_resize_rect(editor):
+def on_resize_rect(editor, mouse_position):
     r = editor.rects.sprites()[editor.selected_rect]
     corner = get_corner_point(r, editor.camera.screen_to_world(mouse_position))
     if corner != None and not isinstance(r, SpawnPoint):
