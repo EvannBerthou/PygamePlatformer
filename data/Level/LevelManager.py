@@ -45,14 +45,14 @@ class LevelManager:
         
         self.load_map()
     
-    def update(self, tick):
+    def update(self, dt):
         keyboard_input = pygame.key.get_pressed()
 
         self.all_colliders.update()
 
         #UPDATE
-        self.player_1.c_update(self.all_colliders.sprites(), keyboard_input, tick)
-        self.player_2.c_update(self.all_colliders.sprites(), keyboard_input, tick)
+        self.player_1.c_update(self.all_colliders.sprites(), keyboard_input, dt)
+        self.player_2.c_update(self.all_colliders.sprites(), keyboard_input, dt)
 
     def draw(self, surface):
         self.all_colliders.draw(surface)

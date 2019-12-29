@@ -15,20 +15,27 @@ class Game:
         self.level_manager = LevelManager((DESING_W, DESING_H))
 
     def run(self):
+        render_time = 0
+        fps = 60
+        update_rate = 60
+        fixed_delta_time = round(1000.0 / update_rate)
         while self.running:
-            tick = self.clock.tick()
+            tick = self.clock.tick(update_rate)
             self.blitting_surface.fill((0,0,0))
 
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self.running = False
 
-            self.level_manager.update(tick)
-            self.level_manager.draw(self.blitting_surface)
+            self.level_manager.update(fixed_delta_time)
 
-            blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
-            self.win.blit(blit, blit.get_rect())
-            pygame.display.update()
-
+            render_time -= fixed_delta_time
+            if render_time <= 0:
+                self.level_manager.draw(self.blitting_surface)
+                blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
+                self.win.blit(blit, blit.get_rect())
+                pygame.display.update()
+                render_time = round(1000 / fps)
+            
 game = Game()
 game.run()
