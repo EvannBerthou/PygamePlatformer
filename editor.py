@@ -252,6 +252,7 @@ class Game:
                                             (self.rects.sprites()[self.selected_rect].rect.center[:2]),
                                             self.camera.screen_to_world(mouse_position), 10)
 
+            self.camera.draw_rect(self.blitting_surface, (255,255,255), (0,0, DESING_W, DESING_H), 3)
             self.rects.draw(self.blitting_surface)
             blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
             self.win.blit(blit, blit.get_rect())
@@ -331,8 +332,8 @@ class Game:
         return pygame.Rect(new_rect)
 
     def load_map(self, file_name = 'map'):
-        self.rects.clear()
-        self.rects = load_map()
+        self.rects.empty()
+        self.rects.add(load_map())
 
 
 game = Game()

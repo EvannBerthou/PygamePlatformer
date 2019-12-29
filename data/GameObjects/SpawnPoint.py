@@ -48,7 +48,7 @@ class SpawnPoint(pygame.sprite.Sprite):
         btn.set_text(f"player : {self.player_id}")
 
     def as_string(self):
-        center_int = (int(v) for v in self.rect.center)
+        center_int = (int(v) for v in self.org_rect.center)
         return 'Spawn, {},{}, {}\n'.format(*center_int, self.player_id)
 
     def get_position(self):

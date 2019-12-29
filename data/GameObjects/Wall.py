@@ -41,5 +41,5 @@ class Wall(pygame.sprite.Sprite):
 
     def as_string(self):
         color_int = (int(v) for v in self.color)
-        rect_int = [ int(self.rect.x), int(self.rect.y), int(self.rect.w), int(self.rect.h) ]
+        rect_int = [ int(self.org_rect.x), int(self.org_rect.y), int(self.org_rect.w), int(self.org_rect.h) ]
         return 'Wall, {},{},{},{}, {},{},{}\n'.format(*rect_int, *color_int)

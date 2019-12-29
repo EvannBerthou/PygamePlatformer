@@ -49,5 +49,5 @@ class Plate(pygame.sprite.Sprite):
             self.linked_to.switch_status()
 
     def as_string(self):
-        rect_int = [ int(self.rect.x), int(self.rect.y), int(self.rect.w), int(self.rect.h) ]
+        rect_int = [ int(self.org_rect.x), int(self.org_rect.y), int(self.org_rect.w), int(self.org_rect.h) ]
         return 'Plate, {},{},{},{}, {}\n'.format(*rect_int, self.linked_to_id)
