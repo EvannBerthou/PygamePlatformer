@@ -13,6 +13,7 @@ class Plate(pygame.sprite.Sprite):
         self.players_on = []
         self.image = pygame.Surface((w,h))
         self.image.fill(self.color)
+        self.selectable = True
 
     def update(self, cam = None):
         if cam:

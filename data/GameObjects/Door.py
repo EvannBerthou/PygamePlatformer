@@ -21,6 +21,7 @@ class Door(pygame.sprite.Sprite):
         self.border = 10
         self.lines = self.get_lines()
         self.image = pygame.Surface((w,h), SRCALPHA)
+        self.selectable = True
         for l in self.lines:
             pygame.draw.line(self.image, self.color, l[0], l[1], self.border)
 

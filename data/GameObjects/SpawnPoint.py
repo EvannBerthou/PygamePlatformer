@@ -1,5 +1,6 @@
 import math
 import pygame
+from pygame.locals import *
 from ..editor import *
 
 class SpawnPoint(pygame.sprite.Sprite):
@@ -21,7 +22,8 @@ class SpawnPoint(pygame.sprite.Sprite):
         self.org_rect = self.rect.copy()
         self.color = color
         self.player_id = player_id
-        self.image = pygame.Surface((self.rect.w + 10, self.rect.h + 10))
+        self.image = pygame.Surface((self.rect.w + 10, self.rect.h + 10), SRCALPHA)
+        self.selectable = True
 
         self.points = self.get_points()
 

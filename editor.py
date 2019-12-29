@@ -6,9 +6,7 @@ import UI
 from data.utils import *
 from data.editor import *
 
-
 DESING_W, DESING_H = 1920,1080
-
 
 class Game:
     def change_object(self, button, obj):
@@ -56,7 +54,7 @@ class Game:
 
         self.spawn_points_count = 0
 
-        self.rects = pygame.sprite.Group()
+        self.rects = pygame.sprite.Group(Background((DESING_W, DESING_H)))
         self.selected_rect = -1
 
     def run(self):
@@ -69,7 +67,6 @@ class Game:
             self.win.fill((0,0,0,))
             self.blitting_surface.fill((0,0,0))
 
-            #TODO(#60): Handle key in different function
             events = pygame.event.get()
             for event in events:
                 if event.type == QUIT:
@@ -86,10 +83,10 @@ class Game:
                     on_key_down(self, event, mouse_position)
 
                 if mouse_pressed[0] and self.selected_rect != -1 and self.property_panel == None:
-                    move_rect(self)
+                    move_rect(self, mouse_position)
 
                 if mouse_pressed[2] and self.selected_rect != -1 and self.property_panel == None:
-                    on_resize_rect(self)
+                    on_resize_rect(self, mouse_position)
 
             if self.camera.mouse_moving:
                 dx,dy = pygame.mouse.get_rel()
@@ -104,6 +101,8 @@ class Game:
                     self.selected_rect = -1
 
             self.rects.update(cam = self.camera)
+
+            self.rects.draw(self.blitting_surface)
 
             if self.selected_rect != -1:
                 rect = self.rects.sprites()[self.selected_rect]
@@ -129,7 +128,6 @@ class Game:
                                             self.camera.screen_to_world(mouse_position), 10)
 
             self.camera.draw_rect(self.blitting_surface, (255,255,255), (0,0, DESING_W, DESING_H), 3)
-            self.rects.draw(self.blitting_surface)
             blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
             self.win.blit(blit, blit.get_rect())
 
@@ -143,6 +141,7 @@ class Game:
 
     def load_map(self, file_name = 'map'):
         self.rects.empty()
+        self.rects.add(Background((DESING_W, DESING_H)))
         self.rects.add(load_map())
     
     def save_to_file(self):
