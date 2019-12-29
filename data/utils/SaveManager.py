@@ -1,5 +1,5 @@
 import os
-from ..GameObjects import *
+from data.GameObjects import *
 
 def save_to_file(rects, file_path = 'map'):
 

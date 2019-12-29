@@ -1,0 +1,172 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/3fdf28bc/
+BUTTON_TEXT	../UI.py	/^BUTTON_TEXT = pygame.font.SysFont("Arial Black", 42)$/;"	kind:variable	line:89
+Background	../data/Level/LevelManager.py	/^class Background(pygame.sprite.Sprite):$/;"	kind:class	line:6
+Button	../UI.py	/^class Button(UIElement):$/;"	kind:class	line:91
+Camera	../data/editor/Camera.py	/^class Camera:$/;"	kind:class	line:4
+Camera	../editor.py	/^    Camera = 0$/;"	kind:variable	line:18
+Camera.py	../data/editor/Camera.py	1;"	kind:file	line:1
+Color.py	../data/editor/Color.py	1;"	kind:file	line:1
+ColorPicker	../data/editor/ColorPicker.py	/^class ColorPicker:$/;"	kind:class	line:5
+ColorPicker.py	../data/editor/ColorPicker.py	1;"	kind:file	line:1
+DESING_H	../editor.py	/^DESING_W, DESING_H = 1920,1080$/;"	kind:variable	line:10
+DESING_H	../main.py	/^DESING_W, DESING_H = 1920,1080$/;"	kind:variable	line:5
+DESING_W	../editor.py	/^DESING_W, DESING_H = 1920,1080$/;"	kind:variable	line:10
+DESING_W	../main.py	/^DESING_W, DESING_H = 1920,1080$/;"	kind:variable	line:5
+Door	../data/GameObjects/Door.py	/^class Door(pygame.sprite.Sprite):$/;"	kind:class	line:5
+Door.py	../data/GameObjects/Door.py	1;"	kind:file	line:1
+DragRect	../data/editor/editor_rects.py	/^class DragRect(pygame.sprite.Sprite):$/;"	kind:class	line:3
+Editor	../editor.py	/^    Editor = 1$/;"	kind:variable	line:19
+Game	../editor.py	/^class Game:$/;"	kind:class	line:21
+Game	../main.py	/^class Game:$/;"	kind:class	line:7
+LevelManager	../data/Level/LevelManager.py	/^class LevelManager:$/;"	kind:class	line:19
+LevelManager.py	../data/Level/LevelManager.py	1;"	kind:file	line:1
+MODE	../editor.py	/^class MODE:$/;"	kind:class	line:17
+MODE_TEXT	../editor.py	/^MODE_TEXT = pygame.font.SysFont("Arial Black", 46)$/;"	kind:variable	line:15
+PLAYER_SIZE	../data/GameObjects/Player.py	/^PLAYER_SIZE = 64$/;"	kind:variable	line:6
+Plate	../data/GameObjects/Plate.py	/^class Plate(pygame.sprite.Sprite):$/;"	kind:class	line:4
+Plate.py	../data/GameObjects/Plate.py	1;"	kind:file	line:1
+Player	../data/GameObjects/Player.py	/^class Player(pygame.sprite.Sprite):$/;"	kind:class	line:8
+Player.py	../data/GameObjects/Player.py	1;"	kind:file	line:1
+PropertyPanel	../data/editor/PropertyPanel.py	/^class PropertyPanel:$/;"	kind:class	line:5
+PropertyPanel.py	../data/editor/PropertyPanel.py	1;"	kind:file	line:1
+SaveManager.py	../data/utils/SaveManager.py	1;"	kind:file	line:1
+Slider	../UI.py	/^class Slider(UIElement):$/;"	kind:class	line:50
+SpawnPoint	../data/GameObjects/SpawnPoint.py	/^class SpawnPoint(pygame.sprite.Sprite):$/;"	kind:class	line:5
+SpawnPoint.py	../data/GameObjects/SpawnPoint.py	1;"	kind:file	line:1
+UI.py	../UI.py	1;"	kind:file	line:1
+UIElement	../UI.py	/^class UIElement:$/;"	kind:class	line:40
+UIManager	../UI.py	/^class UIManager:$/;"	kind:class	line:6
+Wall	../data/GameObjects/Wall.py	/^class Wall(pygame.sprite.Sprite):$/;"	kind:class	line:4
+Wall.py	../data/GameObjects/Wall.py	1;"	kind:file	line:1
+__init__	../UI.py	/^    def __init__(self):$/;"	kind:member	line:7
+__init__	../UI.py	/^    def __init__(self, x,y):$/;"	kind:member	line:41
+__init__	../UI.py	/^    def __init__(self, x,y,w,h, min_value,max_value, bg_color, fg_color):$/;"	kind:member	line:51
+__init__	../UI.py	/^    def __init__(self, x,y,w,h, text, color, callback, args):$/;"	kind:member	line:95
+__init__	../data/GameObjects/Door.py	/^    def __init__(self, x,y,w,h, color, player_id = 0):$/;"	kind:member	line:14
+__init__	../data/GameObjects/Plate.py	/^    def __init__(self, x,y,w,h, color = (255,0,0), linked_to_id = -1):$/;"	kind:member	line:5
+__init__	../data/GameObjects/Player.py	/^    def __init__(self, left_key, right_key, jump_key, player_id):$/;"	kind:member	line:9
+__init__	../data/GameObjects/SpawnPoint.py	/^    def __init__(self, x,y, lenght, color, player_id):$/;"	kind:member	line:17
+__init__	../data/GameObjects/Wall.py	/^    def __init__(self, x,y,w,h, color = (255,0,0)):$/;"	kind:member	line:5
+__init__	../data/Level/LevelManager.py	/^    def __init__(self, window_size):$/;"	kind:member	line:39
+__init__	../data/Level/LevelManager.py	/^    def __init__(self, window_size):$/;"	kind:member	line:7
+__init__	../data/editor/Camera.py	/^    def __init__(self, ws, ds):$/;"	kind:member	line:5
+__init__	../data/editor/ColorPicker.py	/^    def __init__(self, x,y, UIManager):$/;"	kind:member	line:6
+__init__	../data/editor/PropertyPanel.py	/^    def __init__(self, x,y, properties, UIManager, selected_obj):$/;"	kind:member	line:6
+__init__	../data/editor/editor_rects.py	/^    def __init__(self, x,y,w,h, color):$/;"	kind:member	line:4
+__init__	../editor.py	/^    def __init__(self):$/;"	kind:member	line:28
+__init__	../main.py	/^    def __init__(self):$/;"	kind:member	line:8
+__init__.py	../data/GameObjects/__init__.py	1;"	kind:file	line:1
+__init__.py	../data/Level/__init__.py	1;"	kind:file	line:1
+__init__.py	../data/__init__.py	1;"	kind:file	line:1
+__init__.py	../data/editor/__init__.py	1;"	kind:file	line:1
+__init__.py	../data/utils/__init__.py	1;"	kind:file	line:1
+add	../UI.py	/^    def add(self, element):$/;"	kind:member	line:11
+as_string	../data/GameObjects/Door.py	/^    def as_string(self):$/;"	kind:member	line:72
+as_string	../data/GameObjects/Plate.py	/^    def as_string(self):$/;"	kind:member	line:51
+as_string	../data/GameObjects/SpawnPoint.py	/^    def as_string(self):$/;"	kind:member	line:50
+as_string	../data/GameObjects/Wall.py	/^    def as_string(self):$/;"	kind:member	line:42
+c_update	../data/GameObjects/Player.py	/^    def c_update(self, colliders, keys, dt):$/;"	kind:member	line:34
+change_object	../editor.py	/^    def change_object(self, button, obj):$/;"	kind:member	line:22
+clamp	../data/utils/utils.py	/^def clamp(value, min_value, max_value):$/;"	kind:function	line:1
+clamp	../data/utils/utils_funcs.py	/^def clamp(value, min_value, max_value):$/;"	kind:function	line:1
+collision_bottom	../data/GameObjects/Player.py	/^    def collision_bottom(self, col):$/;"	kind:member	line:101
+collision_left	../data/GameObjects/Player.py	/^    def collision_left(self, col):$/;"	kind:member	line:121
+collision_right	../data/GameObjects/Player.py	/^    def collision_right(self, col):$/;"	kind:member	line:129
+collision_top	../data/GameObjects/Player.py	/^    def collision_top(self, col):$/;"	kind:member	line:112
+create_obj	../data/utils/SaveManager.py	/^def create_obj(obj, args):$/;"	kind:function	line:36
+create_rect	../editor.py	/^    def create_rect(self, mouse_end):$/;"	kind:member	line:251
+destroy	../UI.py	/^    def destroy(self, UIManager):$/;"	kind:member	line:116
+destroy	../data/editor/ColorPicker.py	/^    def destroy(self, UIManager):$/;"	kind:member	line:29
+destroy	../data/editor/PropertyPanel.py	/^    def destroy(self, UIManager):$/;"	kind:member	line:39
+draw	../UI.py	/^    def draw(self, surface):$/;"	kind:member	line:103
+draw	../UI.py	/^    def draw(self, surface):$/;"	kind:member	line:36
+draw	../UI.py	/^    def draw(self, surface):$/;"	kind:member	line:44
+draw	../UI.py	/^    def draw(self, surface):$/;"	kind:member	line:65
+draw	../data/Level/LevelManager.py	/^    def draw(self, surface):$/;"	kind:member	line:57
+draw	../data/editor/ColorPicker.py	/^    def draw(self, surface):$/;"	kind:member	line:16
+draw	../data/editor/PropertyPanel.py	/^    def draw(self, surface):$/;"	kind:member	line:34
+draw	../data/editor/editor_rects.py	/^    def draw(self,camera,surface):$/;"	kind:member	line:9
+draw_line	../data/editor/Camera.py	/^    def draw_line(self, surface, color, pt1, pt2, width = 1):$/;"	kind:member	line:25
+draw_polygon	../data/editor/Camera.py	/^    def draw_polygon(self, surface, color, points, width = 0):$/;"	kind:member	line:30
+draw_rect	../data/editor/Camera.py	/^    def draw_rect(self, surface, color, rect, size=0):$/;"	kind:member	line:20
+editor.py	../editor.py	1;"	kind:file	line:1
+editor_rects.py	../data/editor/editor_rects.py	1;"	kind:file	line:1
+event_zoom	../data/editor/Camera.py	/^    def event_zoom(self, event):$/;"	kind:member	line:37
+game	../editor.py	/^game = Game()$/;"	kind:variable	line:315
+game	../main.py	/^game = Game()$/;"	kind:variable	line:33
+get_color	../data/editor/ColorPicker.py	/^    def get_color(self):$/;"	kind:member	line:21
+get_color	../data/editor/PropertyPanel.py	/^    def get_color(self):$/;"	kind:member	line:47
+get_corner_point	../data/editor/editor_rects.py	/^def get_corner_point(rect, point):$/;"	kind:function	line:12
+get_lines	../data/GameObjects/Door.py	/^    def get_lines(self):$/;"	kind:member	line:6
+get_offset	../data/editor/Camera.py	/^    def get_offset(self, rect):$/;"	kind:member	line:15
+get_points	../data/GameObjects/SpawnPoint.py	/^    def get_points(self, lenght = None):$/;"	kind:member	line:6
+get_position	../data/GameObjects/SpawnPoint.py	/^    def get_position(self):$/;"	kind:member	line:54
+get_properties	../data/GameObjects/Door.py	/^    def get_properties(self):$/;"	kind:member	line:55
+get_properties	../data/GameObjects/Plate.py	/^    def get_properties(self):$/;"	kind:member	line:36
+get_properties	../data/GameObjects/SpawnPoint.py	/^    def get_properties(self):$/;"	kind:member	line:43
+get_properties	../data/GameObjects/Wall.py	/^    def get_properties(self):$/;"	kind:member	line:33
+has_collision	../data/GameObjects/Door.py	/^    def has_collision(self, player_id):$/;"	kind:member	line:52
+has_collision	../data/GameObjects/Plate.py	/^    def has_collision(self, player_id):$/;"	kind:member	line:33
+has_collision	../data/GameObjects/Player.py	/^    def has_collision(self, player_id):$/;"	kind:member	line:137
+has_collision	../data/GameObjects/Wall.py	/^    def has_collision(self, player_id):$/;"	kind:member	line:30
+has_collision	../data/Level/LevelManager.py	/^    def has_collision(self, player_id):$/;"	kind:member	line:16
+inside_rect	../editor.py	/^    def inside_rect(self, mouse_position):$/;"	kind:member	line:273
+invert_color	../data/editor/Color.py	/^def invert_color(color):$/;"	kind:function	line:1
+is_hovered	../UI.py	/^    def is_hovered(self, mouse_position):$/;"	kind:member	line:113
+is_hovered	../UI.py	/^    def is_hovered(self, mouse_position):$/;"	kind:member	line:76
+load_map	../data/Level/LevelManager.py	/^    def load_map(self, file_path = 'map'):$/;"	kind:member	line:20
+load_map	../data/utils/SaveManager.py	/^def load_map(file_name = 'map'):$/;"	kind:function	line:65
+load_map	../editor.py	/^    def load_map(self, file_name = 'map'):$/;"	kind:member	line:310
+main.py	../main.py	1;"	kind:file	line:1
+move	../data/GameObjects/Door.py	/^    def move(self, dx,dy,zoom,ratio):$/;"	kind:member	line:47
+move	../data/GameObjects/Plate.py	/^    def move(self, dx,dy,zoom,ratio):$/;"	kind:member	line:28
+move	../data/GameObjects/Player.py	/^    def move(self, dt):$/;"	kind:member	line:29
+move	../data/GameObjects/SpawnPoint.py	/^    def move(self, mp):$/;"	kind:member	line:38
+move	../data/GameObjects/Wall.py	/^    def move(self, dx,dy,zoom,ratio):$/;"	kind:member	line:25
+obj_from_str	../data/utils/SaveManager.py	/^def obj_from_str(string):$/;"	kind:function	line:27
+on_collision	../data/GameObjects/Door.py	/^    def on_collision(self, collider):$/;"	kind:member	line:66
+on_collision	../data/GameObjects/Plate.py	/^    def on_collision(self, collider):$/;"	kind:member	line:39
+on_collision	../data/GameObjects/Player.py	/^    def on_collision(self, collider):$/;"	kind:member	line:140
+on_collision	../data/GameObjects/Wall.py	/^    def on_collision(self, collider):$/;"	kind:member	line:36
+on_collision	../data/Level/LevelManager.py	/^    def on_collision(self, collider):$/;"	kind:member	line:13
+on_collision_exit	../data/GameObjects/Door.py	/^    def on_collision_exit(self, collider):$/;"	kind:member	line:69
+on_collision_exit	../data/GameObjects/Plate.py	/^    def on_collision_exit(self, collider):$/;"	kind:member	line:45
+on_collision_exit	../data/GameObjects/Player.py	/^    def on_collision_exit(self, collider):$/;"	kind:member	line:143
+on_collision_exit	../data/GameObjects/Wall.py	/^    def on_collision_exit(self, collider):$/;"	kind:member	line:39
+outline	../data/GameObjects/Door.py	/^    def outline(self, surface, camera):$/;"	kind:member	line:34
+outline	../data/GameObjects/Plate.py	/^    def outline(self, surface, camera):$/;"	kind:member	line:23
+outline	../data/GameObjects/SpawnPoint.py	/^    def outline(self, surface, camera):$/;"	kind:member	line:33
+outline	../data/GameObjects/Wall.py	/^    def outline(self, surface, camera):$/;"	kind:member	line:20
+remove	../UI.py	/^    def remove(self, element):$/;"	kind:member	line:17
+resize_rect	../editor.py	/^    def resize_rect(self, rect, corner, dx,dy):$/;"	kind:member	line:279
+run	../editor.py	/^    def run(self):$/;"	kind:member	line:70
+run	../main.py	/^    def run(self):$/;"	kind:member	line:17
+save_to_file	../data/utils/SaveManager.py	/^def save_to_file(rects, file_path = 'map'):$/;"	kind:function	line:4
+screen_to_world	../data/editor/Camera.py	/^    def screen_to_world(self, pos):$/;"	kind:member	line:55
+set_color	../data/editor/ColorPicker.py	/^    def set_color(self, color):$/;"	kind:member	line:24
+set_color	../data/editor/PropertyPanel.py	/^    def set_color(self, color):$/;"	kind:member	line:43
+set_position	../data/GameObjects/Player.py	/^    def set_position(self, position):$/;"	kind:member	line:146
+set_text	../UI.py	/^    def set_text(self, text):$/;"	kind:member	line:92
+set_value	../UI.py	/^    def set_value(self, value):$/;"	kind:member	line:79
+switch_player_id	../data/GameObjects/Door.py	/^    def switch_player_id(self, btn, args):$/;"	kind:member	line:58
+switch_player_id	../data/GameObjects/SpawnPoint.py	/^    def switch_player_id(self, btn, args):$/;"	kind:member	line:46
+switch_status	../data/GameObjects/Door.py	/^    def switch_status(self):$/;"	kind:member	line:62
+toggle_linker	../data/editor/PropertyPanel.py	/^    def toggle_linker(self, btn, player_id):$/;"	kind:member	line:51
+update	../UI.py	/^    def update(self):$/;"	kind:member	line:47
+update	../UI.py	/^    def update(self, mouse_position, mouse_pressed, events):$/;"	kind:member	line:107
+update	../UI.py	/^    def update(self, mouse_position, mouse_pressed, events):$/;"	kind:member	line:24
+update	../UI.py	/^    def update(self, mouse_position, mouse_pressed, events):$/;"	kind:member	line:70
+update	../data/GameObjects/Door.py	/^    def update(self, cam = None):$/;"	kind:member	line:27
+update	../data/GameObjects/Plate.py	/^    def update(self, cam = None):$/;"	kind:member	line:17
+update	../data/GameObjects/SpawnPoint.py	/^    def update(self, cam = None):$/;"	kind:member	line:28
+update	../data/GameObjects/Wall.py	/^    def update(self, cam = None):$/;"	kind:member	line:14
+update	../data/Level/LevelManager.py	/^    def update(self, tick):$/;"	kind:member	line:48
+update_mode	../editor.py	/^    def update_mode(self):$/;"	kind:member	line:244
+utils.py	../data/utils/utils.py	1;"	kind:file	line:1
+utils_funcs.py	../data/utils/utils_funcs.py	1;"	kind:file	line:1
