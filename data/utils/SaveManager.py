@@ -1,7 +1,7 @@
 import os
 
 def save_to_file(rects, file_path = 'map'):
-
+    from data.GameObjects.SpawnPoint import SpawnPoint
     spawn_points = []
     for obj in rects:
         if type(obj) == SpawnPoint:
