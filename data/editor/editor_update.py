@@ -64,7 +64,7 @@ def mode_editor_mouse_up(editor, mouse_position):
         rect = create_rect(editor.rect_start, editor.camera.screen_to_world(mouse_position), editor.selected_object)
         if rect != None:
             editor.rects.add(rect)
-            editor.rect_started = False
+        editor.rect_started = False
 
 def on_key_down(editor, event, mouse_position):
     if event.key == K_TAB:
