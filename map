@@ -1,7 +1,8 @@
 name : FOO
 author : BAR
 map:
-Spawn, 453,378, 1
-Spawn, 1445,433, 0
-Wall, -98,702,2156,476, 255,0,0
+Spawn, 163,611, 0
+Spawn, 276,630, 1
+Wall, -64,741,2049,443, 255,0,0
+Goal, 1569,716,100,30
 endmap

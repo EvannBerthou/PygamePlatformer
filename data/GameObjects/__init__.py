@@ -1,3 +1,4 @@
+from .EndGoal import EndGoal
 from .Wall import Wall
 from .Door import Door
 from .Plate import Plate
