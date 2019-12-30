@@ -11,6 +11,7 @@ class EndGoal(pygame.sprite.Sprite):
         self.image.fill(self.color)
         self.players_on = []
         self.collide = False
+        self.selectable = True
     
     def update(self, cam = None):
         if cam:

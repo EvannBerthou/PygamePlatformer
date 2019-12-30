@@ -1,5 +1,4 @@
 import os
-from data.GameObjects import *
 
 def save_to_file(rects, file_path = 'map'):
 
@@ -26,17 +25,19 @@ def save_to_file(rects, file_path = 'map'):
     return "map saved"
 
 def obj_from_str(string):
+    import data.GameObjects as go
     objs = {
-        "Wall": Wall,
-        "Door": Door,
-        "Spawn": SpawnPoint,
-        "Plate": Plate,
-        "Goal":  EndGoal
+        "Wall": go.Wall,
+        "Door": go.Door,
+        "Spawn": go.SpawnPoint,
+        "Plate": go.Plate,
+        "Goal":  go.EndGoal
     }
     return objs[string]
 
 def create_obj(obj, args):
-    if obj == Wall:
+    import data.GameObjects as go
+    if obj == go.Wall:
         pos = []
         color = []
         for v in args[:4]:
@@ -44,30 +45,30 @@ def create_obj(obj, args):
         for v in args[4:]:
             color.append(int(v))
 
-        return Wall(*pos, color)
+        return go.Wall(*pos, color)
 
-    if obj == Door:
+    if obj == go.Door:
         pos = []
         for v in args[:4]:
             pos.append(int(v))
 
-        return Door(*pos, 0, int(args[4]))
-    if obj == SpawnPoint:
+        return go.Door(*pos, 0, int(args[4]))
+    if obj == go.SpawnPoint:
         pos = []
         for v in args[:2]:
             pos.append(int(v))
-        return SpawnPoint(*pos, 50, (255,255,255), int(args[2]))
+        return go.SpawnPoint(*pos, 50, (255,255,255), int(args[2]))
 
-    if obj == Plate:
+    if obj == go.Plate:
         pos = []
         for v in args[:4]:
             pos.append(int(v))
-        return Plate(*pos, (255,255,255), int(args[4]))
-    if obj == EndGoal:
+        return go.Plate(*pos, (255,255,255), int(args[4]))
+    if obj == go.EndGoal:
         pos = []
         for v in args[:4]:
             pos.append(int(v))
-        return EndGoal(*pos)
+        return go.EndGoal(*pos)
 
 def load_map(file_name = 'map'):
     print('Loading map')

@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import SRCALPHA
-from ..editor import *
+from data.editor import *
+from data.utils.SpriteLoader import load_sprite
 
 class Door(pygame.sprite.Sprite):
     def get_lines(self):
@@ -20,17 +21,20 @@ class Door(pygame.sprite.Sprite):
         self.collide = False
         self.border = 10
         self.lines = self.get_lines()
+        self.background = load_sprite('wall.png', (w,h))
+        self.door_size = (88,122)
+        self.door_sprite = load_sprite('door_blue.png', self.door_size)
         self.image = pygame.Surface((w,h), SRCALPHA)
+        self.image.blit(self.background, (0,0))
+        self.image.blit(self.door_sprite, (0, self.rect.h - self.door_size[1]))
         self.selectable = True
-        for l in self.lines:
-            pygame.draw.line(self.image, self.color, l[0], l[1], self.border)
 
     def update(self, cam = None):
         if cam:
             self.rect = pygame.Rect(*(cam.get_offset(self.org_rect)))
             self.image = pygame.Surface((self.rect.w,self.rect.h), SRCALPHA)
-            for l in self.lines:
-                pygame.draw.line(self.image, self.color, l[0], l[1], self.border)
+            self.image.blit(self.background, (0,0))
+            self.image.blit(self.door_sprite, (0,self.rect.h - self.door_size[1]))
 
     def outline(self, surface, camera):
         color = invert_color(self.color)
@@ -65,10 +69,12 @@ class Door(pygame.sprite.Sprite):
         self.color = (255,0,0) if self.player_id == 1 else (0,0,255)
 
     def on_collision(self, collider):
-        return
+        if collider.player_id == self.player_id:
+            self.image.set_alpha(150)
 
     def on_collision_exit(self, collider):
-        return
+        if collider.player_id == self.player_id:
+            self.image.set_alpha(255)
 
     def as_string(self):
         rect_int = [ int(self.org_rect.x), int(self.org_rect.y), int(self.org_rect.w), int(self.org_rect.h) ]

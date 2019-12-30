@@ -1,5 +1,5 @@
 import pygame
-from ..editor import *
+from data.editor import *
 
 class Wall(pygame.sprite.Sprite):
     def __init__(self, x,y,w,h, color = (255,0,0)):

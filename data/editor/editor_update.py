@@ -2,9 +2,7 @@ import pygame
 from pygame.locals import *
 
 from data.editor import *
-from data.GameObjects.SpawnPoint import SpawnPoint
-from data.GameObjects.Door import Door
-from data.GameObjects.Plate import Plate
+from data.GameObjects import *
 
 
 pygame.font.init()
