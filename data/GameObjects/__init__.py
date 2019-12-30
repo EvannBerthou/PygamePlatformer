@@ -1,5 +1,5 @@
-from .EndGoal import EndGoal
 from .Wall import Wall
+from .EndGoal import EndGoal
 from .Door import Door
 from .Plate import Plate
 from .SpawnPoint import SpawnPoint
