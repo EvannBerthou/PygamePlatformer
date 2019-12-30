@@ -19,8 +19,9 @@ def save_to_file(rects, file_path = 'map'):
         f.write('author : BAR\n')
         f.write('map:\n')
         for obj in rects:
-            string = obj.as_string()
-            f.write(string)
+            if hasattr(obj, 'as_string'):
+                string = obj.as_string()
+                f.write(string)
         f.write('endmap\n')
     return "map saved"
 
@@ -29,7 +30,8 @@ def obj_from_str(string):
         "Wall": Wall,
         "Door": Door,
         "Spawn": SpawnPoint,
-        "Plate": Plate
+        "Plate": Plate,
+        "Goal":  EndGoal
     }
     return objs[string]
 
@@ -61,6 +63,11 @@ def create_obj(obj, args):
         for v in args[:4]:
             pos.append(int(v))
         return Plate(*pos, (255,255,255), int(args[4]))
+    if obj == EndGoal:
+        pos = []
+        for v in args[:4]:
+            pos.append(int(v))
+        return EndGoal(*pos)
 
 def load_map(file_name = 'map'):
     print('Loading map')

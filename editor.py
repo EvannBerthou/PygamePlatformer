@@ -44,6 +44,7 @@ class Game:
         self.door_button = UI.Button(2,140,100,30, "Door", (150,150,150), self.change_object, Door)
         self.spawn_button= UI.Button(2,180,100,30, "Spawn", (150,150,150), self.change_object, SpawnPoint)
         self.plate_button= UI.Button(2,220,100,30, "Plate", (150,150,150), self.change_object, Plate)
+        self.goal_button = UI.Button(2,260,100,30, "Goal", (150,150,150), self.change_object, EndGoal)
 
         self.selected_button = self.wall_button
 
@@ -51,6 +52,7 @@ class Game:
         self.UIManager.add(self.door_button)
         self.UIManager.add(self.spawn_button)
         self.UIManager.add(self.plate_button)
+        self.UIManager.add(self.goal_button)
 
         self.spawn_points_count = 0
 
