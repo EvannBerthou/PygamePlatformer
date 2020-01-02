@@ -4,8 +4,8 @@ from pygame.locals import *
 from ..editor import *
 
 class SpawnPoint(pygame.sprite.Sprite):
-    def get_points(self, lenght = None):
-        x,y = (30,26)
+    def get_points(self, lenght = None, offset=(0,0)):
+        x,y = (30+offset[0],26+offset[1])
         if lenght == None: lenght = self.lenght
         sqrt3 = (math.sqrt(3) / 3) * lenght
         sqrt6 = (math.sqrt(3) / 6) * lenght
@@ -34,8 +34,8 @@ class SpawnPoint(pygame.sprite.Sprite):
 
     def outline(self, surface, camera):
         color = (255,0,0)
-        pts = self.get_points(self.lenght)
-        camera.draw_polygon(self.image, color, pts, 10)
+        pts = self.get_points(self.lenght, offset=self.org_rect)
+        camera.draw_polygon(surface, color, pts, 5)
 
     def move(self, mp):
         self.org_rect = pygame.Rect(mp[0] - self.lenght / 2,
