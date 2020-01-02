@@ -18,7 +18,7 @@ class SpawnPoint(pygame.sprite.Sprite):
     def __init__(self, x,y, lenght, color, player_id):
         super().__init__()
         self.lenght = lenght
-        self.rect = pygame.Rect(x - lenght / 2, y - lenght / 2,lenght,lenght)
+        self.rect = pygame.Rect(x,y,lenght,lenght)
         self.org_rect = self.rect.copy()
         self.color = color
         self.player_id = player_id
@@ -34,8 +34,8 @@ class SpawnPoint(pygame.sprite.Sprite):
 
     def outline(self, surface, camera):
         color = (255,0,0)
-        pts = self.get_points(self.lenght + 10)
-        camera.draw_polygon(self.image, color, pts, 5)
+        pts = self.get_points(self.lenght)
+        camera.draw_polygon(self.image, color, pts, 10)
 
     def move(self, mp):
         self.org_rect = pygame.Rect(mp[0] - self.lenght / 2,

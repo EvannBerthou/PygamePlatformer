@@ -3,7 +3,6 @@ import pygame
 class DragRect(pygame.sprite.Sprite):
     def __init__(self, x,y,w,h, color):
         pos, scl = convert_rect(x,y,w,h)
-        print(pos, scl)
         self.rect = pygame.Rect(*pos, *scl)
         self.color = color
         self.image = pygame.Surface(scl)
@@ -18,7 +17,7 @@ def convert_rect(x,y,w,h):
     if w > 0 and h < 0:
         pos = [x,y + h]
         scl = [w, abs(h)]
-    
+
     if w < 0 and h < 0:
         pos = [x + w, y + h]
         scl = [abs(w), abs(h)]
@@ -75,7 +74,7 @@ def resize_rect(rect, corner, dx,dy, zoom):
 def inside_rect(rects, mouse_position, camera):
     for i,r in enumerate(rects.sprites()):
         if r.selectable == False: continue
-        if pygame.Rect(r.rect).collidepoint(camera.screen_to_world(mouse_position)):
+        if pygame.Rect(r.org_rect).collidepoint(camera.screen_to_world(mouse_position)):
             return i
     return -1
 

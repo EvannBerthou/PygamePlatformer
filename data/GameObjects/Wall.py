@@ -19,7 +19,7 @@ class Wall(pygame.sprite.Sprite):
             self.image.fill(self.color)
 
     def outline(self, surface, camera):
-        border = (self.rect[0],self.rect[1],self.rect[2],self.rect[3])
+        border = (self.org_rect[0],self.org_rect[1],self.org_rect[2],self.org_rect[3])
         color = invert_color(self.color)
         camera.draw_rect(surface, color, border, 5)
 
