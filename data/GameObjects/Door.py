@@ -38,17 +38,9 @@ class Door(pygame.sprite.Sprite):
             self.image.blit(self.door_sprite, (0,self.rect.h - self.door_size[1]))
 
     def outline(self, surface, camera):
+        border = (self.org_rect[0],self.org_rect[1],self.org_rect[2],self.org_rect[3])
         color = invert_color(self.color)
-        b = self.border
-        #create lines for the border
-        pts = [
-            ((self.lines[0][0][0]+b,self.lines[0][0][1]+b),(self.lines[0][1][0]-b,self.lines[0][1][1]+b)),
-            ((self.lines[1][0][0]+b,self.lines[1][0][1]+b),(self.lines[1][1][0]+b,self.lines[1][1][1]-b)),
-            ((self.lines[2][0][0]+b,self.lines[2][0][1]-b),(self.lines[2][1][0]-b,self.lines[2][1][1]-b)),
-            ((self.lines[3][0][0]-b,self.lines[3][0][1]+b),(self.lines[3][1][0]-b,self.lines[3][1][1]-b)),
-        ]
-        for pt in pts:
-            camera.draw_line(self.image, color, pt[0], pt[1], self.border)
+        camera.draw_rect(surface, color, border, 5)
 
     def move(self, dx,dy,zoom,ratio):
         self.org_rect = pygame.Rect(self.org_rect[0] + dx * (1 / zoom) * ratio[0],
