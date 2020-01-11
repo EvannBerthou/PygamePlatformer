@@ -1,18 +1,26 @@
 import pygame, sys
 from pygame.locals import *
 from data.Level import LevelManager
+from data.MainMenu import MainMenu
 
-DESING_W, DESING_H = 1920,1080
+class GameState:
+    MAIN_MENU = 0
+    IN_GAME = 1
 
 class Game:
     def __init__(self, map_path):
         self.w, self.h =  1152,648
+        self.DESING_W, self.DESING_H = 1920,1080
         self.win = pygame.display.set_mode((self.w,self.h))
-        self.blitting_surface = pygame.Surface((DESING_W,DESING_H), HWSURFACE)
+        self.blitting_surface = pygame.Surface((self.DESING_W,self.DESING_H), HWSURFACE)
         self.running = True
 
         self.clock = pygame.time.Clock()
-        self.level_manager = LevelManager((DESING_W, DESING_H), map_path)
+        self.level_manager = None
+        self.main_menu = MainMenu(self)
+
+        self.game_state = GameState.MAIN_MENU
+        self.draw_function = [self.draw_main_menu, self.draw_in_game]
 
     def run(self):
         render_time = 0
@@ -23,19 +31,45 @@ class Game:
             tick = self.clock.tick(update_rate)
             self.blitting_surface.fill((0,0,0))
 
-            for event in pygame.event.get():
+            mouse_position = pygame.mouse.get_pos()
+            mouse_pressed  = pygame.mouse.get_pressed()
+
+            events = pygame.event.get()
+            for event in events:
                 if event.type == QUIT:
                     self.running = False
+                if event.type == MOUSEBUTTONDOWN:
+                    if self.game_state == GameState.MAIN_MENU:
+                        if self.main_menu.ui_manager.update(mouse_position, event.button == 1, events) > 0:
+                            return
 
-            self.level_manager.update(fixed_delta_time)
+            if self.game_state == GameState.MAIN_MENU:
+                self.main_menu.update(mouse_position, mouse_pressed, events)
+
+            if self.game_state == GameState.IN_GAME:
+                self.level_manager.update(fixed_delta_time)
 
             render_time -= fixed_delta_time
             if render_time <= 0:
-                self.level_manager.draw(self.blitting_surface)
+                self.draw_function[self.game_state]()
                 blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
                 self.win.blit(blit, blit.get_rect())
+
+                if self.game_state == GameState.MAIN_MENU:
+                    self.main_menu.ui_manager.draw(self.win)
+
                 pygame.display.update()
                 render_time = round(1000 / fps)
+
+    def draw_main_menu(self):
+        self.main_menu.draw(self.blitting_surface)
+
+    def draw_in_game(self):
+        self.level_manager.draw(self.blitting_surface)
+
+    def load_map(self, button, map_name):
+        self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_name)
+        self.game_state = GameState.IN_GAME
 
 if len(sys.argv) == 1:
     print('No path given for the map to load')
