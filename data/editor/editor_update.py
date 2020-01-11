@@ -1,4 +1,4 @@
-import pygame
+import pygame, copy
 from pygame.locals import *
 
 from data.editor import *
@@ -29,6 +29,9 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
         editor.selected_rect = inside_rect(editor.rects, mouse_position, editor.camera)
     if editor.selected_rect > -1:
         pygame.mouse.get_rel()
+        if editor.property_panel and not editor.property_panel.linking:
+            editor.property_panel.destroy(editor.UIManager)
+            editor.property_panel = None
     else:
         #If the selected object is a spawn point, don't drag and create the spawnpoint
         if editor.selected_object == SpawnPoint:
@@ -47,8 +50,8 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
         if editor.property_panel.linking:
             world_pos = editor.camera.screen_to_world(mouse_position)
             hover_objs = pygame.Rect(*world_pos, 1,1).collidelistall(editor.rects.sprites())
-            if hover_objs:
-                obj = hover_objs[0]
+            if len(hover_objs) > 1: #There is always the background but we don't want it to be linked
+                obj = hover_objs[1]
                 editor.rects.sprites()[editor.selected_rect].linked_to_id = obj
                 print("linked to", obj)
             else:
@@ -69,8 +72,10 @@ def on_key_down(editor, event, mouse_position):
         editor.mode = (editor.mode + 1) % 2
         update_mode(editor)
     if event.key == K_r:
-        editor.rects.clear()
+        bg = copy.copy(editor.rects.sprites()[0])
+        editor.rects.empty()
         editor.selected_rect = -1
+        editor.rects.add(bg)
     if event.key == K_DELETE and editor.selected_rect != -1:
         if isinstance(editor.rects.sprites()[editor.selected_rect], SpawnPoint):
             editor.spawn_points_count -= 1
@@ -119,7 +124,7 @@ def move_rect(editor, mouse_position):
 def on_resize_rect(editor, mouse_position):
     r = editor.rects.sprites()[editor.selected_rect]
     corner = get_corner_point(r, editor.camera.screen_to_world(mouse_position))
-    if corner != None and not isinstance(r, SpawnPoint):
+    if corner != None and not isinstance(r, (SpawnPoint, EndGoal)):
         dx,dy = tuple(l*r for l,r in zip(pygame.mouse.get_rel(), editor.camera.ratio))
 
         if isinstance(r, Plate):

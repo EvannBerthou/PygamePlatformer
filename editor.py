@@ -116,8 +116,8 @@ class Game:
 
             if self.selected_rect != -1 and isinstance(rect, Plate) and rect.linked_to_id != -1:
                 self.camera.draw_line(self.blitting_surface, (0,0,255),
-                                        (rect.rect.center[:2]),
-                                        (self.rects.sprites()[rect.linked_to_id].rect.center[:2]), 10)
+                                        (rect.org_rect.center[:2]),
+                                        (self.rects.sprites()[rect.linked_to_id].org_rect.center[:2]), 10)
             if self.rect_started:
                 mp = self.camera.screen_to_world(mouse_position)
                 size = ((mp[0] - self.rect_start[0]), (mp[1] - self.rect_start[1]))
@@ -145,7 +145,7 @@ class Game:
         self.rects.empty()
         self.rects.add(Background((DESING_W, DESING_H)))
         self.rects.add(load_map())
-    
+
     def save_to_file(self):
         return save_to_file(self.rects.sprites())
 

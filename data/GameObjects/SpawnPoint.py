@@ -34,7 +34,7 @@ class SpawnPoint(pygame.sprite.Sprite):
 
     def outline(self, surface, camera):
         color = (255,0,0)
-        pts = self.get_points(self.lenght, offset=self.org_rect)
+        pts = self.get_points(self.lenght / camera.zoom, offset=self.org_rect)
         camera.draw_polygon(surface, color, pts, 5)
 
     def move(self, mp):
