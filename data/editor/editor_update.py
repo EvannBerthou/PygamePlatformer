@@ -6,7 +6,7 @@ from data.GameObjects import *
 
 
 pygame.font.init()
-MODE_TEXT = pygame.font.SysFont("Arial Black", 46)
+MODE_TEXT = pygame.font.SysFont(pygame.font.get_default_font(), 46)
 
 class MODE:
     Camera = 0
