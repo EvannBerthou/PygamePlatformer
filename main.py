@@ -38,10 +38,6 @@ class Game:
             for event in events:
                 if event.type == QUIT:
                     self.running = False
-                if event.type == MOUSEBUTTONDOWN:
-                    if self.game_state == GameState.MAIN_MENU:
-                        if self.main_menu.ui_manager.update(mouse_position, event.button == 1, events) > 0:
-                            return
 
             if self.game_state == GameState.MAIN_MENU:
                 self.main_menu.update(mouse_position, mouse_pressed, events)
@@ -67,7 +63,7 @@ class Game:
     def draw_in_game(self):
         self.level_manager.draw(self.blitting_surface)
 
-    def load_map(self, button, map_name):
+    def load_map(self, map_name):
         self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_name)
         self.game_state = GameState.IN_GAME
 
