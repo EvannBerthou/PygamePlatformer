@@ -70,15 +70,15 @@ def create_obj(obj, args):
             pos.append(int(v))
         return go.EndGoal(*pos)
 
-def load_map(file_name = 'map'):
+def load_map(file_name):
     print('Loading map')
-    if not os.path.exists(file_name):
+    if not os.path.exists(file_name) or not os.path.isfile(file_name):
         print(f'No file named : {file_name}')
-        return
+        exit(1)
 
     rects = []
     in_map = False
-    with open('map', 'r') as f:
+    with open(file_name, 'r') as f:
         for l in f:
             if l == "endmap\n":
                 in_map = False

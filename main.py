@@ -1,18 +1,18 @@
-import pygame
+import pygame, sys
 from pygame.locals import *
 from data.Level import LevelManager
 
 DESING_W, DESING_H = 1920,1080
 
 class Game:
-    def __init__(self):
+    def __init__(self, map_path):
         self.w, self.h =  1152,648
         self.win = pygame.display.set_mode((self.w,self.h))
         self.blitting_surface = pygame.Surface((DESING_W,DESING_H), HWSURFACE)
         self.running = True
 
         self.clock = pygame.time.Clock()
-        self.level_manager = LevelManager((DESING_W, DESING_H))
+        self.level_manager = LevelManager((DESING_W, DESING_H), map_path)
 
     def run(self):
         render_time = 0
@@ -36,6 +36,11 @@ class Game:
                 self.win.blit(blit, blit.get_rect())
                 pygame.display.update()
                 render_time = round(1000 / fps)
-            
-game = Game()
+
+if len(sys.argv) == 1:
+    print('No path given for the map to load')
+    exit(1)
+
+map_path = sys.argv[1]
+game = Game(map_path)
 game.run()
