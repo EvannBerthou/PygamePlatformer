@@ -8,7 +8,7 @@ class GameState:
     IN_GAME = 1
 
 class Game:
-    def __init__(self, map_path):
+    def __init__(self):
         self.w, self.h =  1152,648
         self.DESING_W, self.DESING_H = 1920,1080
         self.win = pygame.display.set_mode((self.w,self.h))
@@ -71,10 +71,5 @@ class Game:
         self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_name)
         self.game_state = GameState.IN_GAME
 
-if len(sys.argv) == 1:
-    print('No path given for the map to load')
-    exit(1)
-
-map_path = sys.argv[1]
-game = Game(map_path)
+game = Game()
 game.run()
