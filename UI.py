@@ -86,7 +86,7 @@ class Slider(UIElement):
         #clamp self.value in [self.min_value; self.max_value]
         self.value = max(self.min_value, min(self.value, self.max_value))
 
-BUTTON_TEXT = pygame.font.SysFont("Arial Black", 42)
+BUTTON_TEXT = pygame.font.SysFont(pygame.font.get_default_font(), 46)
 
 class Button(UIElement):
     def set_text(self, text):
