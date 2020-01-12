@@ -3,6 +3,8 @@ from pygame.locals import *
 from data.GameObjects import *
 from data.utils.SaveManager import load_map
 
+pygame.font.init()
+
 class LevelManager:
     def load_map(self, file_path):
         colliders = load_map(file_path)
@@ -12,6 +14,8 @@ class LevelManager:
                 if col.linked_to_id != -1:
                     linked_to = colliders[col.linked_to_id]
                     col.linked_to = linked_to
+            if isinstance(col, EndGoal):
+                col.level_manager = self
             if isinstance(col, SpawnPoint):
                 player = col.player_id
                 if player == 0:
@@ -32,7 +36,13 @@ class LevelManager:
 
         self.load_map(map_path)
 
+        self.start_time = 0.0
+        self.timer_font = pygame.font.SysFont(pygame.font.get_default_font(), 46)
+        self.timer_playing = True
+
     def update(self, dt):
+        if self.timer_playing:
+            self.start_time += dt / 1000
         keyboard_input = pygame.key.get_pressed()
 
         self.all_colliders.update()
@@ -43,3 +53,10 @@ class LevelManager:
 
     def draw(self, surface):
         self.all_colliders.draw(surface)
+        
+    def draw_timer(self, surface):
+        text = self.timer_font.render('{:06.2f}'.format(self.start_time), 1, (255,255,255))
+        surface.blit(text, (0,0))
+    
+    def end_game(self):
+        self.timer_playing = False

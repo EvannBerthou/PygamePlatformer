@@ -13,6 +13,7 @@ class EndGoal(pygame.sprite.Sprite):
         self.players_on = []
         self.collide = False
         self.selectable = True
+        self.level_manager = None
 
     def update(self, cam = None):
         if cam:
@@ -40,7 +41,7 @@ class EndGoal(pygame.sprite.Sprite):
         if not collider in self.players_on:
             self.players_on.append(collider)
         if len(self.players_on) == 2:
-            print('level completed')
+            self.level_manager.end_game()
 
     def on_collision_exit(self, collider):
         self.players_on.remove(collider)
