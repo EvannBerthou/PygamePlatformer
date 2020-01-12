@@ -52,7 +52,7 @@ class Game:
                 self.win.blit(blit, blit.get_rect())
 
                 if self.game_state == GameState.MAIN_MENU:
-                    self.main_menu.ui_manager.draw(self.win)
+                    self.main_menu.draw_ui(self.win)
                 if self.game_state == GameState.IN_GAME:
                     self.level_manager.draw_timer(self.win)
 

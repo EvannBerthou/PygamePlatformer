@@ -1,0 +1,9 @@
+name : FOO
+author : BAR
+map:
+Spawn, 163,611, 0
+Spawn, 276,630, 1
+Wall, -64,741,2049,443, 255,0,0
+Goal, 1569,716,150,30
+Door, 791,428,433,315, 1
+endmap
