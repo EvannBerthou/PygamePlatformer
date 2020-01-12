@@ -33,6 +33,7 @@ class Game:
 
             mouse_position = pygame.mouse.get_pos()
             mouse_pressed  = pygame.mouse.get_pressed()
+            mouse_rel = pygame.mouse.get_rel()
 
             events = pygame.event.get()
             for event in events:
@@ -40,7 +41,7 @@ class Game:
                     self.running = False
 
             if self.game_state == GameState.MAIN_MENU:
-                self.main_menu.update(mouse_position, mouse_pressed, events)
+                self.main_menu.update(mouse_position, mouse_pressed, mouse_rel, events)
 
             if self.game_state == GameState.IN_GAME:
                 self.level_manager.update(fixed_delta_time)

@@ -21,7 +21,7 @@ class UIManager:
         self.elements.remove(element)
 
 
-    def update(self, mouse_position, mouse_pressed, events):
+    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
         for i,el in enumerate(self.elements):
             if el.is_hovered(mouse_position) and mouse_pressed:
                 self.selected = i
@@ -30,7 +30,7 @@ class UIManager:
             self.selected = -1
 
         if self.selected != -1:
-            self.elements[self.selected].update(mouse_position, (mouse_pressed, 0), events)
+            self.elements[self.selected].update(mouse_position, (mouse_pressed, 0), mouse_rel, events)
         return self.selected
 
     def draw(self, surface):
@@ -67,7 +67,7 @@ class Slider(UIElement):
         pygame.draw.rect(surface, self.fg_color, (self.x, self.y, self.draw_w, self.h))
 
     #Update is only called when the UI Element is the selected one
-    def update(self, mouse_position, mouse_pressed, events):
+    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
         if mouse_pressed[0]:
             #normalize
             x = (mouse_position[0] - self.x) / self.w
@@ -102,9 +102,9 @@ class Button(UIElement):
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
-        surface.blit(self.text, (self.x, self.y))
+        surface.blit(self.text, self.rect)
 
-    def update(self, mouse_position, mouse_pressed, events):
+    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
         for event in events:
             if event.type == MOUSEBUTTONDOWN:
                 if mouse_pressed[0]:
@@ -115,3 +115,39 @@ class Button(UIElement):
 
     def destroy(self, UIManager):
         UIManager.remove(self)
+
+class ScrollView(UIElement):
+    def __init__(self, x,y,w,h, bg_color):
+        super().__init__(x,y)
+        self.rect = pygame.Rect(x,y,w,h)
+        self.elements = []
+        self.bg_color = bg_color
+        self.surface = pygame.Surface((w,h))
+
+    def add(self, element):
+        if element in self.elements:
+            print(f'{element} is already in {self}')
+            return
+        
+        self.elements.append(element)
+
+    def is_hovered(self, mouse_position):
+        return self.rect.collidepoint(mouse_position)
+
+    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
+        if mouse_pressed[0] == 1:
+            self.update_surface(mouse_rel[1])
+
+        for el in self.elements:
+            if el.is_hovered(mouse_position):
+                el.update(mouse_position, mouse_pressed, mouse_rel, events)
+
+    def update_surface(self, rel):
+        self.surface.fill(self.bg_color)
+        for element in self.elements:
+            element.rect.y += rel
+            element.y += rel
+            element.draw(self.surface)
+
+    def draw(self, surface):
+        surface.blit(self.surface, (0,0))
