@@ -53,6 +53,8 @@ class Game:
 
                 if self.game_state == GameState.MAIN_MENU:
                     self.main_menu.ui_manager.draw(self.win)
+                if self.game_state == GameState.IN_GAME:
+                    self.level_manager.draw_timer(self.win)
 
                 pygame.display.update()
                 render_time = round(1000 / fps)
@@ -66,6 +68,6 @@ class Game:
     def load_map(self, map_name):
         self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_name)
         self.game_state = GameState.IN_GAME
-
+    
 game = Game()
 game.run()
