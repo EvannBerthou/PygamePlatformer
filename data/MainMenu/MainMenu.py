@@ -38,9 +38,11 @@ class LevelSelectorMenu(Menu):
 
     def __init__(self, main_menu):
         super().__init__(main_menu)
+        self.scrollview = UI.ScrollView(0,0,1000,1000, (75,0,130))
+        self.ui_manager.add(self.scrollview)
         names, paths = self.load_level_list()
         for i, name in enumerate(names):
-            self.ui_manager.add(UI.Button(self.main_menu.game.w / 2 - 75, 10 + 50 * i, 150, 35,
+            self.scrollview.add(UI.Button(self.main_menu.game.w / 2 - 75, 10 + 50 * i, 150, 35,
                                 name, (150,150,150),
                                 self.main_menu.load_map, paths[i]))
 
@@ -52,10 +54,10 @@ class MainMenu:
         self.game = game
         self.menu = MainScreenMenu(self)
 
-    def update(self, mouse_position, mouse_pressed, events):
-        self.menu.ui_manager.update(mouse_position, mouse_pressed, events)
+    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
+        self.menu.ui_manager.update(mouse_position, mouse_pressed, mouse_rel, events)
         if self.menu.ui_manager.selected != -1:
-            self.menu.ui_manager.elements[self.menu.ui_manager.selected].update(mouse_position,mouse_pressed,events)
+            self.menu.ui_manager.elements[self.menu.ui_manager.selected].update(mouse_position,mouse_pressed,mouse_rel,events)
 
     def draw(self, surface):
         surface.fill((75,0,130))
