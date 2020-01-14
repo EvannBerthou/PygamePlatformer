@@ -1,5 +1,6 @@
 import UI
 import os
+from pygame.locals import *
 
 class Menu:
     def __init__(self, main_menu):
@@ -22,6 +23,9 @@ class MainScreenMenu(Menu):
                             "Quit", (150,150,150),
                             self.main_menu.exit, ''))
 
+    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
+        pass
+
     def draw(self, surface):
         self.ui_manager.draw(surface)
 
@@ -40,14 +44,33 @@ class LevelSelectorMenu(Menu):
         super().__init__(main_menu)
         self.scrollview = UI.ScrollView(0,0,1000,1000, (75,0,130))
         self.ui_manager.add(self.scrollview)
-        names, paths = self.load_level_list()
-        for i, name in enumerate(names):
+        self.names, self.paths = self.load_level_list()
+        for i, name in enumerate(self.names):
             self.scrollview.add(UI.Button(self.main_menu.game.w / 2 - 75, 10 + 50 * i, 150, 35,
                                 name, (150,150,150),
-                                self.main_menu.load_map, paths[i]))
+                                self.main_menu.load_map, self.paths[i]))
+
+        self.search_bar = UI.SearchBar(0,0,100,30, self.update_levels)
+        self.ui_manager.add(self.search_bar)
 
     def draw(self, surface):
         self.ui_manager.draw(surface)
+
+    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
+        for event in events:
+            if event.type == KEYDOWN:
+                self.search_bar.key_pressed(event)
+
+    def update_levels(self, search):
+        self.scrollview.clear()
+        total = 0
+        for i, name in enumerate(self.names):
+            if search in name:
+                self.scrollview.add(UI.Button(self.main_menu.game.w / 2 - 75, 10 + 50 * total, 150, 35,
+                                    name, (150,150,150),
+                                    self.main_menu.load_map, self.paths[i]))
+                total += 1
+        self.scrollview.update_surface(0)
 
 class MainMenu:
     def __init__(self, game):
@@ -58,6 +81,8 @@ class MainMenu:
         self.menu.ui_manager.update(mouse_position, mouse_pressed, mouse_rel, events)
         if self.menu.ui_manager.selected != -1:
             self.menu.ui_manager.elements[self.menu.ui_manager.selected].update(mouse_position,mouse_pressed,mouse_rel,events)
+        self.menu.update(mouse_position, mouse_pressed, mouse_rel, events)
+
 
     def draw(self, surface):
         surface.fill((75,0,130))
