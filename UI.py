@@ -151,3 +151,42 @@ class ScrollView(UIElement):
 
     def draw(self, surface):
         surface.blit(self.surface, (0,0))
+    
+    def clear(self):
+        self.elements.clear()
+
+class SearchBar(UIElement):
+    def __init__(self, x,y,w,h, callback_function):
+        super().__init__(x,y)
+        self.rect = pygame.Rect(x,y,w,h)
+        self.elements = []
+        self.callback_function = callback_function
+        self.surface = pygame.Surface((w,h))
+
+        self.text = ""
+        self.cursor = 0
+
+        self.font = pygame.font.SysFont(pygame.font.get_default_font(), 26)
+        self.text_to_render = self.font.render(self.text, 1, (255,255,255))
+    
+    def key_pressed(self, event):
+        if event.key == K_BACKSPACE: self.remove_letter()
+        elif event.key == K_RETURN: return
+        else: self.add_letter(event.unicode)
+        self.callback_function(self.text)
+
+    def add_letter(self, char):
+        self.text += char
+        self.cursor += 1
+        self.text_to_render = self.font.render(self.text, 1, (255,255,255))
+
+    def remove_letter(self):
+        letter = self.text[self.cursor - 1] if self.cursor < len(self.text) else ""
+        self.text = self.text[:self.cursor - 1] + self.text[self.cursor:]
+        self.cursor -= 1
+        if self.cursor < 0: self.cursor = 0
+
+        self.text_to_render = self.font.render(self.text, 1, (255,255,255))
+
+    def draw(self, surface):
+        surface.blit(self.text_to_render, (self.x, self.y))
