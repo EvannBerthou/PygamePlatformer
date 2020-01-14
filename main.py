@@ -39,7 +39,10 @@ class Game:
             for event in events:
                 if event.type == QUIT:
                     self.running = False
-
+                if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        if self.game_state == GameState.IN_GAME: self.load_main_menu()
+                
             if self.game_state == GameState.MAIN_MENU:
                 self.main_menu.update(mouse_position, mouse_pressed, mouse_rel, events)
 
@@ -69,6 +72,11 @@ class Game:
     def load_map(self, map_name):
         self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_name)
         self.game_state = GameState.IN_GAME
+
+    def load_main_menu(self):
+        self.level_manager = None
+        self.main_menu = MainMenu(self)
+        self.game_state = GameState.MAIN_MENU
     
 game = Game()
 game.run()
