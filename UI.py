@@ -123,6 +123,8 @@ class ScrollView(UIElement):
         self.elements = []
         self.bg_color = bg_color
         self.surface = pygame.Surface((w,h))
+        self.org_rects = {}
+        self.y = 0
 
     def add(self, element):
         if element in self.elements:
@@ -144,6 +146,16 @@ class ScrollView(UIElement):
 
     def update_surface(self, rel):
         self.surface.fill(self.bg_color)
+        self.y += rel
+
+        if rel < 0 and self.elements[-1].rect.bottom < self.rect.h:
+            self.y -= rel
+            rel = 0
+        
+        if rel > 0 and self.elements[0].rect.top > 0:
+            self.y = 0
+            rel = 0
+        
         for element in self.elements:
             element.rect.y += rel
             element.y += rel
