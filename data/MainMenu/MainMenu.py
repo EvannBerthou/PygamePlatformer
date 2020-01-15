@@ -42,7 +42,7 @@ class LevelSelectorMenu(Menu):
 
     def __init__(self, main_menu):
         super().__init__(main_menu)
-        self.scrollview = UI.ScrollView(0,0,1000,1000, (75,0,130))
+        self.scrollview = UI.ScrollView(0,0,1000,main_menu.game.h, (75,0,130))
         self.ui_manager.add(self.scrollview)
         self.names, self.paths = self.load_level_list()
         for i, name in enumerate(self.names):
