@@ -91,23 +91,28 @@ class Slider(UIElement):
         #clamp self.value in [self.min_value; self.max_value]
         self.value = max(self.min_value, min(self.value, self.max_value))
 
-BUTTON_TEXT = pygame.font.SysFont(pygame.font.get_default_font(), 46)
 
 class Button(UIElement):
     def set_text(self, text):
-        self.text = BUTTON_TEXT.render(text, 1, (255,255,255))
+        self.text = self.font.render(text, 1, (255,255,255))
 
-    def __init__(self, x,y,w,h, text, color, callback, args):
+    def __init__(self, x,y,w,h, text, color, callback, args, center_text = False, font_size = 46):
+        self.font = pygame.font.SysFont(pygame.font.get_default_font(), font_size)
         super().__init__(x,y)
         self.rect = pygame.Rect(self.x, self.y, w, h)
         self.color = color
         self.callback = callback
         self.args = args
         self.set_text(text)
+        self.center_text = center_text
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
-        surface.blit(self.text, self.rect)
+        if self.center_text:
+            rect = self.text.get_rect(center=self.rect.center)
+            surface.blit(self.text, rect)
+        else:
+            surface.blit(self.text, self.rect)
 
     def update(self, mouse_position, mouse_pressed, mouse_rel, events):
         for event in events:
