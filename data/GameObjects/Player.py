@@ -51,7 +51,7 @@ class Player(pygame.sprite.Sprite):
                     continue
                 if not i in self.prev_colliders:
                     self.prev_colliders.append(i)
-                col.on_collision(self)
+                    col.on_collision(self)
                 #If the collider is traversable don't check collisions
                 if not col.has_collision(self.player_id):
                     continue
@@ -104,9 +104,6 @@ class Player(pygame.sprite.Sprite):
         br = col.collidepoint(self.rect.bottomright)
         ml = col.collidepoint(self.rect.midleft)
         mr = col.collidepoint(self.rect.midright)
-        #if the player is atleast half inside the ground, detect as a collision
-        if bl and bm and br and ml and mr:
-            return True
         return (bl or br or bm) and not ml and not mr
 
     def collision_top(self, col):
