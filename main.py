@@ -10,6 +10,7 @@ class GameState:
 class Game:
     def __init__(self):
         self.w, self.h =  1152,648
+        # self.w, self.h =  1920,1080
         self.DESING_W, self.DESING_H = 1920,1080
         self.win = pygame.display.set_mode((self.w,self.h))
         self.blitting_surface = pygame.Surface((self.DESING_W,self.DESING_H), HWSURFACE)
@@ -48,6 +49,7 @@ class Game:
 
             if self.game_state == GameState.IN_GAME:
                 self.level_manager.update(fixed_delta_time)
+                self.level_manager.ui_manager.update(mouse_position, mouse_pressed, mouse_rel, events)
 
             render_time -= fixed_delta_time
             if render_time <= 0:
@@ -58,7 +60,7 @@ class Game:
                 if self.game_state == GameState.MAIN_MENU:
                     self.main_menu.draw_ui(self.win)
                 if self.game_state == GameState.IN_GAME:
-                    self.level_manager.draw_timer(self.win)
+                    self.level_manager.draw_ui(self.win)
 
                 pygame.display.update()
                 render_time = round(1000 / fps)
@@ -70,10 +72,10 @@ class Game:
         self.level_manager.draw(self.blitting_surface)
 
     def load_map(self, map_name):
-        self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_name)
+        self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_name, self)
         self.game_state = GameState.IN_GAME
 
-    def load_main_menu(self):
+    def load_main_menu(self, btn = None, args = None):
         self.level_manager = None
         self.main_menu = MainMenu(self)
         self.game_state = GameState.MAIN_MENU

@@ -38,6 +38,10 @@ class UIManager:
         for el in self.elements:
             el.draw(surface)
 
+    def clear(self):
+        for element in self.elements:
+            self.remove(element)
+
 class UIElement:
     def __init__(self, x,y):
         self.x, self.y = x,y
