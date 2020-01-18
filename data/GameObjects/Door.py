@@ -66,6 +66,7 @@ class Door(pygame.sprite.Sprite):
     def on_collision(self, collider):
         if collider.player_id == self.player_id:
             self.image.set_alpha(150)
+            collider.grounded = False
 
     def on_collision_exit(self, collider):
         if collider.player_id == self.player_id:
