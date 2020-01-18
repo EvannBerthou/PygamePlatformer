@@ -42,7 +42,7 @@ class LevelSelectorMenu(Menu):
 
     def __init__(self, main_menu):
         super().__init__(main_menu)
-        self.scrollview = UI.ScrollView(0,0,1000,main_menu.game.h, (75,0,130))
+        self.scrollview = UI.ScrollView(0,40,1000,main_menu.game.h, (75,0,130))
         self.ui_manager.add(self.scrollview)
         self.names, self.paths = self.load_level_list()
         for i, name in enumerate(self.names):
@@ -50,7 +50,7 @@ class LevelSelectorMenu(Menu):
                                 name, (150,150,150),
                                 self.main_menu.load_map, self.paths[i]))
 
-        self.search_bar = UI.SearchBar(0,0,100,30, self.update_levels)
+        self.search_bar = UI.SearchBar(main_menu.game.w / 2 - 100,10,200,30, self.update_levels)
         self.ui_manager.add(self.search_bar)
 
     def draw(self, surface):
