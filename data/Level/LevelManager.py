@@ -86,10 +86,10 @@ class LevelManager:
         button_y_pos = self.game.h / 2 + 50
         w_center = self.game.w / 2
         reload_button = UI.Button(w_center - 300, button_y_pos, 200,40,
-                                    "Replay", (150,150,150), self.reload_level, [])
+                                    "Replay", (150,150,150), self.reload_level, [], center_text = True)
 
         main_menu_button = UI.Button(w_center + 50, button_y_pos, 200,40,
-                                    "Main Menu", (150,150,150), self.game.load_main_menu, [])
+                                    "Main Menu", (150,150,150), self.game.load_main_menu, [], center_text = True)
 
         self.ui_manager.add(reload_button)
         self.ui_manager.add(main_menu_button)
