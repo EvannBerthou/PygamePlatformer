@@ -131,7 +131,7 @@ class ScrollView(UIElement):
         if element in self.elements:
             print(f'{element} is already in {self}')
             return
-        
+
         element.rect.x += self.rect.x
         element.rect.y += self.rect.y
         self.elements.append(element)
@@ -154,11 +154,11 @@ class ScrollView(UIElement):
         if rel < 0 and self.elements[-1].rect.bottom < self.rect.h:
             self.y -= rel
             rel = 0
-        
+
         if rel > 0 and self.elements[0].rect.top > 0:
             self.y = 0
             rel = 0
-        
+
         for element in self.elements:
             element.rect.y += rel
             element.y += rel
@@ -166,7 +166,7 @@ class ScrollView(UIElement):
 
     def draw(self, surface):
         surface.blit(self.surface, (0,0))
-    
+
     def clear(self):
         self.elements.clear()
 
@@ -184,7 +184,7 @@ class SearchBar(UIElement):
 
         self.font = pygame.font.SysFont(pygame.font.get_default_font(), 38)
         self.text_to_render = self.font.render(self.text, 1, (255,255,255))
-    
+
     def key_pressed(self, event):
         if event.key == K_BACKSPACE: self.remove_letter()
         elif event.key == K_RETURN: return
@@ -209,6 +209,32 @@ class SearchBar(UIElement):
         pygame.draw.line(surface, (100,100,100), (self.rect.x, self.rect.y + self.rect.h),
                                                  (self.rect.x + self.rect.w, self.rect.y + self.rect.h), 2)
         surface.blit(self.text_to_render, (self.x + 35, self.y))
-    
+
     def is_hovered(self, mouse_position):
         return False
+
+class Toggle(UIElement):
+    def __init__(self, x,y,w,h, text, callback_function):
+        super().__init__(x,y)
+        self.rect = pygame.Rect(x,y,w,h)
+        self.surface = pygame.Surface((w,h), SRCALPHA)
+        self.callback_function = callback_function
+
+        self.activated = False
+
+        pygame.draw.rect(self.surface, (200,200,200), (0,0,h,h))
+        font = pygame.font.SysFont(pygame.font.get_default_font(), 38)
+        text_to_render = font.render(text, 1, (255,255,255))
+        self.surface.blit(text_to_render, (h + 5,0))
+
+    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
+        for event in events:
+            if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                self.activated = not self.activated
+                self.callback_function(self.activated)
+
+    def draw(self, surface):
+        surface.blit(self.surface, (self.rect.x, self.rect.y))
+
+    def is_hovered(self, mouse_position):
+        return self.rect.collidepoint(mouse_position)

@@ -42,7 +42,7 @@ class Game:
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
                         if self.game_state == GameState.IN_GAME: self.load_main_menu()
-                
+
             if self.game_state == GameState.MAIN_MENU:
                 self.main_menu.update(mouse_position, mouse_pressed, mouse_rel, events)
 
@@ -77,6 +77,6 @@ class Game:
         self.level_manager = None
         self.main_menu = MainMenu(self)
         self.game_state = GameState.MAIN_MENU
-    
+
 game = Game()
 game.run()
