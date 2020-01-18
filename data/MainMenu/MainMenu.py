@@ -53,6 +53,7 @@ class LevelSelectorMenu(Menu):
 
         self.search_bar = UI.SearchBar(main_menu.game.w / 2 - 100,10,200,30, self.update_levels)
         self.ui_manager.add(self.search_bar)
+        self.update_levels("")
 
     def draw(self, surface):
         self.ui_manager.draw(surface)
@@ -76,13 +77,23 @@ class LevelSelectorMenu(Menu):
 class OptionMenu(Menu):
     def __init__(self, main_menu):
         super().__init__(main_menu)
-
-    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
-        pass
+        self.fullscreen_toggle = UI.Toggle(20,20,200,32, "Fullscreen", self.toggle_fullscreen)
+        self.ui_manager.add(self.fullscreen_toggle)
 
     def draw(self, surface):
         pygame.draw.rect(surface, (150,150,150), (10,10, self.main_menu.game.w - 20, self.main_menu.game.h - 20))
         self.ui_manager.draw(surface)
+
+    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
+        pass
+
+    def toggle_fullscreen(self, active):
+        if active:
+            w,h = self.main_menu.game.w, self.main_menu.game.h
+            self.main_menu.game.display = pygame.display.set_mode((w,h), FULLSCREEN, HWSURFACE)
+        else:
+            w,h = self.main_menu.game.w, self.main_menu.game.h
+            self.main_menu.game.display = pygame.display.set_mode((w,h), HWSURFACE)
 
 class MainMenu:
     def __init__(self, game):
@@ -91,10 +102,7 @@ class MainMenu:
 
     def update(self, mouse_position, mouse_pressed, mouse_rel, events):
         self.menu.ui_manager.update(mouse_position, mouse_pressed, mouse_rel, events)
-        if self.menu.ui_manager.selected != -1:
-            self.menu.ui_manager.elements[self.menu.ui_manager.selected].update(mouse_position,mouse_pressed,mouse_rel,events)
         self.menu.update(mouse_position, mouse_pressed, mouse_rel, events)
-
 
     def draw(self, surface):
         surface.fill((75,0,130))
@@ -107,7 +115,6 @@ class MainMenu:
 
     def options(self, btn, args):
         self.menu = OptionMenu(self)
-
 
     def exit(self, btn, args):
         exit(0)
