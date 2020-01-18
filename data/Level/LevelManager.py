@@ -8,6 +8,7 @@ pygame.font.init()
 
 class LevelManager:
     def load_map(self, file_path):
+        self.all_colliders.add([self.background, self.player_1, self.player_2])
         colliders = load_map(file_path)
         for col in colliders:
             if isinstance(col, Plate):
@@ -32,9 +33,9 @@ class LevelManager:
         self.player_1 = Player(K_q, K_d, K_SPACE, 0)
         self.player_2 = Player(K_LEFT, K_RIGHT, K_UP, 1)
 
-        self.all_colliders = pygame.sprite.Group(
-                Background(window_size), self.player_1, self.player_2)
+        self.background = Background(window_size)
 
+        self.all_colliders = pygame.sprite.Group()
         self.map_path = map_path
         self.load_map(map_path)
 
@@ -75,14 +76,19 @@ class LevelManager:
     def end_game(self):
         self.level_completed = True
         self.end_screen.fill((75,0,130,200))
+
+        #Texts
         font = pygame.font.SysFont(pygame.font.get_default_font(), 150)
+
         level_completed_text = font.render("Level Completed !", 1, (255,255,255))
         x_pos = self.end_screen.get_width() / 2 - level_completed_text.get_width() / 2
         self.end_screen.blit(level_completed_text, (x_pos, 50))
+
         timer_text = font.render('{:06.2f}'.format(self.start_time), 1, (255,255,255))
         x_pos = self.end_screen.get_width() / 2 - timer_text.get_width() / 2
         self.end_screen.blit(timer_text, (x_pos, 300))
 
+        #Buttons
         button_y_pos = self.game.h / 2 + 50
         w_center = self.game.w / 2
         reload_button = UI.Button(w_center - 300, button_y_pos, 200,40,
@@ -95,7 +101,10 @@ class LevelManager:
         self.ui_manager.add(main_menu_button)
 
     def reload_level(self, btn, args):
-        self.load_map(self.map_path)
         self.start_time = 0.0
         self.level_completed = False
         self.ui_manager.clear()
+        self.all_colliders.empty()
+        self.player_1.prev_colliders.clear()
+        self.player_2.prev_colliders.clear()
+        self.load_map(self.map_path)
