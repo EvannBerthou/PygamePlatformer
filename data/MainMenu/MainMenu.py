@@ -1,5 +1,6 @@
 import UI
 import os
+import pygame
 from pygame.locals import *
 
 class Menu:
@@ -35,7 +36,7 @@ class LevelSelectorMenu(Menu):
         if not os.path.exists(path) or not os.path.isdir(path):
             print('No folder named "maps"')
             exit(1)
-        
+
         maps_names = os.listdir(path)
         maps_paths = [os.path.join('maps', map_name) for map_name in maps_names]
         return maps_names, maps_paths
@@ -72,6 +73,17 @@ class LevelSelectorMenu(Menu):
                 total += 1
         self.scrollview.update_surface(0)
 
+class OptionMenu(Menu):
+    def __init__(self, main_menu):
+        super().__init__(main_menu)
+
+    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
+        pass
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, (150,150,150), (10,10, self.main_menu.game.w - 20, self.main_menu.game.h - 20))
+        self.ui_manager.draw(surface)
+
 class MainMenu:
     def __init__(self, game):
         self.game = game
@@ -94,7 +106,8 @@ class MainMenu:
         self.menu = LevelSelectorMenu(self)
 
     def options(self, btn, args):
-        print('Options')
+        self.menu = OptionMenu(self)
+
 
     def exit(self, btn, args):
         exit(0)
