@@ -91,6 +91,10 @@ class OptionMenu(Menu):
                                                 (100,100,100), (75,75,75), self.change_resolution)
         self.ui_manager.add(self.resolution_dropdown)
 
+        self.ui_manager.add(UI.Button(main_menu.game.DESING_W - 250, main_menu.game.DESING_H - 100, 200,60,
+                                        "Back", (200,200,200), main_menu.main_menu, [],
+                                        center_text = True, font_size = 70))
+
     def draw(self, surface):
         pygame.draw.rect(surface, (150,150,150),
                         (10,10, self.main_menu.game.DESING_W - 20, self.main_menu.game.DESING_H - 20))
@@ -124,6 +128,9 @@ class MainMenu:
     def update(self, mouse_position, mouse_pressed, mouse_rel, events):
         self.menu.ui_manager.update(mouse_position, mouse_pressed, mouse_rel, events)
         self.menu.update(mouse_position, mouse_pressed, mouse_rel, events)
+
+    def main_menu(self, *args):
+        self.menu = MainScreenMenu(self)
 
     def draw(self, surface):
         surface.fill((75,0,130))
