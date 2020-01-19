@@ -186,12 +186,12 @@ class SearchBar(UIElement):
         self.elements = []
         self.callback_function = callback_function
         self.surface = pygame.Surface((w,h))
-        self.glass_icon = load_sprite('seach_icon.png', (32,32))
+        self.glass_icon = load_sprite('seach_icon.png', (64,64))
 
         self.text = ""
         self.cursor = 0
 
-        self.font = pygame.font.SysFont(pygame.font.get_default_font(), 38)
+        self.font = pygame.font.SysFont(pygame.font.get_default_font(), 70)
         self.text_to_render = self.font.render(self.text, 1, (255,255,255))
 
     def key_pressed(self, event):
@@ -217,7 +217,7 @@ class SearchBar(UIElement):
         surface.blit(self.glass_icon, (self.x, self.y))
         pygame.draw.line(surface, (100,100,100), (self.rect.x, self.rect.y + self.rect.h),
                                                  (self.rect.x + self.rect.w, self.rect.y + self.rect.h), 2)
-        surface.blit(self.text_to_render, (self.x + 35, self.y))
+        surface.blit(self.text_to_render, (self.x + 70, self.y))
 
     def is_hovered(self, mouse_position):
         return False

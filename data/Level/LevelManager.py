@@ -89,12 +89,12 @@ class LevelManager:
         self.end_screen.blit(timer_text, (x_pos, 300))
 
         #Buttons
-        button_y_pos = self.game.h / 2 + 50
-        w_center = self.game.w / 2
-        reload_button = UI.Button(w_center - 300, button_y_pos, 200,40,
+        button_y_pos = self.game.DESING_H / 2 + 50
+        w_center = self.game.DESING_W / 2
+        reload_button = UI.Button(w_center - 600, button_y_pos, 400,80,
                                     "Replay", (150,150,150), self.reload_level, [], center_text = True)
 
-        main_menu_button = UI.Button(w_center + 50, button_y_pos, 200,40,
+        main_menu_button = UI.Button(w_center + 100, button_y_pos, 400,80,
                                     "Main Menu", (150,150,150), self.game.load_main_menu, [], center_text = True)
 
         self.ui_manager.add(reload_button)
