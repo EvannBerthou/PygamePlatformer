@@ -247,3 +247,55 @@ class Toggle(UIElement):
 
     def is_hovered(self, mouse_position):
         return self.rect.collidepoint(mouse_position)
+
+class DropDown(UIElement):
+    def __init__(self, x,y,w,h, choices, selected_color, menu_color):
+        super().__init__(x,y)
+        self.case_height = h
+        h *= len(choices) + 1
+        self.rect = pygame.Rect(x,y,w,h)
+        self.surface = pygame.Surface((w, h), SRCALPHA)
+
+        self.selected_color = selected_color
+        self.menu_color = menu_color
+
+        self.choices = choices
+        self.selected_choice = self.choices[0]
+        self.opened = False
+
+        self.surface.fill(self.selected_color)
+
+        self.ui_manager = UIManager()
+        for i,choice in enumerate(self.choices):
+            btn = Button(self.rect.x, self.rect.y + self.case_height * (i + 1), self.rect.w, self.case_height,
+                            choice, self.menu_color, self.set_choice, choice, font_size = 32)
+            self.ui_manager.add(btn)
+        self.ui_manager.draw(self.surface)
+
+        self.font = pygame.font.SysFont(pygame.font.get_default_font(), 32)
+        choice_text = self.font.render(self.selected_choice, 1, (255,255,255))
+        self.surface.blit(choice_text, (self.rect.x, self.rect.y))
+
+    def set_choice(self, btn, choice):
+        self.selected_choice = choice
+        pygame.draw.rect(self.surface, self.selected_color, (self.rect.x, self.rect.y, self.rect.w, self.case_height))
+        choice_text = self.font.render(self.selected_choice, 1, (255,255,255))
+        self.surface.blit(choice_text, (self.rect.x, self.rect.y))
+
+    def draw(self, surface):
+        if self.opened:
+            surface.blit(self.surface, (self.rect.x, self.rect.y))
+        else:
+            surface.blit(self.surface, (self.rect.x, self.rect.y),
+                        (self.rect.x, self.rect.y, self.rect.w, self.case_height))
+
+
+    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
+        if self.opened:
+            self.ui_manager.update(mouse_position, mouse_pressed, mouse_rel, events)
+        for event in events:
+            if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                self.opened = not self.opened
+
+    def is_hovered(self, mouse_position):
+        return self.rect.collidepoint(mouse_position)
