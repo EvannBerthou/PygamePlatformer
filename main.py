@@ -15,6 +15,7 @@ class Game:
         self.win = pygame.display.set_mode((self.w,self.h))
         self.blitting_surface = pygame.Surface((self.DESING_W,self.DESING_H), HWSURFACE)
         self.running = True
+        self.fullscreen = False
 
         self.clock = pygame.time.Clock()
         self.level_manager = None
