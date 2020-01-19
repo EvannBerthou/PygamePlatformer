@@ -3,6 +3,9 @@ from pygame.locals import *
 from data.Level import LevelManager
 from data.MainMenu import MainMenu
 
+def convert_to_ratio(pos, ratio):
+    return (pos[0] * ratio[0], pos[1] * ratio[1])
+
 class GameState:
     MAIN_MENU = 0
     IN_GAME = 1
@@ -16,6 +19,7 @@ class Game:
         self.blitting_surface = pygame.Surface((self.DESING_W,self.DESING_H), HWSURFACE)
         self.running = True
         self.fullscreen = False
+        self.ratio = (self.DESING_W / self.w, self.DESING_H / self.h)
 
         self.clock = pygame.time.Clock()
         self.level_manager = None
@@ -33,7 +37,7 @@ class Game:
             tick = self.clock.tick(update_rate)
             self.blitting_surface.fill((0,0,0))
 
-            mouse_position = pygame.mouse.get_pos()
+            mouse_position = convert_to_ratio(pygame.mouse.get_pos(), self.ratio)
             mouse_pressed  = pygame.mouse.get_pressed()
             mouse_rel = pygame.mouse.get_rel()
 
@@ -58,19 +62,16 @@ class Game:
                 blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
                 self.win.blit(blit, blit.get_rect())
 
-                if self.game_state == GameState.MAIN_MENU:
-                    self.main_menu.draw_ui(self.win)
-                if self.game_state == GameState.IN_GAME:
-                    self.level_manager.draw_ui(self.win)
-
                 pygame.display.update()
                 render_time = round(1000 / fps)
 
     def draw_main_menu(self):
         self.main_menu.draw(self.blitting_surface)
+        self.main_menu.draw_ui(self.blitting_surface)
 
     def draw_in_game(self):
         self.level_manager.draw(self.blitting_surface)
+        self.level_manager.draw_ui(self.blitting_surface)
 
     def load_map(self, map_name):
         self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_name, self)
@@ -80,6 +81,10 @@ class Game:
         self.level_manager = None
         self.main_menu = MainMenu(self)
         self.game_state = GameState.MAIN_MENU
+
+    def update_screen_size(self, new_size):
+        self.w, self.h = new_size
+        self.ratio = (self.DESING_W / self.w, self.DESING_H / self.h)
 
 game = Game()
 game.run()
