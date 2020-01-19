@@ -80,6 +80,11 @@ class OptionMenu(Menu):
         self.fullscreen_toggle = UI.Toggle(20,20,200,32, "Fullscreen", self.toggle_fullscreen)
         self.ui_manager.add(self.fullscreen_toggle)
 
+        self.resolution_dropdown = UI.DropDown(20,70,200,30,
+                                                ["1920x1080", "1366x768", "1280x720", "1152x648", "960x540","640x360"],
+                                                (100,100,100), (75,75,75), self.change_resolution)
+        self.ui_manager.add(self.resolution_dropdown)
+
     def draw(self, surface):
         pygame.draw.rect(surface, (150,150,150), (10,10, self.main_menu.game.w - 20, self.main_menu.game.h - 20))
         self.ui_manager.draw(surface)
@@ -88,12 +93,23 @@ class OptionMenu(Menu):
         pass
 
     def toggle_fullscreen(self, active):
+        self.main_menu.game.fullscreen = active
         if active:
             w,h = self.main_menu.game.w, self.main_menu.game.h
             self.main_menu.game.display = pygame.display.set_mode((w,h), FULLSCREEN, HWSURFACE)
         else:
             w,h = self.main_menu.game.w, self.main_menu.game.h
             self.main_menu.game.display = pygame.display.set_mode((w,h), HWSURFACE)
+
+    def change_resolution(self, resolution):
+        self.main_menu.game.win.fill((0,0,0))
+        parts = resolution.split('x')
+        w,h = int(parts[0]), int(parts[1])
+        self.main_menu.game.w = w
+        self.main_menu.game.h = h
+        fullscreen = FULLSCREEN if self.main_menu.game.fullscreen else 0
+        self.main_menu.game.display = pygame.display.set_mode((w,h), fullscreen, HWSURFACE)
+        pygame.display.update()
 
 class MainMenu:
     def __init__(self, game):
