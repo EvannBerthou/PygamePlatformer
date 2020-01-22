@@ -13,8 +13,10 @@ class Camera:
         self.last_offset = (0,0)
 
     def get_offset(self, rect):
-        offset = ((self.x + rect.x) * self.zoom, (self.y + rect.y) * self.zoom,
-                  self.zoom * rect.w, self.zoom * rect.h)
+        offset = (int((self.x + rect.x) * self.zoom),
+                  int((self.y + rect.y) * self.zoom),
+                  int(self.zoom * rect.w),
+                  int(self.zoom * rect.h))
         return offset
 
     def draw_rect(self, surface, color, rect, size=0):

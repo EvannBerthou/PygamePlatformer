@@ -26,9 +26,17 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
     if editor.UIManager.update(mouse_position, event.button == 1, 0, events) > 0:
         return
     if editor.property_panel == None:
-        editor.selected_rect = inside_rect(editor.rects, mouse_position, editor.camera)
+        if not (editor.selected_rect > -1 and editor.check_arrow(mouse_position)):
+            editor.selected_rect = inside_rect(editor.rects, mouse_position, editor.camera)
     if editor.selected_rect > -1:
-        pygame.mouse.get_rel()
+        if event.button == 1:
+            mp = editor.camera.screen_to_world(mouse_position)
+            rect = editor.rects.sprites()[editor.selected_rect]
+            rect.before_drag = rect.org_rect.copy()
+            editor.drag_start = editor.camera.screen_to_world(mouse_position)
+            editor.draw_arrows(rect.rect)
+            editor.selected_arrow = editor.check_arrow(mouse_position)
+            pygame.mouse.get_rel()
         if editor.property_panel and not editor.property_panel.linking:
             editor.property_panel.destroy(editor.UIManager)
             editor.property_panel = None
@@ -66,6 +74,8 @@ def mode_editor_mouse_up(editor, mouse_position):
         if rect != None:
             editor.rects.add(rect)
         editor.rect_started = False
+    editor.drag_start = None
+    editor.selected_arrow = ""
 
 def on_key_down(editor, event, mouse_position):
     if event.key == K_TAB:
@@ -111,18 +121,12 @@ def update_mode(editor):
 
 def move_rect(editor, mouse_position):
     r = editor.rects.sprites()[editor.selected_rect]
+    mp = editor.camera.screen_to_world(mouse_position)
     if isinstance(r, SpawnPoint):
-        mp = editor.camera.screen_to_world(mouse_position)
         r.move(mp)
         r.points = r.get_points()
     else:
-        dx,dy = pygame.mouse.get_rel()
-        if editor.selected_arrow == "vertical":
-            r.move(dx,0, editor.camera.zoom, editor.camera.ratio)
-        elif editor.selected_arrow == "horizontal":
-            r.move(0,dy, editor.camera.zoom, editor.camera.ratio)
-        else:
-            r.move(dx,dy, editor.camera.zoom, editor.camera.ratio)
+        r.move(mp, editor.drag_start, editor.selected_arrow)
 
         if isinstance(r, Door):
             r.lines = r.get_lines()

@@ -14,6 +14,7 @@ class Plate(pygame.sprite.Sprite):
         self.image = pygame.Surface((w,h))
         self.image.fill(self.color)
         self.selectable = True
+        self.before_drag = None
 
     def update(self, cam = None):
         if cam:
@@ -26,10 +27,14 @@ class Plate(pygame.sprite.Sprite):
         color = invert_color(self.color)
         camera.draw_rect(surface, color, border, 5)
 
-    def move(self, dx,dy,zoom,ratio):
-        self.org_rect = pygame.Rect(self.org_rect[0] + dx * (1 / zoom) * ratio[0],
-                                    self.org_rect[1] + dy * (1 / zoom) * ratio[1],
-                                    self.org_rect[2], self.org_rect[3])
+    def move(self, mp, drag_start, constraint):
+        if constraint == "vertical":
+            self.org_rect.x = self.before_drag[0] + mp[0] - drag_start[0]
+        elif constraint == "horizontal":
+            self.org_rect.y = self.before_drag[1] + mp[1] - drag_start[1]
+        else:
+            self.org_rect.x = self.before_drag[0] + mp[0] - drag_start[0]
+            self.org_rect.y = self.before_drag[1] + mp[1] - drag_start[1]
 
     def has_collision(self, player_id):
         return self.collide
