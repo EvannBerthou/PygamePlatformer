@@ -97,7 +97,7 @@ class Game:
 
             #UPDATE
             if self.UIManager.selected != -1:
-                self.UIManager.elements[self.UIManager.selected].update(mouse_position, mouse_pressed, events)
+                self.UIManager.elements[self.UIManager.selected].update(mouse_position, mouse_pressed, 0, events)
                 self.rect_started = 0
                 if self.property_panel == None:
                     self.selected_rect = -1

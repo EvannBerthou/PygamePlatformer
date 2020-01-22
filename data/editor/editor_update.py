@@ -23,7 +23,7 @@ def mode_camera_key_down(editor):
 
 
 def mode_editor_mouse_down(editor, event, events, mouse_position):
-    if editor.UIManager.update(mouse_position, event.button == 1, events) > 0:
+    if editor.UIManager.update(mouse_position, event.button == 1, 0, events) > 0:
         return
     if editor.property_panel == None:
         editor.selected_rect = inside_rect(editor.rects, mouse_position, editor.camera)
