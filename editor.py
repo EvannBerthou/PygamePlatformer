@@ -1,4 +1,4 @@
-import os
+import os,sys
 import pygame
 from pygame.locals import *
 import UI
@@ -15,7 +15,7 @@ class Game:
         button.color = (255,0,0)
         self.selected_button = button
 
-    def __init__(self):
+    def __init__(self, map_path):
         self.w, self.h = 1152,648
         # self.w, self.h = 1920,1080
         self.win = pygame.display.set_mode((self.w,self.h))
@@ -62,6 +62,9 @@ class Game:
         self.selected_arrow = ""
         self.vertical_arrow = None
         self.horizontal_arrow = None
+
+        self.map_path = map_path
+        self.load_map(map_path)
 
     def run(self):
         while self.running:
@@ -147,13 +150,13 @@ class Game:
             self.win.blit(self.mode_text,(0,0))
             pygame.display.update()
 
-    def load_map(self, file_name = 'map'):
+    def load_map(self, map_path):
         self.rects.empty()
         self.rects.add(Background((DESING_W, DESING_H)))
-        self.rects.add(load_map())
+        self.rects.add(load_map(map_path))
 
     def save_to_file(self):
-        return save_to_file(self.rects.sprites())
+        return save_to_file(self.rects.sprites(), self.map_path)
 
     def check_arrow(self, mouse_position):
         screen_to_world = self.camera.screen_to_world(mouse_position)
@@ -172,5 +175,8 @@ class Game:
         pygame.draw.rect(self.blitting_surface, (0,255,0), self.horizontal_arrow)
 
 
-game = Game()
+if len(sys.argv) < 2:
+    print('No file path given')
+    exit(1)
+game = Game(sys.argv[1])
 game.run()

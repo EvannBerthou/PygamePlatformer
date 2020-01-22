@@ -28,8 +28,6 @@ class Game:
         self.game_state = GameState.MAIN_MENU
         self.draw_function = [self.draw_main_menu, self.draw_in_game]
 
-        print(pygame.display.list_modes(flags = 0))
-
     def run(self):
         render_time = 0
         fps = 60
