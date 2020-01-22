@@ -34,6 +34,7 @@ class Game:
 
         self.rect_start = None
         self.rect_started = False
+        self.drag_start = None
 
         self.UIManager = UI.UIManager()
         self.property_panel = None
@@ -72,6 +73,9 @@ class Game:
             self.win.fill((0,0,0,))
             self.blitting_surface.fill((0,0,0))
 
+            if mouse_pressed[0] and self.selected_rect != -1 and self.property_panel == None:
+                move_rect(self, mouse_position)
+
             events = pygame.event.get()
             for event in events:
                 if event.type == QUIT:
@@ -87,11 +91,8 @@ class Game:
                 if event.type == KEYDOWN:
                     on_key_down(self, event, mouse_position)
 
-                if mouse_pressed[0] and self.selected_rect != -1 and self.property_panel == None:
-                    move_rect(self, mouse_position)
-
-                if mouse_pressed[2] and self.selected_rect != -1 and self.property_panel == None:
-                    on_resize_rect(self, mouse_position)
+            if mouse_pressed[2] and self.selected_rect != -1 and self.property_panel == None:
+                on_resize_rect(self, mouse_position)
 
             if self.camera.mouse_moving:
                 dx,dy = pygame.mouse.get_rel()
@@ -112,8 +113,8 @@ class Game:
             if self.selected_rect != -1:
                 rect = self.rects.sprites()[self.selected_rect]
                 rect.outline(self.blitting_surface, self.camera)
-                self.draw_arrows(rect.org_rect)
-                self.selected_arrow = self.check_arrow(mouse_position)
+                self.draw_arrows(rect.rect)
+                self.check_arrow(mouse_position)
                 if self.property_panel:
                     if "ColorPicker" in self.property_panel.properties_obj:
                         color = self.property_panel.get_color()
@@ -155,7 +156,9 @@ class Game:
         return save_to_file(self.rects.sprites())
 
     def check_arrow(self, mouse_position):
-        mp = self.camera.screen_to_world(mouse_position)
+        screen_to_world = self.camera.screen_to_world(mouse_position)
+        mouse_rect = pygame.Rect(*screen_to_world, 1,1)
+        mp = self.camera.get_offset(mouse_rect)[:2] #Only keep x and y
         if self.vertical_arrow.collidepoint(mp):
             return "vertical"
         if self.horizontal_arrow.collidepoint(mp):
@@ -163,8 +166,8 @@ class Game:
         return ""
 
     def draw_arrows(self, rect):
-        self.vertical_arrow = pygame.Rect(rect.center[0], rect.center[1], 100,30)
-        self.horizontal_arrow = pygame.Rect(rect.center[0], rect.center[1], 30,100)
+        self.vertical_arrow = pygame.Rect(rect.center[0] + 40, rect.center[1], 140,40)
+        self.horizontal_arrow = pygame.Rect(rect.center[0], rect.center[1], 40,140)
         pygame.draw.rect(self.blitting_surface, (0,0,255), self.vertical_arrow)
         pygame.draw.rect(self.blitting_surface, (0,255,0), self.horizontal_arrow)
 

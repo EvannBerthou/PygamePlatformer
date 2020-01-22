@@ -32,10 +32,14 @@ class EndGoal(pygame.sprite.Sprite):
         color = invert_color(self.color)
         camera.draw_rect(surface, color, border, 5)
 
-    def move(self, dx,dy,zoom,ratio):
-        self.org_rect = pygame.Rect(self.org_rect[0] + dx * (1 / zoom) * ratio[0],
-                                    self.org_rect[1] + dy * (1 / zoom) * ratio[1],
-                                    self.org_rect[2], self.org_rect[3])
+    def move(self, mp, drag_start, constraint):
+        if constraint == "vertical":
+            self.org_rect.x = self.before_drag[0] + mp[0] - drag_start[0]
+        elif constraint == "horizontal":
+            self.org_rect.y = self.before_drag[1] + mp[1] - drag_start[1]
+        else:
+            self.org_rect.x = self.before_drag[0] + mp[0] - drag_start[0]
+            self.org_rect.y = self.before_drag[1] + mp[1] - drag_start[1]
 
     def on_collision(self, collider):
         if not collider in self.players_on:
