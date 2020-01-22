@@ -1,0 +1,251 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/3fdf28bc/
+A définir	README.md	/^###    A définir$/;"	S
+Background	data/GameObjects/Background.py	/^class Background(pygame.sprite.Sprite):$/;"	c
+Button	UI.py	/^class Button(UIElement):$/;"	c
+Camera	data/editor/Camera.py	/^class Camera:$/;"	c
+Camera	data/editor/editor_update.py	/^    Camera = 0$/;"	v	class:MODE
+ColorPicker	data/editor/ColorPicker.py	/^class ColorPicker:$/;"	c
+Contenue du jeu :	README.md	/^## Contenue du jeu :$/;"	s
+DESING_H	editor.py	/^DESING_W, DESING_H = 1920,1080$/;"	v
+DESING_W	editor.py	/^DESING_W, DESING_H = 1920,1080$/;"	v
+Door	data/GameObjects/Door.py	/^class Door(pygame.sprite.Sprite):$/;"	c
+DragRect	data/editor/editor_rects.py	/^class DragRect(pygame.sprite.Sprite):$/;"	c
+DropDown	UI.py	/^class DropDown(UIElement):$/;"	c
+Editor	data/editor/editor_update.py	/^    Editor = 1$/;"	v	class:MODE
+EndGoal	data/GameObjects/EndGoal.py	/^class EndGoal(pygame.sprite.Sprite):$/;"	c
+Game	editor.py	/^class Game:$/;"	c
+Game	main.py	/^class Game:$/;"	c
+GameState	main.py	/^class GameState:$/;"	c
+Github pour le suivi du developpement du jeu	README.md	/^###    Github pour le suivi du developpement du jeu$/;"	S
+IN_GAME	main.py	/^    IN_GAME = 1$/;"	v	class:GameState
+Jeu de platforme en coopération	README.md	/^###    Jeu de platforme en coopération$/;"	S
+Kylian QUESNEL, Evann BERTHOU	README.md	/^###    Kylian QUESNEL, Evann BERTHOU$/;"	S
+LevelManager	data/Level/LevelManager.py	/^class LevelManager:$/;"	c
+LevelSelectorMenu	data/MainMenu/MainMenu.py	/^class LevelSelectorMenu(Menu):$/;"	c
+Logiciels :	README.md	/^## Logiciels :$/;"	s
+MAIN_MENU	main.py	/^    MAIN_MENU = 0$/;"	v	class:GameState
+MODE	data/editor/editor_update.py	/^class MODE:$/;"	c
+MODE_TEXT	data/editor/editor_update.py	/^MODE_TEXT = pygame.font.SysFont(pygame.font.get_default_font(), 46)$/;"	v
+MainMenu	data/MainMenu/MainMenu.py	/^class MainMenu:$/;"	c
+MainScreenMenu	data/MainMenu/MainMenu.py	/^class MainScreenMenu(Menu):$/;"	c
+Menu	data/MainMenu/MainMenu.py	/^class Menu:$/;"	c
+OptionMenu	data/MainMenu/MainMenu.py	/^class OptionMenu(Menu):$/;"	c
+PLAYER_SIZE	data/GameObjects/Player.py	/^PLAYER_SIZE = 64$/;"	v
+Participants :	README.md	/^## Participants :$/;"	s
+Plate	data/GameObjects/Plate.py	/^class Plate(pygame.sprite.Sprite):$/;"	c
+Player	data/GameObjects/Player.py	/^class Player(pygame.sprite.Sprite):$/;"	c
+Principe du jeu :	README.md	/^## Principe du jeu :$/;"	s
+Problématique :	README.md	/^## Problématique :$/;"	s
+PropertyPanel	data/editor/PropertyPanel.py	/^class PropertyPanel:$/;"	c
+PygamePlatformer	README.md	/^# PygamePlatformer$/;"	c
+Python avec la librairie PyGame	README.md	/^###    Python avec la librairie PyGame$/;"	S
+ScrollView	UI.py	/^class ScrollView(UIElement):$/;"	c
+SearchBar	UI.py	/^class SearchBar(UIElement):$/;"	c
+Slider	UI.py	/^class Slider(UIElement):$/;"	c
+SpawnPoint	data/GameObjects/SpawnPoint.py	/^class SpawnPoint(pygame.sprite.Sprite):$/;"	c
+Titre du projet :	README.md	/^## Titre du projet :$/;"	s
+Toggle	UI.py	/^class Toggle(UIElement):$/;"	c
+UIElement	UI.py	/^class UIElement:$/;"	c
+UIManager	UI.py	/^class UIManager:$/;"	c
+Wall	data/GameObjects/Wall.py	/^class Wall(pygame.sprite.Sprite):$/;"	c
+__init__	UI.py	/^    def __init__(self):$/;"	m	class:UIManager
+__init__	UI.py	/^    def __init__(self, x,y):$/;"	m	class:UIElement
+__init__	UI.py	/^    def __init__(self, x,y,w,h, bg_color):$/;"	m	class:ScrollView
+__init__	UI.py	/^    def __init__(self, x,y,w,h, callback_function):$/;"	m	class:SearchBar
+__init__	UI.py	/^    def __init__(self, x,y,w,h, choices, selected_color, menu_color, callback):$/;"	m	class:DropDown
+__init__	UI.py	/^    def __init__(self, x,y,w,h, min_value,max_value, bg_color, fg_color):$/;"	m	class:Slider
+__init__	UI.py	/^    def __init__(self, x,y,w,h, text, callback_function):$/;"	m	class:Toggle
+__init__	UI.py	/^    def __init__(self, x,y,w,h, text, color, callback, args, center_text = False, font_size = 46/;"	m	class:Button
+__init__	data/GameObjects/Background.py	/^    def __init__(self, window_size):$/;"	m	class:Background
+__init__	data/GameObjects/Door.py	/^    def __init__(self, x,y,w,h, color, player_id = 0):$/;"	m	class:Door
+__init__	data/GameObjects/EndGoal.py	/^    def __init__(self, x,y, w,h, color = (150,100,200)):$/;"	m	class:EndGoal
+__init__	data/GameObjects/Plate.py	/^    def __init__(self, x,y,w,h, color = (255,0,0), linked_to_id = -1):$/;"	m	class:Plate
+__init__	data/GameObjects/Player.py	/^    def __init__(self, left_key, right_key, jump_key, player_id):$/;"	m	class:Player
+__init__	data/GameObjects/SpawnPoint.py	/^    def __init__(self, x,y, lenght, color, player_id):$/;"	m	class:SpawnPoint
+__init__	data/GameObjects/Wall.py	/^    def __init__(self, x,y,w,h, color = (255,0,0)):$/;"	m	class:Wall
+__init__	data/Level/LevelManager.py	/^    def __init__(self, window_size, map_path, game):$/;"	m	class:LevelManager
+__init__	data/MainMenu/MainMenu.py	/^    def __init__(self, game):$/;"	m	class:MainMenu
+__init__	data/MainMenu/MainMenu.py	/^    def __init__(self, main_menu):$/;"	m	class:LevelSelectorMenu
+__init__	data/MainMenu/MainMenu.py	/^    def __init__(self, main_menu):$/;"	m	class:MainScreenMenu
+__init__	data/MainMenu/MainMenu.py	/^    def __init__(self, main_menu):$/;"	m	class:Menu
+__init__	data/MainMenu/MainMenu.py	/^    def __init__(self, main_menu):$/;"	m	class:OptionMenu
+__init__	data/editor/Camera.py	/^    def __init__(self, ws, ds):$/;"	m	class:Camera
+__init__	data/editor/ColorPicker.py	/^    def __init__(self, x,y, UIManager):$/;"	m	class:ColorPicker
+__init__	data/editor/PropertyPanel.py	/^    def __init__(self, x,y, properties, UIManager, selected_obj):$/;"	m	class:PropertyPanel
+__init__	data/editor/editor_rects.py	/^    def __init__(self, x,y,w,h, color):$/;"	m	class:DragRect
+__init__	editor.py	/^    def __init__(self):$/;"	m	class:Game
+__init__	main.py	/^    def __init__(self):$/;"	m	class:Game
+add	UI.py	/^    def add(self, element):$/;"	m	class:ScrollView
+add	UI.py	/^    def add(self, element):$/;"	m	class:UIManager
+add_letter	UI.py	/^    def add_letter(self, char):$/;"	m	class:SearchBar
+as_string	data/GameObjects/Door.py	/^    def as_string(self):$/;"	m	class:Door
+as_string	data/GameObjects/EndGoal.py	/^    def as_string(self):$/;"	m	class:EndGoal
+as_string	data/GameObjects/Plate.py	/^    def as_string(self):$/;"	m	class:Plate
+as_string	data/GameObjects/SpawnPoint.py	/^    def as_string(self):$/;"	m	class:SpawnPoint
+as_string	data/GameObjects/Wall.py	/^    def as_string(self):$/;"	m	class:Wall
+c_update	data/GameObjects/Player.py	/^    def c_update(self, colliders, keys, dt):$/;"	m	class:Player
+change_object	editor.py	/^    def change_object(self, button, obj):$/;"	m	class:Game
+change_resolution	data/MainMenu/MainMenu.py	/^    def change_resolution(self, resolution):$/;"	m	class:OptionMenu
+clamp	data/utils/utils.py	/^def clamp(value, min_value, max_value):$/;"	f
+clamp	data/utils/utils_funcs.py	/^def clamp(value, min_value, max_value):$/;"	f
+clear	UI.py	/^    def clear(self):$/;"	m	class:ScrollView
+clear	UI.py	/^    def clear(self):$/;"	m	class:UIManager
+collision_bottom	data/GameObjects/Player.py	/^    def collision_bottom(self, col):$/;"	m	class:Player
+collision_left	data/GameObjects/Player.py	/^    def collision_left(self, col):$/;"	m	class:Player
+collision_right	data/GameObjects/Player.py	/^    def collision_right(self, col):$/;"	m	class:Player
+collision_top	data/GameObjects/Player.py	/^    def collision_top(self, col):$/;"	m	class:Player
+convert_rect	data/editor/editor_rects.py	/^def convert_rect(x,y,w,h):$/;"	f
+convert_to_ratio	main.py	/^def convert_to_ratio(pos, ratio):$/;"	f
+create_obj	data/utils/SaveManager.py	/^def create_obj(obj, args):$/;"	f
+create_rect	data/editor/editor_rects.py	/^def create_rect(rect_start, mouse_end, obj):$/;"	f
+destroy	UI.py	/^    def destroy(self, UIManager):$/;"	m	class:Button
+destroy	data/editor/ColorPicker.py	/^    def destroy(self, UIManager):$/;"	m	class:ColorPicker
+destroy	data/editor/PropertyPanel.py	/^    def destroy(self, UIManager):$/;"	m	class:PropertyPanel
+draw	UI.py	/^    def draw(self, surface):$/;"	m	class:Button
+draw	UI.py	/^    def draw(self, surface):$/;"	m	class:DropDown
+draw	UI.py	/^    def draw(self, surface):$/;"	m	class:ScrollView
+draw	UI.py	/^    def draw(self, surface):$/;"	m	class:SearchBar
+draw	UI.py	/^    def draw(self, surface):$/;"	m	class:Slider
+draw	UI.py	/^    def draw(self, surface):$/;"	m	class:Toggle
+draw	UI.py	/^    def draw(self, surface):$/;"	m	class:UIElement
+draw	UI.py	/^    def draw(self, surface):$/;"	m	class:UIManager
+draw	data/Level/LevelManager.py	/^    def draw(self, surface):$/;"	m	class:LevelManager
+draw	data/MainMenu/MainMenu.py	/^    def draw(self, surface):$/;"	m	class:LevelSelectorMenu
+draw	data/MainMenu/MainMenu.py	/^    def draw(self, surface):$/;"	m	class:MainMenu
+draw	data/MainMenu/MainMenu.py	/^    def draw(self, surface):$/;"	m	class:MainScreenMenu
+draw	data/MainMenu/MainMenu.py	/^    def draw(self, surface):$/;"	m	class:Menu
+draw	data/MainMenu/MainMenu.py	/^    def draw(self, surface):$/;"	m	class:OptionMenu
+draw	data/editor/ColorPicker.py	/^    def draw(self, surface):$/;"	m	class:ColorPicker
+draw	data/editor/PropertyPanel.py	/^    def draw(self, surface):$/;"	m	class:PropertyPanel
+draw	data/editor/editor_rects.py	/^    def draw(self,camera,surface):$/;"	m	class:DragRect
+draw_arrow	data/editor/editor_rects.py	/^def draw_arrow(rect, camera):$/;"	f
+draw_in_game	main.py	/^    def draw_in_game(self):$/;"	m	class:Game
+draw_line	data/editor/Camera.py	/^    def draw_line(self, surface, color, pt1, pt2, width = 1):$/;"	m	class:Camera
+draw_main_menu	main.py	/^    def draw_main_menu(self):$/;"	m	class:Game
+draw_polygon	data/editor/Camera.py	/^    def draw_polygon(self, surface, color, points, width = 0):$/;"	m	class:Camera
+draw_rect	data/editor/Camera.py	/^    def draw_rect(self, surface, color, rect, size=0):$/;"	m	class:Camera
+draw_ui	data/Level/LevelManager.py	/^    def draw_ui(self, surface):$/;"	m	class:LevelManager
+draw_ui	data/MainMenu/MainMenu.py	/^    def draw_ui(self, surface):$/;"	m	class:MainMenu
+end_game	data/Level/LevelManager.py	/^    def end_game(self):$/;"	m	class:LevelManager
+event_zoom	data/editor/Camera.py	/^    def event_zoom(self, event):$/;"	m	class:Camera
+exit	data/MainMenu/MainMenu.py	/^    def exit(self, btn, args):$/;"	m	class:MainMenu
+game	editor.py	/^game = Game()$/;"	v
+game	main.py	/^game = Game()$/;"	v
+get_color	data/editor/ColorPicker.py	/^    def get_color(self):$/;"	m	class:ColorPicker
+get_color	data/editor/PropertyPanel.py	/^    def get_color(self):$/;"	m	class:PropertyPanel
+get_corner_point	data/editor/editor_rects.py	/^def get_corner_point(rect, point):$/;"	f
+get_lines	data/GameObjects/Door.py	/^    def get_lines(self):$/;"	m	class:Door
+get_offset	data/editor/Camera.py	/^    def get_offset(self, rect):$/;"	m	class:Camera
+get_points	data/GameObjects/SpawnPoint.py	/^    def get_points(self, lenght = None, offset=(0,0)):$/;"	m	class:SpawnPoint
+get_position	data/GameObjects/SpawnPoint.py	/^    def get_position(self):$/;"	m	class:SpawnPoint
+get_properties	data/GameObjects/Door.py	/^    def get_properties(self):$/;"	m	class:Door
+get_properties	data/GameObjects/EndGoal.py	/^    def get_properties(self):$/;"	m	class:EndGoal
+get_properties	data/GameObjects/Plate.py	/^    def get_properties(self):$/;"	m	class:Plate
+get_properties	data/GameObjects/SpawnPoint.py	/^    def get_properties(self):$/;"	m	class:SpawnPoint
+get_properties	data/GameObjects/Wall.py	/^    def get_properties(self):$/;"	m	class:Wall
+go	data/utils/SaveManager.py	/^    import data.GameObjects as go$/;"	I	function:create_obj	file:
+go	data/utils/SaveManager.py	/^    import data.GameObjects as go$/;"	I	function:obj_from_str	file:
+has_collision	data/GameObjects/Background.py	/^    def has_collision(self, player_id):$/;"	m	class:Background
+has_collision	data/GameObjects/Door.py	/^    def has_collision(self, player_id):$/;"	m	class:Door
+has_collision	data/GameObjects/EndGoal.py	/^    def has_collision(self, player_id):$/;"	m	class:EndGoal
+has_collision	data/GameObjects/Plate.py	/^    def has_collision(self, player_id):$/;"	m	class:Plate
+has_collision	data/GameObjects/Player.py	/^    def has_collision(self, player_id):$/;"	m	class:Player
+has_collision	data/GameObjects/Wall.py	/^    def has_collision(self, player_id):$/;"	m	class:Wall
+inside_rect	data/editor/editor_rects.py	/^def inside_rect(rects, mouse_position, camera):$/;"	f
+invert_color	data/editor/Color.py	/^def invert_color(color):$/;"	f
+is_hovered	UI.py	/^    def is_hovered(self, mouse_position):$/;"	m	class:Button
+is_hovered	UI.py	/^    def is_hovered(self, mouse_position):$/;"	m	class:DropDown
+is_hovered	UI.py	/^    def is_hovered(self, mouse_position):$/;"	m	class:ScrollView
+is_hovered	UI.py	/^    def is_hovered(self, mouse_position):$/;"	m	class:SearchBar
+is_hovered	UI.py	/^    def is_hovered(self, mouse_position):$/;"	m	class:Slider
+is_hovered	UI.py	/^    def is_hovered(self, mouse_position):$/;"	m	class:Toggle
+key_pressed	UI.py	/^    def key_pressed(self, event):$/;"	m	class:SearchBar
+load_level_list	data/MainMenu/MainMenu.py	/^    def load_level_list(self):$/;"	m	class:LevelSelectorMenu
+load_main_menu	main.py	/^    def load_main_menu(self, btn = None, args = None):$/;"	m	class:Game
+load_map	data/Level/LevelManager.py	/^    def load_map(self, file_path):$/;"	m	class:LevelManager
+load_map	data/MainMenu/MainMenu.py	/^    def load_map(self, btn, args):$/;"	m	class:MainMenu
+load_map	data/utils/SaveManager.py	/^def load_map(file_name):$/;"	f
+load_map	editor.py	/^    def load_map(self, file_name = 'map'):$/;"	m	class:Game
+load_map	main.py	/^    def load_map(self, map_name):$/;"	m	class:Game
+load_sprite	data/utils/SpriteLoader.py	/^def load_sprite(name, size):$/;"	f
+main_menu	data/MainMenu/MainMenu.py	/^    def main_menu(self, *args):$/;"	m	class:MainMenu
+mode_camera_key_down	data/editor/editor_update.py	/^def mode_camera_key_down(editor):$/;"	f
+mode_camera_mouse_down	data/editor/editor_update.py	/^def mode_camera_mouse_down(editor, event):$/;"	f
+mode_camera_mouse_up	data/editor/editor_update.py	/^def mode_camera_mouse_up(editor, event):$/;"	f
+mode_editor_mouse_down	data/editor/editor_update.py	/^def mode_editor_mouse_down(editor, event, events, mouse_position):$/;"	f
+mode_editor_mouse_up	data/editor/editor_update.py	/^def mode_editor_mouse_up(editor, mouse_position):$/;"	f
+move	data/GameObjects/Door.py	/^    def move(self, dx,dy,zoom,ratio):$/;"	m	class:Door
+move	data/GameObjects/EndGoal.py	/^    def move(self, dx,dy,zoom,ratio):$/;"	m	class:EndGoal
+move	data/GameObjects/Plate.py	/^    def move(self, dx,dy,zoom,ratio):$/;"	m	class:Plate
+move	data/GameObjects/Player.py	/^    def move(self, dt):$/;"	m	class:Player
+move	data/GameObjects/SpawnPoint.py	/^    def move(self, mp):$/;"	m	class:SpawnPoint
+move	data/GameObjects/Wall.py	/^    def move(self, dx,dy,zoom,ratio):$/;"	m	class:Wall
+move_rect	data/editor/editor_update.py	/^def move_rect(editor, mouse_position):$/;"	f
+obj_from_str	data/utils/SaveManager.py	/^def obj_from_str(string):$/;"	f
+on_collision	data/GameObjects/Background.py	/^    def on_collision(self, collider):$/;"	m	class:Background
+on_collision	data/GameObjects/Door.py	/^    def on_collision(self, collider):$/;"	m	class:Door
+on_collision	data/GameObjects/EndGoal.py	/^    def on_collision(self, collider):$/;"	m	class:EndGoal
+on_collision	data/GameObjects/Plate.py	/^    def on_collision(self, collider):$/;"	m	class:Plate
+on_collision	data/GameObjects/Player.py	/^    def on_collision(self, collider):$/;"	m	class:Player
+on_collision	data/GameObjects/Wall.py	/^    def on_collision(self, collider):$/;"	m	class:Wall
+on_collision_exit	data/GameObjects/Door.py	/^    def on_collision_exit(self, collider):$/;"	m	class:Door
+on_collision_exit	data/GameObjects/EndGoal.py	/^    def on_collision_exit(self, collider):$/;"	m	class:EndGoal
+on_collision_exit	data/GameObjects/Plate.py	/^    def on_collision_exit(self, collider):$/;"	m	class:Plate
+on_collision_exit	data/GameObjects/Player.py	/^    def on_collision_exit(self, collider):$/;"	m	class:Player
+on_collision_exit	data/GameObjects/Wall.py	/^    def on_collision_exit(self, collider):$/;"	m	class:Wall
+on_key_down	data/editor/editor_update.py	/^def on_key_down(editor, event, mouse_position):$/;"	f
+on_resize_rect	data/editor/editor_update.py	/^def on_resize_rect(editor, mouse_position):$/;"	f
+options	data/MainMenu/MainMenu.py	/^    def options(self, btn, args):$/;"	m	class:MainMenu
+outline	data/GameObjects/Door.py	/^    def outline(self, surface, camera):$/;"	m	class:Door
+outline	data/GameObjects/EndGoal.py	/^    def outline(self, surface, camera):$/;"	m	class:EndGoal
+outline	data/GameObjects/Plate.py	/^    def outline(self, surface, camera):$/;"	m	class:Plate
+outline	data/GameObjects/SpawnPoint.py	/^    def outline(self, surface, camera):$/;"	m	class:SpawnPoint
+outline	data/GameObjects/Wall.py	/^    def outline(self, surface, camera):$/;"	m	class:Wall
+play	data/MainMenu/MainMenu.py	/^    def play(self, btn, args):$/;"	m	class:MainMenu
+reload_level	data/Level/LevelManager.py	/^    def reload_level(self, btn, args):$/;"	m	class:LevelManager
+remove	UI.py	/^    def remove(self, element):$/;"	m	class:UIManager
+remove_letter	UI.py	/^    def remove_letter(self):$/;"	m	class:SearchBar
+resize_rect	data/editor/editor_rects.py	/^def resize_rect(rect, corner, dx,dy, zoom):$/;"	f
+run	editor.py	/^    def run(self):$/;"	m	class:Game
+run	main.py	/^    def run(self):$/;"	m	class:Game
+save_to_file	data/utils/SaveManager.py	/^def save_to_file(rects, file_path = 'map'):$/;"	f
+save_to_file	editor.py	/^    def save_to_file(self):$/;"	m	class:Game
+screen_to_world	data/editor/Camera.py	/^    def screen_to_world(self, pos):$/;"	m	class:Camera
+set_choice	UI.py	/^    def set_choice(self, btn, choice):$/;"	m	class:DropDown
+set_color	data/editor/ColorPicker.py	/^    def set_color(self, color):$/;"	m	class:ColorPicker
+set_color	data/editor/PropertyPanel.py	/^    def set_color(self, color):$/;"	m	class:PropertyPanel
+set_position	data/GameObjects/Player.py	/^    def set_position(self, position):$/;"	m	class:Player
+set_text	UI.py	/^    def set_text(self, text):$/;"	m	class:Button
+set_value	UI.py	/^    def set_value(self, value):$/;"	m	class:Slider
+switch_player_id	data/GameObjects/Door.py	/^    def switch_player_id(self, btn, args):$/;"	m	class:Door
+switch_player_id	data/GameObjects/SpawnPoint.py	/^    def switch_player_id(self, btn, args):$/;"	m	class:SpawnPoint
+switch_status	data/GameObjects/Door.py	/^    def switch_status(self):$/;"	m	class:Door
+toggle_fullscreen	data/MainMenu/MainMenu.py	/^    def toggle_fullscreen(self, active):$/;"	m	class:OptionMenu
+toggle_linker	data/editor/PropertyPanel.py	/^    def toggle_linker(self, btn, player_id):$/;"	m	class:PropertyPanel
+update	UI.py	/^    def update(self):$/;"	m	class:UIElement
+update	UI.py	/^    def update(self, mouse_position, mouse_pressed, mouse_rel, events):$/;"	m	class:Button
+update	UI.py	/^    def update(self, mouse_position, mouse_pressed, mouse_rel, events):$/;"	m	class:DropDown
+update	UI.py	/^    def update(self, mouse_position, mouse_pressed, mouse_rel, events):$/;"	m	class:ScrollView
+update	UI.py	/^    def update(self, mouse_position, mouse_pressed, mouse_rel, events):$/;"	m	class:Slider
+update	UI.py	/^    def update(self, mouse_position, mouse_pressed, mouse_rel, events):$/;"	m	class:Toggle
+update	UI.py	/^    def update(self, mouse_position, mouse_pressed, mouse_rel, events):$/;"	m	class:UIManager
+update	data/GameObjects/Door.py	/^    def update(self, cam = None):$/;"	m	class:Door
+update	data/GameObjects/EndGoal.py	/^    def update(self, cam = None):$/;"	m	class:EndGoal
+update	data/GameObjects/Plate.py	/^    def update(self, cam = None):$/;"	m	class:Plate
+update	data/GameObjects/SpawnPoint.py	/^    def update(self, cam = None):$/;"	m	class:SpawnPoint
+update	data/GameObjects/Wall.py	/^    def update(self, cam = None):$/;"	m	class:Wall
+update	data/Level/LevelManager.py	/^    def update(self, dt):$/;"	m	class:LevelManager
+update	data/MainMenu/MainMenu.py	/^    def update(self, mouse_position, mouse_pressed, mouse_rel, events):$/;"	m	class:LevelSelectorMenu
+update	data/MainMenu/MainMenu.py	/^    def update(self, mouse_position, mouse_pressed, mouse_rel, events):$/;"	m	class:MainMenu
+update	data/MainMenu/MainMenu.py	/^    def update(self, mouse_position, mouse_pressed, mouse_rel, events):$/;"	m	class:MainScreenMenu
+update	data/MainMenu/MainMenu.py	/^    def update(self, mouse_position, mouse_pressed, mouse_rel, events):$/;"	m	class:OptionMenu
+update_levels	data/MainMenu/MainMenu.py	/^    def update_levels(self, search):$/;"	m	class:LevelSelectorMenu
+update_mode	data/editor/editor_update.py	/^def update_mode(editor):$/;"	f
+update_screen_size	main.py	/^    def update_screen_size(self, new_size):$/;"	m	class:Game
+update_surface	UI.py	/^    def update_surface(self, rel):$/;"	m	class:ScrollView

@@ -116,8 +116,14 @@ def move_rect(editor, mouse_position):
         r.move(mp)
         r.points = r.get_points()
     else:
-        dx,dy = (pygame.mouse.get_rel())
-        r.move(dx,dy, editor.camera.zoom, editor.camera.ratio)
+        dx,dy = pygame.mouse.get_rel()
+        if editor.selected_arrow == "vertical":
+            r.move(dx,0, editor.camera.zoom, editor.camera.ratio)
+        elif editor.selected_arrow == "horizontal":
+            r.move(0,dy, editor.camera.zoom, editor.camera.ratio)
+        else:
+            r.move(dx,dy, editor.camera.zoom, editor.camera.ratio)
+
         if isinstance(r, Door):
             r.lines = r.get_lines()
 

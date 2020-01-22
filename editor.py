@@ -58,6 +58,9 @@ class Game:
 
         self.rects = pygame.sprite.Group(Background((DESING_W, DESING_H)))
         self.selected_rect = -1
+        self.selected_arrow = ""
+        self.vertical_arrow = None
+        self.horizontal_arrow = None
 
     def run(self):
         while self.running:
@@ -109,6 +112,8 @@ class Game:
             if self.selected_rect != -1:
                 rect = self.rects.sprites()[self.selected_rect]
                 rect.outline(self.blitting_surface, self.camera)
+                self.draw_arrows(rect.org_rect)
+                self.selected_arrow = self.check_arrow(mouse_position)
                 if self.property_panel:
                     if "ColorPicker" in self.property_panel.properties_obj:
                         color = self.property_panel.get_color()
@@ -148,6 +153,21 @@ class Game:
 
     def save_to_file(self):
         return save_to_file(self.rects.sprites())
+
+    def check_arrow(self, mouse_position):
+        mp = self.camera.screen_to_world(mouse_position)
+        if self.vertical_arrow.collidepoint(mp):
+            return "vertical"
+        if self.horizontal_arrow.collidepoint(mp):
+            return "horizontal"
+        return ""
+
+    def draw_arrows(self, rect):
+        self.vertical_arrow = pygame.Rect(rect.center[0], rect.center[1], 100,30)
+        self.horizontal_arrow = pygame.Rect(rect.center[0], rect.center[1], 30,100)
+        pygame.draw.rect(self.blitting_surface, (0,0,255), self.vertical_arrow)
+        pygame.draw.rect(self.blitting_surface, (0,255,0), self.horizontal_arrow)
+
 
 game = Game()
 game.run()
