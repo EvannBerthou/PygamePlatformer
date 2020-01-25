@@ -109,7 +109,7 @@ def on_key_down(editor, event, mouse_position):
         print(editor.save_to_file())
     if event.key == K_l:
         editor.selected_rect = -1
-        editor.load_map()
+        editor.load_map(editor.map_path)
 
 def update_mode(editor):
     editor.selected_rect = -1
