@@ -14,15 +14,15 @@ def convert_rect(x,y,w,h):
     pos = [x,y]
     scl = [w,h]
 
-    if w > 0 and h < 0:
+    if w >= 0 and h <= 0:
         pos = [x,y + h]
         scl = [w, abs(h)]
 
-    if w < 0 and h < 0:
+    if w <= 0 and h <= 0:
         pos = [x + w, y + h]
         scl = [abs(w), abs(h)]
 
-    if w < 0 and h > 0:
+    if w <= 0 and h >= 0:
         pos = [x + w, y]
         scl = [abs(w), h]
 
