@@ -1,6 +1,7 @@
 import UI
 import os
 import pygame
+from data.utils.ConfigManager import load_config
 from pygame.locals import *
 
 class Menu:
@@ -90,13 +91,15 @@ class OptionMenu(Menu):
                                                 ["1920x1080", "1366x768", "1280x720", "1152x664", "960x540","640x360"],
                                                 (100,100,100), (75,75,75), self.change_resolution)
 
-        current_w,current_h = main_menu.game.w, main_menu.game.h
-        self.resolution_dropdown.set_choice(None, "{}x{}".format(current_w,current_h))
         self.ui_manager.add(self.resolution_dropdown)
 
         self.ui_manager.add(UI.Button(main_menu.game.DESING_W - 250, main_menu.game.DESING_H - 100, 200,60,
                                         "Back", (200,200,200), main_menu.main_menu, [],
                                         center_text = True, font_size = 70))
+
+        self.fullscreen_toggle.activated = main_menu.game.config['fullscreen'] == 1
+        self.fullscreen_toggle.update_surface()
+        self.resolution_dropdown.set_choice(None, "{}x{}".format(main_menu.game.w, main_menu.game.h))
 
     def draw(self, surface):
         pygame.draw.rect(surface, (150,150,150),
@@ -133,6 +136,7 @@ class MainMenu:
         self.menu.update(mouse_position, mouse_pressed, mouse_rel, events)
 
     def main_menu(self, *args):
+        self.game.save_config()
         self.menu = MainScreenMenu(self)
 
     def draw(self, surface):

@@ -2,23 +2,26 @@ import pygame, sys
 from pygame.locals import *
 from data.Level import LevelManager
 from data.MainMenu import MainMenu
+from data.utils.ConfigManager import load_config, save_config
 
 def convert_to_ratio(pos, ratio):
     return (pos[0] * ratio[0], pos[1] * ratio[1])
-
 class GameState:
     MAIN_MENU = 0
     IN_GAME = 1
 
 class Game:
     def __init__(self):
-        self.w, self.h =  1152,648
+        self.config = load_config()
+        resolution = self.config["resolution"].split('x')
+
+        self.w, self.h =  int(resolution[0]), int(resolution[1])
         # self.w, self.h =  1920,1080
         self.DESING_W, self.DESING_H = 1920,1080
-        self.win = pygame.display.set_mode((self.w,self.h))
+        self.win = pygame.display.set_mode((self.w,self.h), FULLSCREEN if self.config['fullscreen'] else 0)
         self.blitting_surface = pygame.Surface((self.DESING_W,self.DESING_H), HWSURFACE)
         self.running = True
-        self.fullscreen = False
+        self.fullscreen = self.config['fullscreen']
         self.ratio = (self.DESING_W / self.w, self.DESING_H / self.h)
 
         self.clock = pygame.time.Clock()
@@ -27,6 +30,7 @@ class Game:
 
         self.game_state = GameState.MAIN_MENU
         self.draw_function = [self.draw_main_menu, self.draw_in_game]
+
 
     def run(self):
         render_time = 0
@@ -85,6 +89,11 @@ class Game:
     def update_screen_size(self, new_size):
         self.w, self.h = new_size
         self.ratio = (self.DESING_W / self.w, self.DESING_H / self.h)
+
+    def save_config(self):
+        self.config['fullscreen'] = self.fullscreen
+        self.config['resolution'] = f'{self.w}x{self.h}'
+        save_config(self.config)
 
 game = Game()
 game.run()
