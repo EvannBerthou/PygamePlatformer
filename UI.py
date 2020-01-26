@@ -231,16 +231,26 @@ class Toggle(UIElement):
 
         self.activated = False
 
-        pygame.draw.rect(self.surface, (200,200,200), (0,0,h,h))
+        self.tick = load_sprite('tick.png', (h,h))
         font = pygame.font.SysFont(pygame.font.get_default_font(), 38)
-        text_to_render = font.render(text, 1, (255,255,255))
-        self.surface.blit(text_to_render, (h + 5,0))
+        self.text_to_render = font.render(text, 1, (255,255,255))
+
+        self.update_surface()
 
     def update(self, mouse_position, mouse_pressed, mouse_rel, events):
         for event in events:
             if event.type == MOUSEBUTTONDOWN and event.button == 1:
                 self.activated = not self.activated
                 self.callback_function(self.activated)
+                self.update_surface()
+
+    def update_surface(self):
+        h = self.rect.h
+        self.surface.fill((0,0,0,0))
+        pygame.draw.rect(self.surface, (200,200,200), (0,0,h,h))
+        if self.activated:
+            self.surface.blit(self.tick, (0,0))
+        self.surface.blit(self.text_to_render, (h + 5,0))
 
     def draw(self, surface):
         surface.blit(self.surface, (self.rect.x, self.rect.y))
