@@ -36,15 +36,21 @@ class Camera:
         pygame.draw.polygon(surface, color, pts, width)
 
 
-    def event_zoom(self, event):
+    def event_zoom(self, event, mouse_position):
         if event.type == MOUSEBUTTONDOWN:
+            prev_pos = self.screen_to_world(mouse_position)
             if event.button == 4:
                 self.zoom += 0.05
             if event.button == 5:
                 self.zoom -= 0.05
 
-                self.zoom = max(0.5, self.zoom)
-                self.zoom = min(1.5, self.zoom)
+            self.zoom = max(0.5, self.zoom)
+            self.zoom = min(1.5, self.zoom)
+
+            new_pos = self.screen_to_world(mouse_position)
+
+            self.x += new_pos[0] - prev_pos[0]
+            self.y += new_pos[1] - prev_pos[1]
 
             if event.button == 1:
                 self.mouse_moving = 1

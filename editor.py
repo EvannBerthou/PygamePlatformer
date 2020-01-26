@@ -84,7 +84,7 @@ class Game:
                 if event.type == QUIT:
                     self.running = False
                 if event.type == MOUSEBUTTONDOWN:
-                    if self.mode == MODE.Camera: mode_camera_mouse_down(self, event)
+                    if self.mode == MODE.Camera: mode_camera_mouse_down(self, event, mouse_position)
                     if self.mode == MODE.Editor: mode_editor_mouse_down(self, event, events, mouse_position)
 
                 if event.type == MOUSEBUTTONUP:
