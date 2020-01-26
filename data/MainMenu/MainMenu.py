@@ -89,6 +89,9 @@ class OptionMenu(Menu):
         self.resolution_dropdown = UI.DropDown(20,100,400,60,
                                                 ["1920x1080", "1366x768", "1280x720", "1152x664", "960x540","640x360"],
                                                 (100,100,100), (75,75,75), self.change_resolution)
+
+        current_w,current_h = main_menu.game.w, main_menu.game.h
+        self.resolution_dropdown.set_choice(None, "{}x{}".format(current_w,current_h))
         self.ui_manager.add(self.resolution_dropdown)
 
         self.ui_manager.add(UI.Button(main_menu.game.DESING_W - 250, main_menu.game.DESING_H - 100, 200,60,
