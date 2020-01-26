@@ -12,8 +12,8 @@ class MODE:
     Camera = 0
     Editor = 1
 
-def mode_camera_mouse_down(editor, event):
-    editor.camera.event_zoom(event)
+def mode_camera_mouse_down(editor, event, mouse_position):
+    editor.camera.event_zoom(event, mouse_position)
 
 def mode_camera_mouse_up(editor, event):
     editor.camera.event_zoom(event)
