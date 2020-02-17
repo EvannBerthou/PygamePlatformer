@@ -23,6 +23,7 @@ def mode_camera_key_down(editor):
 
 
 def mode_editor_mouse_down(editor, event, events, mouse_position):
+    pygame.mouse.get_rel()
     if editor.UIManager.update(mouse_position, event.button == 1, 0, events) > 0:
         return
     if editor.property_panel == None:
@@ -76,6 +77,7 @@ def mode_editor_mouse_up(editor, mouse_position):
         editor.rect_started = False
     editor.drag_start = None
     editor.selected_arrow = ""
+    pygame.mouse.get_rel()
 
 def on_key_down(editor, event, mouse_position):
     if event.key == K_TAB:
@@ -132,9 +134,14 @@ def move_rect(editor, mouse_position):
             r.lines = r.get_lines()
 
 def on_resize_rect(editor, mouse_position):
+    arrow_selected = editor.check_arrow(mouse_position)
+    if arrow_selected != "" or editor.selected_arrow != "":
+        resize_arrow(editor, arrow_selected)
+        return
+
     r = editor.rects.sprites()[editor.selected_rect]
     corner = get_corner_point(r, editor.camera.screen_to_world(mouse_position))
-    if corner != None and not isinstance(r, (SpawnPoint, EndGoal)):
+    if corner != None and r.resizable:
         dx,dy = tuple(l*r for l,r in zip(pygame.mouse.get_rel(), editor.camera.ratio))
 
         if isinstance(r, Plate):
@@ -150,3 +157,14 @@ def on_resize_rect(editor, mouse_position):
             r.org_rect = resize_rect(r.org_rect, corner, dx,dy, editor.camera.zoom)
             if isinstance(r, Door):
                 r.lines = r.get_lines()
+
+def resize_arrow(editor, arrow):
+    rect = editor.rects.sprites()[editor.selected_rect]
+    mouse_rel = pygame.mouse.get_rel()
+    if editor.selected_arrow == "":
+        editor.selected_arrow = arrow
+    if editor.selected_arrow == "vertical":
+        resize_rect_arrow(rect, mouse_rel[0], 0)
+    if editor.selected_arrow == "horizontal":
+        resize_rect_arrow(rect, 0, mouse_rel[1])
+

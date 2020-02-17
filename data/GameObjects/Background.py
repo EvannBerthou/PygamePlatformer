@@ -7,6 +7,7 @@ class Background(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(background_img, window_size)
         self.rect = self.image.get_rect()
         self.selectable = False
+        self.resizable = False
 
     def on_collision(self, collider):
         return

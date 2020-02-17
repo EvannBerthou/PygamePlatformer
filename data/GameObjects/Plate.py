@@ -14,6 +14,7 @@ class Plate(pygame.sprite.Sprite):
         self.image = pygame.Surface((w,h))
         self.image.fill(self.color)
         self.selectable = True
+        self.resizable = False
         self.before_drag = None
 
     def update(self, cam = None):

@@ -88,3 +88,12 @@ def create_rect(rect_start, mouse_end, obj):
         return None
 
     return r
+
+def resize_rect_arrow(rect, x,y):
+    if not rect.resizable: return
+    new_x = rect.org_rect.x - x
+    new_w = rect.org_rect.w + x * 2
+    new_y = rect.org_rect.y - y
+    new_h = rect.org_rect.h + y * 2
+    if new_w <= 10 or new_h <= 10: return
+    rect.org_rect = pygame.Rect(new_x, new_y, new_w, new_h)

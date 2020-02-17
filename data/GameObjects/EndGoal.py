@@ -13,6 +13,7 @@ class EndGoal(pygame.sprite.Sprite):
         self.players_on = []
         self.collide = False
         self.selectable = True
+        self.resizable = False
         self.level_manager = None
 
     def update(self, cam = None):
