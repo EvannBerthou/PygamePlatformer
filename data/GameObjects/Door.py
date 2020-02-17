@@ -29,6 +29,7 @@ class Door(pygame.sprite.Sprite):
         self.image.blit(self.background, (0,0))
         self.image.blit(self.door_sprite, (0, self.rect.h - self.door_size[1]))
         self.selectable = True
+        self.resizable = True
         self.before_drag = None
 
     def update(self, cam = None):

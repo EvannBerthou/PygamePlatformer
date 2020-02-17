@@ -11,6 +11,7 @@ class Wall(pygame.sprite.Sprite):
         self.image = pygame.Surface((w,h))
         self.image.fill(self.color)
         self.selectable = True
+        self.resizable = True
 
         self.before_drag = None
 
@@ -33,6 +34,7 @@ class Wall(pygame.sprite.Sprite):
         else:
             self.org_rect.x = self.before_drag[0] + mp[0] - drag_start[0]
             self.org_rect.y = self.before_drag[1] + mp[1] - drag_start[1]
+
 
     def has_collision(self, player_id):
         return self.collide

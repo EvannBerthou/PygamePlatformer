@@ -24,6 +24,7 @@ class SpawnPoint(pygame.sprite.Sprite):
         self.player_id = player_id
         self.image = pygame.Surface((self.rect.w + 10, self.rect.h + 10), SRCALPHA)
         self.selectable = True
+        self.resizable = False
 
         self.points = self.get_points()
 
