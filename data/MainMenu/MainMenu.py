@@ -52,20 +52,19 @@ class LevelSelectorMenu(Menu):
                                                 "Community", (150,150,150),
                                                 self.open_categorie, "community"))
 
-        self.scrollview = UI.ScrollView(0,0,main_menu.game.DESING_W,main_menu.game.DESING_H, (75,0,130))
+        BUTTON_WIDTH = 800
+        BUTTON_HEIGHT = 100
+        self.scrollview = UI.ScrollView(
+                                        0, 0,
+                                        main_menu.game.DESING_W,main_menu.game.DESING_H, (75,0,130),
+                                        BUTTON_WIDTH, BUTTON_HEIGHT,
+                                        main_menu.game.DESING_W / 2 - BUTTON_WIDTH / 2, 25)
         self.LevelSelectorUI = UI.UIManager()
         self.LevelSelectorUI.add(self.scrollview)
 
         self.search_bar = UI.SearchBar(10,10,400,60, self.update_levels)
         self.LevelSelectorUI.add(self.search_bar)
         self.ui_manager = self.category_selector_ui
-
-        self.grid = UI.Grid(0,0, 250,300, 100,100,10,10)
-        self.grid.add(UI.Button, ["t", (150,150,150), print, "community"])
-        self.grid.add(UI.Button, ["t", (150,150,150), print, "community"])
-        self.grid.add(UI.Button, ["t", (150,150,150), print, "community"])
-        self.grid.add(UI.Button, ["t", (150,150,150), print, "community"])
-        self.ui_manager.add(self.grid)
 
     def open_categorie(self, btn, categorie):
         self.ui_manager = self.LevelSelectorUI
@@ -110,16 +109,12 @@ class LevelSelectorMenu(Menu):
     def update_levels(self, search):
         self.scrollview.clear()
         total = 0
-        BUTTON_WIDTH = 800
-        BUTTON_HEIGHT = 100
         for i, infos in enumerate(self.infos):
             if search in infos['name']:
-                self.scrollview.add(UI.LevelButton(
-                                    self.main_menu.game.DESING_W / 2 - BUTTON_WIDTH / 2, (BUTTON_HEIGHT+10)*total,
-                                    BUTTON_WIDTH, BUTTON_HEIGHT,
-                                    infos['name'], infos['author'], (150,150,150),
+                self.scrollview.add(UI.LevelButton,
+                                    [infos['name'], infos['author'], (150,150,150),
                                     self.main_menu.load_map, self.paths[i],
-                                    center_text = True, font_size = 64))
+                                    True, 64])
                 total += 1
         self.scrollview.update_surface(0)
 
