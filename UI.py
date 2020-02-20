@@ -325,3 +325,42 @@ class LevelButton(Button):
         Button.draw(self, surface)
         surface.blit(self.map_name, self.rect)
         surface.blit(self.map_author, (self.rect.x, self.rect.y + self.map_name_height))
+
+class Grid(UIElement):
+    def __init__(self, x,y,w,h, w_size, h_size, w_gap, h_gap):
+        super().__init__(x,y)
+        self.ui_manager = UIManager()
+        self.rect = pygame.Rect(x,y,w,h)
+        self.w_size, self.h_size = w_size, h_size
+        self.w_gap, self.h_gap = w_gap, h_gap
+        self.line = 0
+        self.row = 0
+
+    def add(self, ui_class, ui_params):
+        if (self.line != 0 or self.row != 0) and self.row * (self.w_size + self.w_gap) + self.w_size > self.rect.w:
+            self.line += 1
+            self.row = 0
+
+        x = self.row  * (self.w_size + self.w_gap)
+        y = self.line * (self.h_size + self.h_gap)
+
+        ui_element = ui_class(x,y,self.w_size,self.h_size, *ui_params)
+        self.ui_manager.add(ui_element)
+        self.row += 1
+
+    def update_positions(self, offset):
+        self.rect.x += offset[0]
+        self.rect.y += offset[1]
+        for element in self.ui_manager.elements:
+            element.rect.x += offset[0]
+            element.rect.y += offset[1]
+
+
+    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
+        self.ui_manager.update(mouse_position, mouse_pressed, mouse_rel, events)
+
+    def draw(self, surface):
+        self.ui_manager.draw(surface)
+
+    def is_hovered(self, mouse_position):
+        return self.rect.collidepoint(mouse_position)
