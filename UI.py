@@ -149,7 +149,7 @@ class ScrollView(UIElement):
         return self.rect.collidepoint(mouse_position)
 
     def update(self, mouse_position, mouse_pressed, mouse_rel, events):
-        if mouse_pressed[0] == 1:
+        if mouse_pressed[0][0] == 1:
             self.update_surface(mouse_rel[1])
 
         for el in self.elements:
@@ -312,3 +312,16 @@ class DropDown(UIElement):
 
     def is_hovered(self, mouse_position):
         return self.rect.collidepoint(mouse_position)
+
+class LevelButton(Button):
+    def __init__(self, x,y,w,h, map_name, map_author, color, callback, args, center_text = False, font_size = 46):
+        super().__init__(x,y,w,h, " ", color, callback, args)
+        self.map_name = self.font.render(map_name, 1, (255,255,255))
+        self.map_author = self.font.render(map_author, 1,(200,200,200))
+
+        self.map_name_height = self.map_name.get_height()
+
+    def draw(self, surface):
+        Button.draw(self, surface)
+        surface.blit(self.map_name, self.rect)
+        surface.blit(self.map_author, (self.rect.x, self.rect.y + self.map_name_height))
