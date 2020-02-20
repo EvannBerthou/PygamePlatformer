@@ -37,16 +37,6 @@ class MainScreenMenu(Menu):
         self.ui_manager.draw(surface)
 
 class LevelSelectorMenu(Menu):
-    def load_level_list(self, folder):
-        path = os.path.join('.', folder)
-        if not os.path.exists(path) or not os.path.isdir(path):
-            print(f'No folder named {folder}')
-            exit(1)
-
-        maps_names = os.listdir(path)
-        maps_paths = [os.path.join(folder, map_name) for map_name in maps_names]
-        return maps_names, maps_paths
-
     def __init__(self, main_menu):
         super().__init__(main_menu)
         self.category_selector_ui = UI.UIManager()
@@ -62,11 +52,11 @@ class LevelSelectorMenu(Menu):
                                                 "Community", (150,150,150),
                                                 self.open_categorie, "community"))
 
-        self.scrollview = UI.ScrollView(0,40,main_menu.game.DESING_W,main_menu.game.DESING_H, (75,0,130))
+        self.scrollview = UI.ScrollView(0,0,main_menu.game.DESING_W,main_menu.game.DESING_H, (75,0,130))
         self.LevelSelectorUI = UI.UIManager()
         self.LevelSelectorUI.add(self.scrollview)
 
-        self.search_bar = UI.SearchBar(main_menu.game.DESING_W / 2 - 200,10,400,60, self.update_levels)
+        self.search_bar = UI.SearchBar(10,10,400,60, self.update_levels)
         self.LevelSelectorUI.add(self.search_bar)
         self.ui_manager = self.category_selector_ui
 
@@ -74,12 +64,29 @@ class LevelSelectorMenu(Menu):
         self.ui_manager = self.LevelSelectorUI
 
         folder = 'maps' if categorie == 'official' else 'custom_maps'
-        self.names, self.paths = self.load_level_list(folder)
-        for i, name in enumerate(self.names):
-            self.scrollview.add(UI.Button(self.main_menu.game.DESING_W / 2 - 75, 20 + 50 * i, 300, 70,
-                                name, (150,150,150),
-                                self.main_menu.load_map, self.paths[i]))
+        self.infos, self.paths = self.load_level_list(folder)
         self.update_levels('')
+
+    def load_level_list(self, folder):
+        path = os.path.join('.', folder)
+        if not os.path.exists(path) or not os.path.isdir(path):
+            print(f'No folder named {folder}')
+            exit(1)
+
+        maps_names = os.listdir(path)
+        maps_paths = [os.path.join(folder, map_name) for map_name in maps_names]
+        maps_infos  = [self.extract_map_infos(file) for file in maps_paths]
+        return maps_infos, maps_paths
+
+    def extract_map_infos(self, file):
+        infos = {}
+        with open(file, 'r') as f:
+            for line in f:
+                if line.startswith('name'):
+                    infos['name'] = line.split(':')[1].strip()
+                if line.startswith('author'):
+                    infos['author'] = line.split(':')[1].strip()
+        return infos
 
     def draw(self, surface):
         self.ui_manager.draw(surface)
@@ -96,10 +103,14 @@ class LevelSelectorMenu(Menu):
     def update_levels(self, search):
         self.scrollview.clear()
         total = 0
-        for i, name in enumerate(self.names):
-            if search in name:
-                self.scrollview.add(UI.Button(self.main_menu.game.DESING_W / 2 - 150, 50 + 75 * total, 300, 70,
-                                    name, (150,150,150),
+        BUTTON_WIDTH = 800
+        BUTTON_HEIGHT = 100
+        for i, infos in enumerate(self.infos):
+            if search in infos['name']:
+                self.scrollview.add(UI.LevelButton(
+                                    self.main_menu.game.DESING_W / 2 - BUTTON_WIDTH / 2, (BUTTON_HEIGHT+10)*total,
+                                    BUTTON_WIDTH, BUTTON_HEIGHT,
+                                    infos['name'], infos['author'], (150,150,150),
                                     self.main_menu.load_map, self.paths[i],
                                     center_text = True, font_size = 64))
                 total += 1

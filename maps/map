@@ -1,5 +1,5 @@
-name : FOO
-author : BAR
+name : This is the map's name
+author : This is the map's author
 map:
 Spawn, 188,636, 0
 Spawn, 301,655, 1
