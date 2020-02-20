@@ -60,6 +60,13 @@ class LevelSelectorMenu(Menu):
         self.LevelSelectorUI.add(self.search_bar)
         self.ui_manager = self.category_selector_ui
 
+        self.grid = UI.Grid(0,0, 250,300, 100,100,10,10)
+        self.grid.add(UI.Button, ["t", (150,150,150), print, "community"])
+        self.grid.add(UI.Button, ["t", (150,150,150), print, "community"])
+        self.grid.add(UI.Button, ["t", (150,150,150), print, "community"])
+        self.grid.add(UI.Button, ["t", (150,150,150), print, "community"])
+        self.ui_manager.add(self.grid)
+
     def open_categorie(self, btn, categorie):
         self.ui_manager = self.LevelSelectorUI
 
@@ -93,7 +100,7 @@ class LevelSelectorMenu(Menu):
 
     def update(self, mouse_position, mouse_pressed, mouse_rel, events):
         for event in events:
-            if event.type == KEYDOWN:
+            if event.type == KEYDOWN and self.ui_manager == self.LevelSelectorUI:
                 self.search_bar.key_pressed(event)
                 if event.key == K_ESCAPE:
                     if self.ui_manager == self.LevelSelectorUI: self.ui_manager = self.category_selector_ui
