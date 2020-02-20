@@ -127,23 +127,17 @@ class Button(UIElement):
         UIManager.remove(self)
 
 class ScrollView(UIElement):
-    def __init__(self, x,y,w,h, bg_color):
+    def __init__(self, x,y,w,h, bg_color, w_size, h_size, w_gap, h_gap):
         super().__init__(x,y)
         self.rect = pygame.Rect(x,y,w,h)
-        self.elements = []
+        self.grid = Grid(x,y,w,h, w_size, h_size, w_gap, h_gap)
         self.bg_color = bg_color
         self.surface = pygame.Surface((w,h))
         self.org_rects = {}
         self.y = 0
 
-    def add(self, element):
-        if element in self.elements:
-            print(f'{element} is already in {self}')
-            return
-
-        element.rect.x += self.rect.x
-        element.rect.y += self.rect.y
-        self.elements.append(element)
+    def add(self, ui_class, ui_params):
+        self.grid.add(ui_class, ui_params)
 
     def is_hovered(self, mouse_position):
         return self.rect.collidepoint(mouse_position)
@@ -152,7 +146,7 @@ class ScrollView(UIElement):
         if mouse_pressed[0][0] == 1:
             self.update_surface(mouse_rel[1])
 
-        for el in self.elements:
+        for el in self.grid.ui_manager.elements:
             if el.is_hovered(mouse_position):
                 el.update(mouse_position, mouse_pressed, mouse_rel, events)
 
@@ -160,24 +154,21 @@ class ScrollView(UIElement):
         self.surface.fill(self.bg_color)
         self.y += rel
 
-        if rel < 0 and self.elements[-1].rect.bottom < self.rect.h:
+        if rel < 0 and self.grid.ui_manager.elements[-1].rect.bottom < self.rect.h:
             self.y -= rel
-            rel = 0
+            rel = self.rect.h - self.grid.ui_manager.elements[-1].rect.bottom - self.grid.h_gap
 
-        if rel > 0 and self.elements[0].rect.top > 0:
+        elif rel > 0 and self.grid.ui_manager.elements[0].rect.top > 0:
             self.y = 0
-            rel = 0
+            rel = -(self.grid.ui_manager.elements[0].rect.top) + self.grid.h_gap
 
-        for element in self.elements:
-            element.rect.y += rel
-            element.y += rel
-            element.draw(self.surface)
+        self.grid.update_positions((0,rel))
 
     def draw(self, surface):
-        surface.blit(self.surface, (0,0))
+        self.grid.draw(surface)
 
     def clear(self):
-        self.elements.clear()
+        self.grid.clear()
 
 class SearchBar(UIElement):
     def __init__(self, x,y,w,h, callback_function):
@@ -341,8 +332,8 @@ class Grid(UIElement):
             self.line += 1
             self.row = 0
 
-        x = self.row  * (self.w_size + self.w_gap)
-        y = self.line * (self.h_size + self.h_gap)
+        x = self.row  * (self.w_size + self.w_gap) + self.rect.x + self.w_gap
+        y = self.line * (self.h_size + self.h_gap) + self.rect.y + self.h_gap
 
         ui_element = ui_class(x,y,self.w_size,self.h_size, *ui_params)
         self.ui_manager.add(ui_element)
@@ -364,3 +355,8 @@ class Grid(UIElement):
 
     def is_hovered(self, mouse_position):
         return self.rect.collidepoint(mouse_position)
+
+    def clear(self):
+        self.line = 0
+        self.row = 0
+        self.ui_manager.elements.clear()
