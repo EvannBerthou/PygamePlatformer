@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 
 from ..utils.utils import clamp
+from ..utils.SpriteLoader import load_animation
 
 PLAYER_SIZE = 64
 
@@ -20,11 +21,20 @@ class Player(pygame.sprite.Sprite):
         self.jump_key  = jump_key
 
         self.player_id = player_id
-        self.image = pygame.Surface((PLAYER_SIZE,PLAYER_SIZE))
+        self.image = pygame.Surface((PLAYER_SIZE,PLAYER_SIZE), SRCALPHA)
         color = (255,0,0) if self.player_id == 1 else (0,0,255)
         self.image.fill(color)
 
         self.prev_colliders = []
+
+        self.animations = {
+                "walking" : load_animation('walker1.png', (PLAYER_SIZE, PLAYER_SIZE), 16, 33)
+                # "idle": load_animation(f'player_{self.player_id}_idle.png', (PLAYER_SIZE, PLAYER_SIZE)),
+                # "walking": load_animation(f'player_{self.player_id}_walking.png', (PLAYER_SIZE, PLAYER_SIZE), 9, 27),
+                # "standing": load_animation(f'player_{self.player_id}_standing.png', (PLAYER_SIZE, PLAYER_SIZE))
+        }
+        self.animation_lenght = 1000 #duration of the animation in ms
+        self.animation_time = 0 #time since the start of the animation in ms
 
     def move(self, dt):
         self.rect.x += self.mvt[0] * dt
@@ -32,6 +42,11 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = clamp(self.rect.x, 0, 1920 - PLAYER_SIZE)
 
     def c_update(self, colliders, keys, dt):
+        self.image.fill((0,0,0,0))
+        self.animation_time = (self.animation_time + dt) % self.animation_lenght
+        animation_frame = self.animation_time * len(self.animations['walking']) // self.animation_lenght
+        self.image.blit(self.animations['walking'][animation_frame], (0,0))
+
         self.move(dt)
         self.mvt[0] = (keys[self.right_key] - keys[self.left_key]) * self.speed
         collisions = self.rect.collidelistall(colliders)
