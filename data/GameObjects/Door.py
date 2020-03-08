@@ -23,11 +23,12 @@ class Door(pygame.sprite.Sprite):
         self.lines = self.get_lines()
         self.background = load_sprite('wall.png', (w,h))
         self.door_size = (88,122)
-        door_sprite_name = 'door_blue.png' if self.player_id == 0 else 'door_red.png'
-        self.door_sprite = load_sprite(door_sprite_name, self.door_size)
+        self.door_sprite_blue = load_sprite('door_blue.png', self.door_size)
+        self.door_sprite_red = load_sprite('door_red.png', self.door_size)
+        door_sprite = self.door_sprite_blue if self.player_id == 0 else self.door_sprite_red
         self.image = pygame.Surface((w,h), SRCALPHA)
         self.image.blit(self.background, (0,0))
-        self.image.blit(self.door_sprite, (0, self.rect.h - self.door_size[1]))
+        self.image.blit(door_sprite, (0, self.rect.h - self.door_size[1]))
         self.selectable = True
         self.resizable = True
         self.before_drag = None
@@ -66,8 +67,9 @@ class Door(pygame.sprite.Sprite):
     def switch_status(self):
         self.player_id = (self.player_id + 1) % 2
         self.color = (255,0,0) if self.player_id == 1 else (0,0,255)
-        door_sprite_name = 'door_blue.png' if self.player_id == 0 else 'door_red.png'
-        self.door_sprite = load_sprite(door_sprite_name, self.door_size)
+        door_sprite = self.door_sprite_blue if self.player_id == 0 else self.door_sprite_red
+        self.image.blit(door_sprite, (0, self.rect.h - self.door_size[1]))
+        self.image.set_alpha(255)
 
     def on_collision(self, collider):
         if collider.player_id == self.player_id:

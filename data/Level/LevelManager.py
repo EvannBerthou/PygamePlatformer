@@ -10,11 +10,12 @@ class LevelManager:
     def load_map(self, file_path):
         self.all_colliders.add([self.background, self.player_1, self.player_2])
         colliders = load_map(file_path)
+        print(colliders)
         for col in colliders:
             if isinstance(col, Plate):
                 print("plate id",col.linked_to_id)
                 if col.linked_to_id != -1:
-                    linked_to = colliders[col.linked_to_id]
+                    linked_to = colliders[col.linked_to_id - 1]
                     col.linked_to = linked_to
             if isinstance(col, EndGoal):
                 col.level_manager = self

@@ -16,6 +16,7 @@ class Plate(pygame.sprite.Sprite):
         self.selectable = True
         self.resizable = False
         self.before_drag = None
+        print(self.linked_to)
 
     def update(self, cam = None):
         if cam:
