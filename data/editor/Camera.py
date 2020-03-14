@@ -13,6 +13,13 @@ class Camera:
         self.last_offset = (0,0)
 
     def get_offset(self, rect):
+        """
+        Returns the positon of the rect relative to the camera
+
+        param rect: The rect to convert
+        type rect: pygame.Rect
+        rtype: (int,int,int,int)
+        """
         offset = (int((self.x + rect.x) * self.zoom),
                   int((self.y + rect.y) * self.zoom),
                   int(self.zoom * rect.w),
@@ -61,5 +68,12 @@ class Camera:
                 self.mouse_moving = 0
 
     def screen_to_world(self, pos):
+        """
+        Convert screen position to game position
+
+        :param pos: on screen position
+        :type pos: (int,int)
+        :rtype: (int,int)
+        """
         return (int(((pos[0] * self.ratio[0] / self.zoom) - self.x)),
                 int(((pos[1] * self.ratio[1] / self.zoom) - self.y)))

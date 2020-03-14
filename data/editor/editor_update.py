@@ -23,6 +23,19 @@ def mode_camera_key_down(editor):
 
 
 def mode_editor_mouse_down(editor, event, events, mouse_position):
+    """
+    Handles the events when a mouse button is pressed in editor mode
+
+    :param editor: the editor object
+    :param event: current event state
+    :param events: list of all events in the frame
+    :param mouse_position: mouse's position in screen coordinates
+    :type editor: Editor
+    :type event: event
+    :type events: [event]
+    :type mouse_position: (int,int)
+    :rtype: None
+    """
     pygame.mouse.get_rel()
     if editor.UIManager.update(mouse_position, event.button == 1, 0, events) > 0:
         return
@@ -69,6 +82,15 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
 
 
 def mode_editor_mouse_up(editor, mouse_position):
+    """
+    Handles the events when a mouse button is released in editor mode
+
+    :param editor: the editor object
+    :param mouse_position: mouse's position in screen coordinates
+    :type editor: Editor
+    :type mouse_position: (int,int)
+    :rtype: None
+    """
     editor.UIManager.selected = -1
     if editor.rect_started:
         rect = create_rect(editor.rect_start, editor.camera.screen_to_world(mouse_position), editor.selected_object)
@@ -80,6 +102,17 @@ def mode_editor_mouse_up(editor, mouse_position):
     pygame.mouse.get_rel()
 
 def on_key_down(editor, event, mouse_position):
+    """
+    Handles the events when a key is pressed
+
+    :param editor: the editor object
+    :param event: current event
+    :param mouse_position: mouse's position in screen coordinates
+    :type editor: Editor
+    :type event: event
+    :type mouse_position: (int,int)
+    :rtype: None
+    """
     if event.key == K_TAB:
         editor.mode = (editor.mode + 1) % 2
         update_mode(editor)
@@ -134,6 +167,15 @@ def move_rect(editor, mouse_position):
             r.lines = r.get_lines()
 
 def on_resize_rect(editor, mouse_position):
+    """
+    Resize the selected rect
+
+    :param editor: the editor object
+    :param mouse_position: mouse's position in screen coordinates
+    :type editor: Editor
+    :type mouse_position: (int,int)
+    :rtype: None
+    """
     arrow_selected = editor.check_arrow(mouse_position)
     if arrow_selected != "" or editor.selected_arrow != "":
         resize_arrow(editor, arrow_selected)
@@ -159,6 +201,15 @@ def on_resize_rect(editor, mouse_position):
                 r.lines = r.get_lines()
 
 def resize_arrow(editor, arrow):
+    """
+    Resize the selected rect when an arrow is selected
+
+    :param editor: the editor object
+    :param arrow: the selected arrow
+    :type editor: Editor
+    :type arrow: string
+    :rtype: None
+    """
     rect = editor.rects.sprites()[editor.selected_rect]
     mouse_rel = pygame.mouse.get_rel()
     if editor.selected_arrow == "":
