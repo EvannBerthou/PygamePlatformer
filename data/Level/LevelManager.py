@@ -3,6 +3,7 @@ from pygame.locals import *
 from data.GameObjects import *
 from data.utils.SaveManager import load_map
 import UI
+import json
 
 pygame.font.init()
 
@@ -48,18 +49,26 @@ class LevelManager:
         self.end_screen = pygame.Surface(window_size, SRCALPHA)
         self.game = game
 
+        self.actions_timer = 0
+        self.players_actions = {}
+
     def update(self, dt):
         if self.level_completed:
             return
 
         self.start_time += dt / 1000
         keyboard_input = pygame.key.get_pressed()
+        self.actions_timer += dt
 
         self.all_colliders.update()
 
         #UPDATE
-        self.player_1.c_update(self.all_colliders.sprites(), keyboard_input, dt)
-        self.player_2.c_update(self.all_colliders.sprites(), keyboard_input, dt)
+        actions_1 = self.player_1.c_update(self.all_colliders.sprites(), keyboard_input, dt)
+        actions_2 = self.player_2.c_update(self.all_colliders.sprites(), keyboard_input, dt)
+        total_actions = actions_1 + actions_2
+
+        if total_actions:
+            self.players_actions[self.actions_timer] = total_actions
 
     def draw(self, surface):
         self.all_colliders.draw(surface)
@@ -100,6 +109,10 @@ class LevelManager:
 
         self.ui_manager.add(reload_button)
         self.ui_manager.add(main_menu_button)
+
+        #saves recorded actions
+        with open('test.json', 'w') as f:
+            f.write(json.dumps(self.players_actions))
 
     def reload_level(self, btn, args):
         self.start_time = 0.0
