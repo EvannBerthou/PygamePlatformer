@@ -107,5 +107,6 @@ class Game:
         self.config['resolution'] = f'{self.w}x{self.h}'
         save_config(self.config)
 
+
 game = Game()
 game.run()

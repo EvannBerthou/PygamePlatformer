@@ -4,6 +4,7 @@ from data.GameObjects import *
 from data.utils.SaveManager import load_map
 import UI
 import json
+from .ReplayManager import ReplayManager
 
 pygame.font.init()
 
@@ -11,10 +12,8 @@ class LevelManager:
     def load_map(self, file_path):
         self.all_colliders.add([self.background, self.player_1, self.player_2])
         colliders = load_map(file_path)
-        print(colliders)
         for col in colliders:
             if isinstance(col, Plate):
-                print("plate id",col.linked_to_id)
                 if col.linked_to_id != -1:
                     linked_to = colliders[col.linked_to_id - 1]
                     col.linked_to = linked_to
@@ -31,7 +30,7 @@ class LevelManager:
             else:
                 self.all_colliders.add(col)
 
-    def __init__(self, window_size, map_path, game):
+    def __init__(self, window_size, map_path, game, replay = True):
         self.player_1 = Player(K_q, K_d, K_SPACE, 0)
         self.player_2 = Player(K_LEFT, K_RIGHT, K_UP, 1)
 
@@ -49,8 +48,11 @@ class LevelManager:
         self.end_screen = pygame.Surface(window_size, SRCALPHA)
         self.game = game
 
-        self.actions_timer = 0
-        self.players_actions = {}
+        self.players_positions = {}
+        self.replay = replay
+        if self.replay:
+            self.replay_manager = ReplayManager('test.json')
+
 
     def update(self, dt):
         if self.level_completed:
@@ -58,17 +60,31 @@ class LevelManager:
 
         self.start_time += dt / 1000
         keyboard_input = pygame.key.get_pressed()
-        self.actions_timer += dt
 
         self.all_colliders.update()
 
         #UPDATE
-        actions_1 = self.player_1.c_update(self.all_colliders.sprites(), keyboard_input, dt)
-        actions_2 = self.player_2.c_update(self.all_colliders.sprites(), keyboard_input, dt)
-        total_actions = actions_1 + actions_2
+        if self.replay:
+            positions = self.replay_manager.get_action([self.player_1, self.player_2])
+            self.replay_position(self.player_1, positions[0])
+            self.replay_position(self.player_2, positions[1])
+            self.player_1.c_update(self.all_colliders.sprites(), None, dt)
+            self.player_2.c_update(self.all_colliders.sprites(), None, dt)
+            self.player_1.update_animation(dt)
+            self.player_2.update_animation(dt)
+        else:
+            self.player_1.c_update(self.all_colliders.sprites(), keyboard_input, dt)
+            self.player_2.c_update(self.all_colliders.sprites(), keyboard_input, dt)
+            self.record_position()
 
-        if total_actions:
-            self.players_actions[self.actions_timer] = total_actions
+    def record_position(self):
+        self.players_positions[len(self.players_positions)] = [
+                [self.player_1.rect.x, self.player_1.rect.y],
+                [self.player_2.rect.x, self.player_2.rect.y]]
+
+    def replay_position(self, player, positions):
+        player.rect.x = positions[0]
+        player.rect.y = positions[1]
 
     def draw(self, surface):
         self.all_colliders.draw(surface)
@@ -112,7 +128,7 @@ class LevelManager:
 
         #saves recorded actions
         with open('test.json', 'w') as f:
-            f.write(json.dumps(self.players_actions))
+            f.write(json.dumps(self.players_positions))
 
     def reload_level(self, btn, args):
         self.start_time = 0.0
