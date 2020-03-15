@@ -112,6 +112,17 @@ class Player(pygame.sprite.Sprite):
             self.mvt[1] -= self.jump_force
             self.grounded = False
 
+        return self.get_actions(keys)
+
+
+    def get_actions(self, keys):
+        actions = []
+
+        if keys[self.left_key]:  actions.append(self.left_key)
+        if keys[self.right_key]: actions.append(self.right_key)
+        if keys[self.jump_key]:  actions.append(self.jump_key)
+
+        return actions
 
     def collision_bottom(self, col):
         bl = col.collidepoint(self.rect.bottomleft)

@@ -69,7 +69,7 @@ def resize_rect(rect, corner, dx,dy, zoom):
     :type zoom: int
     :rtype: pygame.Rect
     """
-    :AREA_LIMIT = 2000
+    AREA_LIMIT = 2000
     new_rect = None
     if corner == 0:
         new_rect = (rect[0] + dx * (1 / zoom),
