@@ -62,7 +62,7 @@ class LevelSelectorMenu(Menu):
         self.LevelSelectorUI = UI.UIManager()
         self.LevelSelectorUI.add(self.scrollview)
 
-        self.search_bar = UI.SearchBar(10,10,400,60, self.update_levels)
+        self.search_bar = UI.InputField(10,10,400,60, self.update_levels, 'search_icon.png')
         self.LevelSelectorUI.add(self.search_bar)
         self.ui_manager = self.category_selector_ui
 

@@ -1,6 +1,6 @@
 import os
 
-def save_to_file(rects, file_path = 'map'):
+def save_to_file(rects, file_path, name, author):
     from data.GameObjects.SpawnPoint import SpawnPoint
     spawn_points = []
     for obj in rects:
@@ -12,10 +12,9 @@ def save_to_file(rects, file_path = 'map'):
     if len(spawn_points) < 2:
         return "Missing {} spawn point(s)".format(2 - len(spawn_points))
 
-
     with open(file_path, 'w') as f:
-        f.write('name : FOO\n')
-        f.write('author : BAR\n')
+        f.write(f'name:{name}\n')
+        f.write(f'author:{author}\n')
         f.write('map:\n')
         for obj in rects:
             if hasattr(obj, 'as_string'):
@@ -73,15 +72,23 @@ def create_obj(obj, args):
 def load_map(file_name):
     print('Loading map')
     if not os.path.exists(file_name) or not os.path.isfile(file_name):
-        print(f'No file named : {file_name}')
-        exit(1)
+        print(f'No file named : {file_name}, creating one')
+        return {'rects': [], 'name': '', 'author': ''}
 
     rects = []
     in_map = False
+    name = ""
+    author = ""
     with open(file_name, 'r') as f:
         for l in f:
             if l == "endmap\n":
                 in_map = False
+
+            if l.startswith('name'):
+                name = "".join(l.split(':')[1:]).strip('\n')
+
+            if l.startswith('author'):
+                author = "".join(l.split(':')[1:]).strip('\n')
 
             if in_map:
                 parts = l.strip().split(',')
@@ -91,4 +98,4 @@ def load_map(file_name):
             if l == "map:\n":
                 in_map = True
     print('Map loaded')
-    return rects
+    return {"rects": rects, "name": name,"author": author}

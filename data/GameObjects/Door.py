@@ -38,7 +38,8 @@ class Door(pygame.sprite.Sprite):
             self.rect = pygame.Rect(*(cam.get_offset(self.org_rect)))
             self.image = pygame.Surface((self.rect.w,self.rect.h), SRCALPHA)
             self.image.blit(self.background, (0,0))
-            self.image.blit(self.door_sprite, (0,self.rect.h - self.door_size[1]))
+            door_sprite = self.door_sprite_blue if self.player_id == 0 else self.door_sprite_red
+            self.image.blit(door_sprite, (0,self.rect.h - self.door_size[1]))
 
     def outline(self, surface, camera):
         border = (self.org_rect[0],self.org_rect[1],self.org_rect[2],self.org_rect[3])

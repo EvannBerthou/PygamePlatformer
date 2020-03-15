@@ -24,7 +24,7 @@ class UIManager:
 
     def update(self, mouse_position, mouse_pressed, mouse_rel, events):
         for i,el in enumerate(self.elements):
-            if el.is_hovered(mouse_position) and mouse_pressed:
+            if el.is_hovered(mouse_position):
                 self.selected = i
                 break
         else:
@@ -170,26 +170,32 @@ class ScrollView(UIElement):
     def clear(self):
         self.grid.clear()
 
-class SearchBar(UIElement):
-    def __init__(self, x,y,w,h, callback_function):
+class InputField(UIElement):
+    def __init__(self, x,y,w,h, callback_function, icon, text_size = 70):
         super().__init__(x,y)
         self.rect = pygame.Rect(x,y,w,h)
         self.elements = []
         self.callback_function = callback_function
         self.surface = pygame.Surface((w,h))
-        self.glass_icon = load_sprite('seach_icon.png', (64,64))
+        self.icon = None
+        if icon:
+            self.icon = load_sprite(icon, (64,64))
 
         self.text = ""
         self.cursor = 0
+        self.text_offset = 70 if self.icon else 0
+        self.text_width = 0
 
-        self.font = pygame.font.SysFont(pygame.font.get_default_font(), 70)
+        self.font = pygame.font.SysFont(pygame.font.get_default_font(), text_size)
         self.text_to_render = self.font.render(self.text, 1, (255,255,255))
+        self.selected = 0
 
     def key_pressed(self, event):
         if event.key == K_BACKSPACE: self.remove_letter()
         elif event.key == K_RETURN: return
         else: self.add_letter(event.unicode)
-        self.callback_function(self.text)
+        if self.callback_function: self.callback_function(self.text)
+        self.text_width = self.text_to_render.get_width()
 
     def add_letter(self, char):
         self.text += char
@@ -205,13 +211,31 @@ class SearchBar(UIElement):
         self.text_to_render = self.font.render(self.text, 1, (255,255,255))
 
     def draw(self, surface):
-        surface.blit(self.glass_icon, (self.x, self.y))
+        if self.icon:
+            surface.blit(self.icon, (self.x, self.y))
+        #Bottom line
         pygame.draw.line(surface, (100,100,100), (self.rect.x, self.rect.y + self.rect.h),
                                                  (self.rect.x + self.rect.w, self.rect.y + self.rect.h), 2)
-        surface.blit(self.text_to_render, (self.x + 70, self.y))
+        if self.text != "":
+            surface.blit(self.text_to_render, (self.x + self.text_offset, self.y))
+        if self.selected:
+            pygame.draw.line(surface, (100,100,100), (self.rect.x + self.text_width, self.rect.y),
+                                                     (self.rect.x + self.text_width, self.rect.y + self.rect.h), 2)
+
+    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
+        self.selected = 1
+        for event in events:
+            if event.type == KEYDOWN:
+                self.key_pressed(event)
 
     def is_hovered(self, mouse_position):
-        return False
+        self.selected = 0
+        return self.rect.collidepoint(mouse_position)
+
+    def set_text(self, text):
+        self.text = text
+        self.text_to_render = self.font.render(self.text, 1, (255,255,255))
+        self.text_width = self.text_to_render.get_width()
 
 class Toggle(UIElement):
     def __init__(self, x,y,w,h, text, callback_function):
@@ -360,3 +384,38 @@ class Grid(UIElement):
         self.line = 0
         self.row = 0
         self.ui_manager.elements.clear()
+
+class Image(UIElement):
+    def __init__(self, x,y,w,h, image = None, color = None):
+        super().__init__(x,y)
+        self.rect = pygame.Rect(x,y,w,h)
+        self.surface = pygame.Surface((w,h), SRCALPHA)
+        if image:
+            self.surface.blit(image, (0,0))
+        if color:
+            self.surface.fill(color)
+
+    def draw(self, surface):
+        surface.blit(self.surface, self.rect)
+
+    def update(self):
+        return
+
+    def is_hovered(self, mouse_position):
+        return
+
+class Text(UIElement):
+    def set_text(self, text):
+        self.text = self.font.render(text, 1, self.color)
+
+    def __init__(self, x,y, text, size, color):
+        super().__init__(x,y)
+        self.font = pygame.font.SysFont(pygame.font.get_default_font(), size)
+        self.color = color
+        self.set_text(text)
+
+    def draw(self, surface):
+        surface.blit(self.text, (self.x, self.y))
+
+    def is_hovered(self, mouse_position):
+        return False

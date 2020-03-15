@@ -37,7 +37,7 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
     :rtype: None
     """
     pygame.mouse.get_rel()
-    if editor.UIManager.update(mouse_position, event.button == 1, 0, events) > 0:
+    if editor.ui_to_draw.update(mouse_position, event.button == 1, 0, events) > 0:
         return
     if editor.property_panel == None:
         if not (editor.selected_rect > -1 and editor.check_arrow(mouse_position)):
@@ -52,7 +52,7 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
             editor.selected_arrow = editor.check_arrow(mouse_position)
             pygame.mouse.get_rel()
         if editor.property_panel and not editor.property_panel.linking:
-            editor.property_panel.destroy(editor.UIManager)
+            editor.property_panel.destroy(editor.ui_to_draw)
             editor.property_panel = None
     else:
         #If the selected object is a spawn point, don't drag and create the spawnpoint
@@ -91,7 +91,7 @@ def mode_editor_mouse_up(editor, mouse_position):
     :type mouse_position: (int,int)
     :rtype: None
     """
-    editor.UIManager.selected = -1
+    # editor.ui_to_draw.selected = -1
     if editor.rect_started:
         rect = create_rect(editor.rect_start, editor.camera.screen_to_world(mouse_position), editor.selected_object)
         if rect != None:
@@ -116,7 +116,7 @@ def on_key_down(editor, event, mouse_position):
     if event.key == K_TAB:
         editor.mode = (editor.mode + 1) % 2
         update_mode(editor)
-    if event.key == K_r:
+    if event.key == K_r and event.mod & KMOD_LSHIFT:
         bg = copy.copy(editor.rects.sprites()[0])
         editor.rects.empty()
         editor.selected_rect = -1
@@ -128,20 +128,20 @@ def on_key_down(editor, event, mouse_position):
         editor.selected_rect = -1
     if event.key == K_c and editor.mode == MODE.Editor and editor.selected_rect != -1:
         if editor.property_panel:
-            editor.property_panel.destroy(editor.UIManager)
+            editor.property_panel.destroy(editor.ui_to_draw)
             editor.property_panel = None
         else:
             editor.property_panel = PropertyPanel(*mouse_position,
                                                 editor.rects.sprites()[editor.selected_rect].get_properties(),
-                                                editor.UIManager, editor.rects.sprites()[editor.selected_rect])
+                                                editor.ui_to_draw, editor.rects.sprites()[editor.selected_rect])
             if "ColorPicker" in editor.property_panel.properties_obj:
                 editor.property_panel.set_color(editor.rects.sprites()[editor.selected_rect].color)
     if event.key == K_F1:
         editor.change_object(editor.wall_button, Wall)
     if event.key == K_F2:
         editor.change_object(editor.door_button, Door)
-    if event.key == K_s:
-        print(editor.save_to_file())
+    if event.key == K_s and event.mod & KMOD_LALT:
+        editor.save_to_file(None, None)
     if event.key == K_l:
         editor.selected_rect = -1
         editor.load_map(editor.map_path)
