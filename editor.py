@@ -142,7 +142,10 @@ class Game:
 
             #UPDATE
             if self.ui_to_draw.selected != -1:
-                self.ui_to_draw.elements[self.ui_to_draw.selected].update(mouse_position, mouse_pressed, 0, events)
+                if self.ui_to_draw.selected < len(self.ui_to_draw.elements):
+                    self.ui_to_draw.elements[self.ui_to_draw.selected].update(mouse_position, mouse_pressed, 0, events)
+                else:
+                    self.ui_to_draw.selected = 0
                 self.rect_started = 0
                 if self.property_panel == None:
                     self.selected_rect = -1

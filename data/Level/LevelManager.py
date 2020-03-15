@@ -12,7 +12,7 @@ pygame.font.init()
 class LevelManager:
     def load_map(self, file_path):
         self.all_colliders.add([self.background, self.player_1, self.player_2])
-        colliders = load_map(file_path)
+        colliders = load_map(file_path)['rects']
         for col in colliders:
             if isinstance(col, Plate):
                 if col.linked_to_id != -1:

@@ -156,12 +156,17 @@ def update_mode(editor):
 
 def move_rect(editor, mouse_position):
     r = editor.rects.sprites()[editor.selected_rect]
+    if not r:
+        return
     mp = editor.camera.screen_to_world(mouse_position)
     if isinstance(r, SpawnPoint):
         r.move(mp)
         r.points = r.get_points()
     else:
-        r.move(mp, editor.drag_start, editor.selected_arrow)
+        if editor.drag_start:
+            r.move(mp, editor.drag_start, editor.selected_arrow)
+        else:
+            editor.selected_rect = -1
 
         if isinstance(r, Door):
             r.lines = r.get_lines()
