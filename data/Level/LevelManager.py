@@ -4,6 +4,7 @@ from data.GameObjects import *
 from data.utils.SaveManager import load_map
 import UI
 import json
+import os
 from .ReplayManager import ReplayManager
 
 pygame.font.init()
@@ -30,7 +31,7 @@ class LevelManager:
             else:
                 self.all_colliders.add(col)
 
-    def __init__(self, window_size, map_path, game, replay = True):
+    def __init__(self, window_size, map_path, game, replay = False):
         self.player_1 = Player(K_q, K_d, K_SPACE, 0)
         self.player_2 = Player(K_LEFT, K_RIGHT, K_UP, 1)
 
@@ -52,7 +53,6 @@ class LevelManager:
         self.replay = replay
         if self.replay:
             self.replay_manager = ReplayManager('test.json')
-
 
     def update(self, dt):
         if self.level_completed:
@@ -117,17 +117,27 @@ class LevelManager:
         #Buttons
         button_y_pos = self.game.DESING_H / 2 + 50
         w_center = self.game.DESING_W / 2
-        reload_button = UI.Button(w_center - 600, button_y_pos, 400,80,
-                                    "Replay", (150,150,150), self.reload_level, [], center_text = True)
+        reload_button = UI.Button(w_center - 650, button_y_pos, 400,80,
+                                  "Restart", (150,150,150), self.reload_level, [], center_text = True)
 
-        main_menu_button = UI.Button(w_center + 100, button_y_pos, 400,80,
+        save_replay_button = UI.Button(w_center - 200, button_y_pos, 400,80,
+                                      "Save Replay", (150,150,150), self.save_replay, [], center_text = True)
+
+        main_menu_button = UI.Button(w_center + 250, button_y_pos, 400,80,
                                     "Main Menu", (150,150,150), self.game.load_main_menu, [], center_text = True)
 
         self.ui_manager.add(reload_button)
         self.ui_manager.add(main_menu_button)
+        self.ui_manager.add(save_replay_button)
 
         #saves recorded actions
         with open('test.json', 'w') as f:
+            f.write(json.dumps(self.players_positions))
+
+    def save_replay(self, btn, args):
+        file_name = os.path.basename(self.map_path) + '.json'
+        print(file_name)
+        with open(file_name, 'w') as f:
             f.write(json.dumps(self.players_positions))
 
     def reload_level(self, btn, args):
