@@ -31,7 +31,7 @@ class LevelManager:
             else:
                 self.all_colliders.add(col)
 
-    def __init__(self, window_size, map_path, game, replay = False):
+    def __init__(self, window_size, map_path, game, replay = None):
         self.player_1 = Player(K_q, K_d, K_SPACE, 0)
         self.player_2 = Player(K_LEFT, K_RIGHT, K_UP, 1)
 

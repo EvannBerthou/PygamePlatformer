@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, os
 from pygame.locals import *
 from data.Level import LevelManager
 from data.MainMenu import MainMenu
@@ -107,6 +107,15 @@ class Game:
         self.config['resolution'] = f'{self.w}x{self.h}'
         save_config(self.config)
 
+    def start_replay(self, map_name, replay_path):
+        self.game_state = GameState.IN_GAME
+        self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_name, self, replay = replay_path)
 
 game = Game()
+if len(sys.argv) > 1:
+    file_path = sys.argv[1]
+    splitted = file_path.split('.')
+    if splitted[1] == 'json':
+        map_path = os.path.join('maps', splitted[0])
+        game.start_replay(map_path, file_path)
 game.run()
