@@ -41,14 +41,17 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.mvt[1] * dt
         self.rect.x = clamp(self.rect.x, 0, 1920 - PLAYER_SIZE)
 
-    def c_update(self, colliders, keys, dt):
+    def update_animation(self, dt):
         self.image.fill((0,0,0,0))
         self.animation_time = (self.animation_time + dt) % self.animation_lenght
         animation_frame = self.animation_time * len(self.animations['walking']) // self.animation_lenght
         self.image.blit(self.animations['walking'][animation_frame], (0,0))
 
-        self.move(dt)
-        self.mvt[0] = (keys[self.right_key] - keys[self.left_key]) * self.speed
+    def c_update(self, colliders, keys, dt):
+        self.update_animation(dt)
+        if keys:
+            self.move(dt)
+            self.mvt[0] = (keys[self.right_key] - keys[self.left_key]) * self.speed
         collisions = self.rect.collidelistall(colliders)
         dx = 0
         dy = 0
@@ -108,21 +111,9 @@ class Player(pygame.sprite.Sprite):
         if not self.grounded:
             self.mvt[1] += self.gravity * dt
 
-        if keys[self.jump_key] and self.grounded:
+        if keys and keys[self.jump_key] and self.grounded:
             self.mvt[1] -= self.jump_force
             self.grounded = False
-
-        return self.get_actions(keys)
-
-
-    def get_actions(self, keys):
-        actions = []
-
-        if keys[self.left_key]:  actions.append(self.left_key)
-        if keys[self.right_key]: actions.append(self.right_key)
-        if keys[self.jump_key]:  actions.append(self.jump_key)
-
-        return actions
 
     def collision_bottom(self, col):
         bl = col.collidepoint(self.rect.bottomleft)

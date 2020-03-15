@@ -16,7 +16,6 @@ class Plate(pygame.sprite.Sprite):
         self.selectable = True
         self.resizable = False
         self.before_drag = None
-        print(self.linked_to)
 
     def update(self, cam = None):
         if cam:
@@ -51,7 +50,6 @@ class Plate(pygame.sprite.Sprite):
             self.players_on.append(collider)
 
     def on_collision_exit(self, collider):
-        print('exit')
         self.players_on.remove(collider)
         if not self.players_on:
             self.linked_to.switch_status()
