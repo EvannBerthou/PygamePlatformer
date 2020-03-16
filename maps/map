@@ -10,6 +10,6 @@ endmap
 dialogues:
 p1, Hello everyone
 p2, This text is loaded from map file !
-p1, Red means player 1
-p2, Green means player 2
+p1, Blue means player 1
+p2, Red means player 2
 enddialogues
