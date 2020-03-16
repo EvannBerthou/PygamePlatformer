@@ -7,3 +7,9 @@ Spawn, 381,590, 0
 Spawn, 627,625, 1
 Door, 1088,481,372,248, 0
 endmap
+dialogues:
+p1, Hello everyone
+p2, This text is loaded from map file !
+p1, Red means player 1
+p2, Green means player 2
+enddialogues

@@ -47,7 +47,8 @@ class LevelManager:
         self.map_path = map_path
         map_data = self.load_map(map_path)
 
-        self.dialogues = ["Hello everyone", "New dialogue"]
+        self.dialogues = map_data['dialogues']
+        print(self.dialogues)
         self.level_state = LevelState.DIALOGUE if len(self.dialogues) > 0 else LevelState.IN_GAME
         self.dialogues_index = -1
 
@@ -64,11 +65,11 @@ class LevelManager:
         if self.replay:
             self.replay_manager = ReplayManager('test.json')
 
-        self.line = self.next_dialogue()
         self.line_index = -1
         self.dialogues_text = UI.Text(100,100, "", 56, (255,255,255))
         self.text_timer = 0
         self.next_timer = 0
+        self.line = self.next_dialogue()
 
     def update(self, dt):
         if self.level_completed:
@@ -117,7 +118,9 @@ class LevelManager:
 
     def draw(self, surface):
         self.all_colliders.draw(surface)
-        self.dialogues_text.draw(surface)
+
+        if self.level_state == LevelState.DIALOGUE:
+            self.dialogues_text.draw(surface)
         if self.level_completed:
             surface.blit(self.end_screen, (0,0))
 
@@ -186,5 +189,11 @@ class LevelManager:
             return None
         self.line_index = -1
         self.dialogues_index += 1
-        line = self.dialogues[self.dialogues_index]
-        return line
+        dialogue = self.dialogues[self.dialogues_index]
+        player = dialogue[0]
+        if player == "p1":
+            self.dialogues_text.color = (255,0,0)
+        if player == "p2":
+            self.dialogues_text.color = (0,255,0)
+        text = dialogue[1]
+        return text
