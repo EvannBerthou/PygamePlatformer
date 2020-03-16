@@ -76,13 +76,18 @@ def load_map(file_name):
         return {'rects': [], 'name': '', 'author': ''}
 
     rects = []
+    dialogues = []
     in_map = False
+    in_dialogue = False
     name = ""
     author = ""
     with open(file_name, 'r') as f:
         for l in f:
             if l == "endmap\n":
                 in_map = False
+
+            if l == "enddialogues\n":
+                in_dialogue = False
 
             if l.startswith('name'):
                 name = "".join(l.split(':')[1:]).strip('\n')
@@ -95,7 +100,16 @@ def load_map(file_name):
                 obj = obj_from_str(parts[0])
                 rects.append(create_obj(obj, parts[1:]))
 
+            if in_dialogue:
+                parts = l.strip().split(',')
+                player = parts[0]
+                text = ",".join(parts[1:])
+                dialogues.append([player, text])
+
             if l == "map:\n":
                 in_map = True
+
+            if l == "dialogues:\n":
+                in_dialogue = True
     print('Map loaded')
-    return {"rects": rects, "name": name,"author": author}
+    return {"rects": rects, "name": name,"author": author, "dialogues": dialogues}

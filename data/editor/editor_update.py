@@ -156,8 +156,6 @@ def update_mode(editor):
 
 def move_rect(editor, mouse_position):
     r = editor.rects.sprites()[editor.selected_rect]
-    if not r:
-        return
     mp = editor.camera.screen_to_world(mouse_position)
     if isinstance(r, SpawnPoint):
         r.move(mp)

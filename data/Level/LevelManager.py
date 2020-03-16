@@ -9,10 +9,15 @@ from .ReplayManager import ReplayManager
 
 pygame.font.init()
 
+class LevelState:
+    DIALOGUE = 0
+    IN_GAME = 1
+
 class LevelManager:
     def load_map(self, file_path):
         self.all_colliders.add([self.background, self.player_1, self.player_2])
-        colliders = load_map(file_path)['rects']
+        map_data = load_map(file_path)
+        colliders = map_data['rects']
         for col in colliders:
             if isinstance(col, Plate):
                 if col.linked_to_id != -1:
@@ -30,6 +35,7 @@ class LevelManager:
                     raise ValueError("Spawn point's Player_id is not valid")
             else:
                 self.all_colliders.add(col)
+        return map_data
 
     def __init__(self, window_size, map_path, game, replay = None):
         self.player_1 = Player(K_q, K_d, K_SPACE, 0)
@@ -39,13 +45,18 @@ class LevelManager:
 
         self.all_colliders = pygame.sprite.Group()
         self.map_path = map_path
-        self.load_map(map_path)
+        map_data = self.load_map(map_path)
+
+        self.dialogues = map_data['dialogues']
+        self.level_state = LevelState.DIALOGUE if len(self.dialogues) > 0 else LevelState.IN_GAME
+        self.dialogues_index = -1
 
         self.start_time = 0.0
         self.timer_font = pygame.font.SysFont(pygame.font.get_default_font(), 46)
         self.level_completed = False
 
         self.ui_manager = UI.UIManager()
+        self.dialogue_ui = UI.UIManager()
         self.end_screen = pygame.Surface(window_size, SRCALPHA)
         self.game = game
 
@@ -54,8 +65,31 @@ class LevelManager:
         if self.replay:
             self.replay_manager = ReplayManager('test.json')
 
+        self.line_index = -1
+        self.dialogues_background = UI.Image(0, game.DESING_H - 300, game.DESING_W, 300, color = (150,150,150))
+        self.dialogues_text = UI.Text(5,game.DESING_H - 280, "", 70, (255,255,255))
+        self.text_timer = 0
+        self.next_timer = 0
+        self.line = self.next_dialogue()
+
+        self.dialogue_ui.add(self.dialogues_background)
+        self.dialogue_ui.add(self.dialogues_text)
+
     def update(self, dt):
         if self.level_completed:
+            return
+        if self.level_state == LevelState.DIALOGUE:
+            if not self.line:
+                self.level_state = LevelState.IN_GAME
+                return
+
+            self.text_timer += dt
+            if self.text_timer >= self.next_timer:
+                self.next_timer += 64
+                self.line_index += 1
+                self.dialogues_text.set_text(self.line[:self.line_index])
+                if self.line_index > len(self.line):
+                    self.line = self.next_dialogue()
             return
 
         self.start_time += dt / 1000
@@ -88,6 +122,9 @@ class LevelManager:
 
     def draw(self, surface):
         self.all_colliders.draw(surface)
+
+        if self.level_state == LevelState.DIALOGUE:
+            self.dialogue_ui.draw(surface)
         if self.level_completed:
             surface.blit(self.end_screen, (0,0))
 
@@ -148,3 +185,19 @@ class LevelManager:
         self.player_1.prev_colliders.clear()
         self.player_2.prev_colliders.clear()
         self.load_map(self.map_path)
+
+    def next_dialogue(self):
+        if self.level_state != LevelState.DIALOGUE:
+            return
+        if self.dialogues_index >= len(self.dialogues) - 1:
+            return None
+        self.line_index = -1
+        self.dialogues_index += 1
+        dialogue = self.dialogues[self.dialogues_index]
+        player = dialogue[0]
+        if player == "p1":
+            self.dialogues_text.color = (0,0,255)
+        if player == "p2":
+            self.dialogues_text.color = (255,0,0)
+        text = dialogue[1]
+        return text
