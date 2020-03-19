@@ -327,6 +327,8 @@ class DropDown(UIElement):
                 self.opened = not self.opened
 
     def is_hovered(self, mouse_position):
+        if self.opened:
+            return self.rect.collidepoint(mouse_position)
         return self.choice_rect.collidepoint(mouse_position)
 
 class LevelButton(Button):
