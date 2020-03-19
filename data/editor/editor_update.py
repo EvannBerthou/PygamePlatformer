@@ -39,6 +39,8 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
     pygame.mouse.get_rel()
     if editor.ui_to_draw.update(mouse_position, event.button == 1, 0, events) > 0:
         return
+    if editor.ui_to_draw == editor.save_options_ui:
+        return
     if editor.property_panel == None:
         if not (editor.selected_rect > -1 and editor.check_arrow(mouse_position)):
             editor.selected_rect = inside_rect(editor.rects, mouse_position, editor.camera)
