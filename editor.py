@@ -23,7 +23,7 @@ class Game:
         name = self.map_name.text.strip(' ')
         author = self.map_author.text.strip(' ')
         if name and author:
-            print(save_to_file(self.rects.sprites(), self.map_path, name, author))
+            print(save_to_file(self.rects.sprites(), self.map_path, name, author, self.dialogues))
         else:
             print('You need to provide a map name and an author name in order to save')
 
@@ -102,7 +102,7 @@ class Game:
         self.ui_to_draw = self.editor_ui
 
         self.map_path = map_path
-        self.load_map(map_path)
+        self.map_data = self.load_map(map_path)
 
     def run(self):
         while self.running:
@@ -200,6 +200,7 @@ class Game:
         map_author = map_data['author']
         self.map_name.set_text(map_name)
         self.map_author.set_text(map_author)
+        self.dialogues = map_data['dialogues']
 
 
     def check_arrow(self, mouse_position):

@@ -1,6 +1,6 @@
 import os
 
-def save_to_file(rects, file_path, name, author):
+def save_to_file(rects, file_path, name, author, dialogues):
     from data.GameObjects.SpawnPoint import SpawnPoint
     spawn_points = []
     for obj in rects:
@@ -21,6 +21,10 @@ def save_to_file(rects, file_path, name, author):
                 string = obj.as_string()
                 f.write(string)
         f.write('endmap\n')
+        f.write('dialogues:\n')
+        for dialogue in dialogues:
+            f.write(f'{dialogue[0]},{dialogue[1]}\n')
+        f.write('enddialogues\n')
     return "map saved"
 
 def obj_from_str(string):

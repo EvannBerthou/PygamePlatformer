@@ -12,6 +12,9 @@ class Camera:
         self.ratio = (ds[0] / ws[0], ds[1] / ws[1])
         self.last_offset = (0,0)
 
+    def get_zoomed(self, size):
+        return (int(size[0] * self.zoom), int(size[1] * self.zoom))
+
     def get_offset(self, rect):
         """
         Returns the positon of the rect relative to the camera

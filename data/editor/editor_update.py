@@ -154,6 +154,7 @@ def update_mode(editor):
         editor.mode_text = MODE_TEXT.render("Camera", 1, (255,255,255))
     if editor.mode == MODE.Editor:
         editor.mode_text = MODE_TEXT.render("Editor", 1, (255,255,255))
+    editor.rect_started = False
 
 
 def move_rect(editor, mouse_position):
