@@ -278,6 +278,7 @@ class DropDown(UIElement):
         super().__init__(x,y)
         self.case_height = h
         h *= len(choices) + 1
+        self.choice_rect = pygame.Rect(x,y,w,self.case_height)
         self.rect = pygame.Rect(x,y,w,h)
         self.surface = pygame.Surface((w, h), SRCALPHA)
 
@@ -326,7 +327,7 @@ class DropDown(UIElement):
                 self.opened = not self.opened
 
     def is_hovered(self, mouse_position):
-        return self.rect.collidepoint(mouse_position)
+        return self.choice_rect.collidepoint(mouse_position)
 
 class LevelButton(Button):
     def __init__(self, x,y,w,h, map_name, map_author, color, callback, args, center_text = False, font_size = 46):

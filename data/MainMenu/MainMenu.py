@@ -150,24 +150,24 @@ class OptionMenu(Menu):
                                                 ["1920x1080", "1366x768", "1280x720", "1152x664", "960x540","640x360"],
                                                 (100,100,100), (75,75,75), self.change_resolution)
 
-        #self.ui_manager.add(self.resolution_dropdown)
+        self.ui_manager.add(self.resolution_dropdown)
 
         self.ui_manager.add(UI.Button(main_menu.game.DESING_W - 250, main_menu.game.DESING_H - 100, 200,60,
                                         "Back", (200,200,200), main_menu.main_menu, [],
                                         center_text = True, font_size = 70))
 
-        p1_text = UI.Text(200, 200, "Player 1", 56, (255,255,255))
-        p2_text = UI.Text(410, 200, "Player 2", 56, (255,255,255))
-        left_text = UI.Text(20, 275, "Left", 56, (255,255,255))
-        right_text = UI.Text(20, 345, "Right", 56, (255,255,255))
-        jump_text = UI.Text(20, 410, "Jump", 56, (255,255,255))
+        p1_text = UI.Text(700, 20, "Player 1", 56, (255,255,255))
+        p2_text = UI.Text(910, 20, "Player 2", 56, (255,255,255))
+        left_text = UI.Text(520, 95, "Left", 56, (255,255,255))
+        right_text = UI.Text(520, 165, "Right", 56, (255,255,255))
+        jump_text = UI.Text(520, 230, "Jump", 56, (255,255,255))
         self.ui_manager.add(p1_text)
         self.ui_manager.add(p2_text)
         self.ui_manager.add(left_text)
         self.ui_manager.add(right_text)
         self.ui_manager.add(jump_text)
 
-        keybind_grid = UI.Grid(175,250,600,300,200,60,10,10)
+        keybind_grid = UI.Grid(675,70,600,300,200,60,10,10)
         cfg = main_menu.game.config
         keybind_grid.add(UI.Button, [self.key_to_char(cfg['p1_left']), (200,200,200), self.set_keybind, ['p1_left'], True])
         keybind_grid.add(UI.Button, [self.key_to_char(cfg["p2_left"]), (200,200,200), self.set_keybind, ['p2_left'], True])
