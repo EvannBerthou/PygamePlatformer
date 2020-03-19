@@ -38,8 +38,8 @@ class LevelManager:
         return map_data
 
     def __init__(self, window_size, map_path, game, replay = None):
-        self.player_1 = Player(K_q, K_d, K_SPACE, 0)
-        self.player_2 = Player(K_LEFT, K_RIGHT, K_UP, 1)
+        self.player_1 = Player(game.config['p1_left'], game.config['p1_right'], game.config['p1_jump'], 0)
+        self.player_2 = Player(game.config['p2_left'], game.config['p2_right'], game.config['p2_jump'], 1)
 
         self.background = Background(window_size)
 

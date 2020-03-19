@@ -119,6 +119,28 @@ class LevelSelectorMenu(Menu):
         self.scrollview.update_surface(0)
 
 class OptionMenu(Menu):
+    def set_keybind(self, btn, key):
+        self.waiting_for_key = True
+        self.keybind = key[0]
+        self.btn = btn
+
+    def key_to_char(self, key):
+        str_key = str(key)
+        specials = {
+            "32": "Space",
+            "1073741903": "Right",
+            "1073741904": "Left",
+            "1073741905": "Down",
+            "1073741906": "Up",
+        }
+        if str_key in specials:
+            return specials[str_key]
+        if key < 0 or key > 0x10FFFF:
+            print('Key out of chr range')
+            return None
+
+        return chr(key)
+
     def __init__(self, main_menu):
         super().__init__(main_menu)
         self.fullscreen_toggle = UI.Toggle(20,20,400,64, "Fullscreen", self.toggle_fullscreen)
@@ -128,15 +150,40 @@ class OptionMenu(Menu):
                                                 ["1920x1080", "1366x768", "1280x720", "1152x664", "960x540","640x360"],
                                                 (100,100,100), (75,75,75), self.change_resolution)
 
-        self.ui_manager.add(self.resolution_dropdown)
+        #self.ui_manager.add(self.resolution_dropdown)
 
         self.ui_manager.add(UI.Button(main_menu.game.DESING_W - 250, main_menu.game.DESING_H - 100, 200,60,
                                         "Back", (200,200,200), main_menu.main_menu, [],
                                         center_text = True, font_size = 70))
 
+        p1_text = UI.Text(200, 200, "Player 1", 56, (255,255,255))
+        p2_text = UI.Text(410, 200, "Player 2", 56, (255,255,255))
+        left_text = UI.Text(20, 275, "Left", 56, (255,255,255))
+        right_text = UI.Text(20, 345, "Right", 56, (255,255,255))
+        jump_text = UI.Text(20, 410, "Jump", 56, (255,255,255))
+        self.ui_manager.add(p1_text)
+        self.ui_manager.add(p2_text)
+        self.ui_manager.add(left_text)
+        self.ui_manager.add(right_text)
+        self.ui_manager.add(jump_text)
+
+        keybind_grid = UI.Grid(175,250,600,300,200,60,10,10)
+        cfg = main_menu.game.config
+        keybind_grid.add(UI.Button, [self.key_to_char(cfg['p1_left']), (200,200,200), self.set_keybind, ['p1_left'], True])
+        keybind_grid.add(UI.Button, [self.key_to_char(cfg["p2_left"]), (200,200,200), self.set_keybind, ['p2_left'], True])
+        keybind_grid.add(UI.Button, [self.key_to_char(cfg["p1_right"]), (200,200,200), self.set_keybind, ['p1_right'], True])
+        keybind_grid.add(UI.Button, [self.key_to_char(cfg["p2_right"]), (200,200,200), self.set_keybind, ['p2_right'], True])
+        keybind_grid.add(UI.Button, [self.key_to_char(cfg["p1_jump"]), (200,200,200), self.set_keybind, ['p1_jump'], True])
+        keybind_grid.add(UI.Button, [self.key_to_char(cfg["p2_jump"]), (200,200,200), self.set_keybind, ['p2_jump'], True])
+        self.ui_manager.add(keybind_grid)
+
         self.fullscreen_toggle.activated = main_menu.game.config['fullscreen'] == 1
         self.fullscreen_toggle.update_surface()
         self.resolution_dropdown.set_choice(None, "{}x{}".format(main_menu.game.w, main_menu.game.h))
+
+        self.waiting_for_key = False
+        self.keybind = None
+        self.btn = None
 
     def draw(self, surface):
         pygame.draw.rect(surface, (150,150,150),
@@ -144,8 +191,14 @@ class OptionMenu(Menu):
         self.ui_manager.draw(surface)
 
     def update(self, mouse_position, mouse_pressed, mouse_rel, events):
-        pass
-
+        if self.waiting_for_key:
+            for event in events:
+                if event.type == KEYDOWN:
+                    key = self.key_to_char(event.key)
+                    self.main_menu.game.config[self.keybind] = event.key
+                    self.waiting_for_key = False
+                    self.btn.set_text(key)
+ 
     def toggle_fullscreen(self, active):
         self.main_menu.game.fullscreen = active
         if active:
