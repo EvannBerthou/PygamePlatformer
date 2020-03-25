@@ -195,6 +195,7 @@ class Game:
         self.rects.empty()
         self.rects.add(Background((DESING_W, DESING_H)))
         map_data = load_map(map_path)
+        self.spawn_points_count = 2 if map_data['rects'] else 0
         self.rects.add(map_data['rects'])
         map_name = map_data['name']
         map_author = map_data['author']

@@ -2,6 +2,7 @@ import UI
 import os
 import pygame
 from data.utils.ConfigManager import load_config
+from data.utils.SpriteLoader import load_sprite
 from pygame.locals import *
 
 class Menu:
@@ -156,18 +157,18 @@ class OptionMenu(Menu):
                                         "Back", (200,200,200), main_menu.main_menu, [],
                                         center_text = True, font_size = 70))
 
-        p1_text = UI.Text(700, 20, "Player 1", 56, (255,255,255))
-        p2_text = UI.Text(910, 20, "Player 2", 56, (255,255,255))
+        p1_text = UI.Text(720, 20, "Player 1", 56, (255,255,255))
+        p2_text = UI.Text(930, 20, "Player 2", 56, (255,255,255))
         left_text = UI.Text(520, 95, "Left", 56, (255,255,255))
-        right_text = UI.Text(520, 165, "Right", 56, (255,255,255))
-        jump_text = UI.Text(520, 230, "Jump", 56, (255,255,255))
+        right_text = UI.Text(520, 175, "Right", 56, (255,255,255))
+        jump_text = UI.Text(520, 255, "Jump", 56, (255,255,255))
         self.ui_manager.add(p1_text)
         self.ui_manager.add(p2_text)
         self.ui_manager.add(left_text)
         self.ui_manager.add(right_text)
         self.ui_manager.add(jump_text)
 
-        keybind_grid = UI.Grid(675,70,600,300,200,60,10,10)
+        keybind_grid = UI.Grid(675,70,600,300,200,60,20,20)
         cfg = main_menu.game.config
         keybind_grid.add(UI.Button, [self.key_to_char(cfg['p1_left']), (200,200,200), self.set_keybind, ['p1_left'], True])
         keybind_grid.add(UI.Button, [self.key_to_char(cfg["p2_left"]), (200,200,200), self.set_keybind, ['p2_left'], True])
@@ -220,6 +221,7 @@ class MainMenu:
     def __init__(self, game):
         self.game = game
         self.menu = MainScreenMenu(self)
+        self.background = load_sprite('background.png', (1920,1080))
 
     def update(self, mouse_position, mouse_pressed, mouse_rel, events):
         self.menu.ui_manager.update(mouse_position, mouse_pressed, mouse_rel, events)
@@ -230,7 +232,7 @@ class MainMenu:
         self.menu = MainScreenMenu(self)
 
     def draw(self, surface):
-        surface.fill((75,0,130))
+        surface.blit(self.background, (0,0))
 
     def draw_ui(self, surface):
         self.menu.draw(surface)

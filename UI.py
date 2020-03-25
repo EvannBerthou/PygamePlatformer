@@ -105,6 +105,7 @@ class Button(UIElement):
         self.args = args
         self.set_text(text)
         self.center_text = center_text
+        self.hovered = False
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
@@ -121,7 +122,13 @@ class Button(UIElement):
                     self.callback(self, self.args)
 
     def is_hovered(self, mouse_position):
-        return self.rect.collidepoint(mouse_position)
+        hovered = self.rect.collidepoint(mouse_position)
+        if hovered and not self.hovered:
+            self.rect.inflate_ip(10,10)
+        if not hovered and self.hovered:
+            self.rect.inflate_ip(-10,-10)
+        self.hovered = hovered
+        return hovered
 
     def destroy(self, UIManager):
         UIManager.remove(self)

@@ -77,7 +77,7 @@ def load_map(file_name):
     print('Loading map')
     if not os.path.exists(file_name) or not os.path.isfile(file_name):
         print(f'No file named : {file_name}, creating one')
-        return {'rects': [], 'name': '', 'author': ''}
+        return {'rects': [], 'name': '', 'author': '', 'dialogues': []}
 
     rects = []
     dialogues = []
