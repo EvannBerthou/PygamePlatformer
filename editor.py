@@ -22,8 +22,10 @@ class Game:
     def save_to_file(self, btn, args):
         name = self.map_name.text.strip(' ')
         author = self.map_author.text.strip(' ')
+        player_size = 32 if self.player_size.text == "" else int(self.player_size.text)
         if name and author:
-            print(save_to_file(self.rects.sprites(), self.map_path, name, author, self.dialogues))
+            self.map_path = os.path.join('custom_maps', name)
+            print(save_to_file(self.rects.sprites(), self.map_path, name, author, self.dialogues, player_size))
         else:
             print('You need to provide a map name and an author name in order to save')
 
@@ -90,6 +92,10 @@ class Game:
         self.map_name = UI.InputField(self.w / 2 - 225, self.h / 2 - 200, 400,30, None, None, 50)
         self.map_author_text = UI.Text(self.w / 2 - 225, self.h / 2 - 150, "Map author", 36, (255,255,255))
         self.map_author = UI.InputField(self.w / 2 - 225, self.h / 2 - 125, 400,30, None, None, 50)
+        self.player_size_text = UI.Text(self.w / 2 - 225, self.h / 2 - 75, "Player size", 36, (255,255,255))
+        self.player_size = UI.InputField(self.w / 2 - 220 + self.player_size_text.get_width(),
+                                         self.h / 2 - 75, 50,30, None, None, 50,
+                                         text_type = int, char_limit=2)
 
         self.save_options_ui.add(UI.Image(self.w / 2 - 250, self.h / 2 - 250,500,500, color = (200,200,200,200)))
         self.save_options_ui.add(self.back_button)
@@ -98,11 +104,15 @@ class Game:
         self.save_options_ui.add(self.map_name)
         self.save_options_ui.add(self.map_author_text)
         self.save_options_ui.add(self.map_author)
+        self.save_options_ui.add(self.player_size_text)
+        self.save_options_ui.add(self.player_size)
 
         self.ui_to_draw = self.editor_ui
 
         self.map_path = map_path
-        self.map_data = self.load_map(map_path)
+        if self.map_path:
+            self.map_data = self.load_map(map_path)
+        self.dialogues = []        
 
     def run(self):
         while self.running:
@@ -141,14 +151,7 @@ class Game:
                 self.camera.y += dy * (1 / self.camera.zoom)
 
             #UPDATE
-            if self.ui_to_draw.selected != -1:
-                if self.ui_to_draw.selected < len(self.ui_to_draw.elements):
-                    self.ui_to_draw.elements[self.ui_to_draw.selected].update(mouse_position, mouse_pressed, 0, events)
-                else:
-                    self.ui_to_draw.selected = 0
-                self.rect_started = 0
-                if self.property_panel == None:
-                    self.selected_rect = -1
+            self.ui_to_draw.update(mouse_position, mouse_pressed, 0, events)
 
             self.rects.update(cam = self.camera)
 
@@ -197,10 +200,9 @@ class Game:
         map_data = load_map(map_path)
         self.spawn_points_count = 2 if map_data['rects'] else 0
         self.rects.add(map_data['rects'])
-        map_name = map_data['name']
-        map_author = map_data['author']
-        self.map_name.set_text(map_name)
-        self.map_author.set_text(map_author)
+        self.map_name.set_text(map_data['name'])
+        self.map_author.set_text(map_data['author'])
+        self.player_size.set_text(map_data['player_size'])
         self.dialogues = map_data['dialogues']
 
 
@@ -221,8 +223,6 @@ class Game:
         pygame.draw.rect(self.blitting_surface, (0,255,0), self.horizontal_arrow)
 
 
-if len(sys.argv) < 2:
-    print('No file path given')
-    exit(1)
-game = Game(sys.argv[1])
+path = None if len(sys.argv) < 2 else sys.argv[1]
+game = Game(path)
 game.run()

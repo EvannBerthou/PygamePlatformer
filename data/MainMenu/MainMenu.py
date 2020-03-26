@@ -78,7 +78,7 @@ class LevelSelectorMenu(Menu):
         path = os.path.join('.', folder)
         if not os.path.exists(path) or not os.path.isdir(path):
             print(f'No folder named {folder}')
-            exit(1)
+            quit(1)
 
         maps_names = os.listdir(path)
         maps_paths = [os.path.join(folder, map_name) for map_name in maps_names]
@@ -244,7 +244,7 @@ class MainMenu:
         self.menu = OptionMenu(self)
 
     def exit(self, btn, args):
-        exit(0)
+        quit(0)
 
     def load_map(self, btn, args):
         self.game.load_map(args)

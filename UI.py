@@ -178,7 +178,7 @@ class ScrollView(UIElement):
         self.grid.clear()
 
 class InputField(UIElement):
-    def __init__(self, x,y,w,h, callback_function, icon, text_size = 70):
+    def __init__(self, x,y,w,h, callback_function, icon, text_size = 70, text_type = str, char_limit = 0):
         super().__init__(x,y)
         self.rect = pygame.Rect(x,y,w,h)
         self.elements = []
@@ -196,6 +196,8 @@ class InputField(UIElement):
         self.font = pygame.font.SysFont(pygame.font.get_default_font(), text_size)
         self.text_to_render = self.font.render(self.text, 1, (255,255,255))
         self.selected = 0
+        self.text_type = text_type
+        self.char_limit = char_limit
 
     def key_pressed(self, event):
         if event.key == K_BACKSPACE: self.remove_letter()
@@ -205,9 +207,16 @@ class InputField(UIElement):
         self.text_width = self.text_to_render.get_width()
 
     def add_letter(self, char):
-        self.text += char
-        self.cursor += 1
-        self.text_to_render = self.font.render(self.text, 1, (255,255,255))
+        try:
+            converted_char = self.text_type(char)
+        except ValueError:
+            print('Incorrect type')
+            return
+        if self.char_limit == 0 or len(self.text) < self.char_limit:
+            if char.isalnum():
+                self.text += char
+                self.cursor += 1
+                self.text_to_render = self.font.render(self.text, 1, (255,255,255))
 
     def remove_letter(self):
         letter = self.text[self.cursor - 1] if self.cursor < len(self.text) else ""
@@ -240,9 +249,10 @@ class InputField(UIElement):
         return self.rect.collidepoint(mouse_position)
 
     def set_text(self, text):
-        self.text = text
+        self.text = str(text)
         self.text_to_render = self.font.render(self.text, 1, (255,255,255))
         self.text_width = self.text_to_render.get_width()
+        self.cursor = len(self.text)
 
 class Toggle(UIElement):
     def __init__(self, x,y,w,h, text, callback_function):
@@ -429,3 +439,6 @@ class Text(UIElement):
 
     def is_hovered(self, mouse_position):
         return False
+    
+    def get_width(self):
+        return self.text.get_width()

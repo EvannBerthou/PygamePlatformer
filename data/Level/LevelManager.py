@@ -15,7 +15,9 @@ class LevelState:
 
 class LevelManager:
     def load_map(self, file_path):
-        self.all_colliders.add([self.background, self.player_1, self.player_2])
+        colliders_list = []
+        p1_pos = (0,0)
+        p2_pos = (0,0)
         map_data = load_map(file_path)
         colliders = map_data['rects']
         for col in colliders:
@@ -28,24 +30,31 @@ class LevelManager:
             if isinstance(col, SpawnPoint):
                 player = col.player_id
                 if player == 0:
-                    self.player_1.set_position(col.get_position())
+                    p1_pos = col.get_position()
                 elif player == 1:
-                    self.player_2.set_position(col.get_position())
+                    p2_pos = col.get_position()
                 else:
                     raise ValueError("Spawn point's Player_id is not valid")
             else:
-                self.all_colliders.add(col)
-        return map_data
+                colliders_list.append(col)
+        return map_data, colliders_list, p1_pos, p2_pos
 
     def __init__(self, window_size, map_path, game, replay = None):
-        self.player_1 = Player(game.config['p1_left'], game.config['p1_right'], game.config['p1_jump'], 0)
-        self.player_2 = Player(game.config['p2_left'], game.config['p2_right'], game.config['p2_jump'], 1)
 
         self.background = Background(window_size)
 
-        self.all_colliders = pygame.sprite.Group()
         self.map_path = map_path
-        map_data = self.load_map(map_path)
+        map_data, colliders, p1_pos, p2_pos = self.load_map(map_path)
+        size = (map_data['player_size'], map_data['player_size'])
+
+        self.player_1 = Player(game.config['p1_left'], game.config['p1_right'], game.config['p1_jump'],
+                               0, pygame.Rect(*p2_pos, *size))
+        self.player_2 = Player(game.config['p2_left'], game.config['p2_right'], game.config['p2_jump'], 
+                               1, pygame.Rect(*p2_pos, *size))
+
+        self.all_colliders = pygame.sprite.Group()
+        self.all_colliders.add([self.background, self.player_1, self.player_2])
+        self.all_colliders.add(colliders)
 
         self.dialogues = map_data['dialogues']
         self.level_state = LevelState.DIALOGUE if len(self.dialogues) > 0 else LevelState.IN_GAME

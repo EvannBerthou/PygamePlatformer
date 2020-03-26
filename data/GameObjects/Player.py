@@ -4,34 +4,33 @@ from pygame.locals import *
 from ..utils.utils import clamp
 from ..utils.SpriteLoader import load_animation
 
-PLAYER_SIZE = 64
-
 class Player(pygame.sprite.Sprite):
-    def __init__(self, left_key, right_key, jump_key, player_id):
+    def __init__(self, left_key, right_key, jump_key, player_id, rect):
         super().__init__()
-        self.rect = pygame.Rect(400,375, PLAYER_SIZE, PLAYER_SIZE)
+        self.rect = rect
+        self.size = self.rect.w
         self.grounded = True
         self.mvt = [0,0]
         self.speed = 0.5
         self.gravity = 0.0035
-        self.jump_force = 1.2
+        self.jump_force = self.size / 55
 
         self.left_key  = left_key
         self.right_key = right_key
         self.jump_key  = jump_key
 
         self.player_id = player_id
-        self.image = pygame.Surface((PLAYER_SIZE,PLAYER_SIZE), SRCALPHA)
+        self.image = pygame.Surface((self.size,self.size), SRCALPHA)
         color = (255,0,0) if self.player_id == 1 else (0,0,255)
         self.image.fill(color)
 
         self.prev_colliders = []
 
         self.animations = {
-                "walking" : load_animation('walker1.png', (PLAYER_SIZE, PLAYER_SIZE), 16, 33)
-                # "idle": load_animation(f'player_{self.player_id}_idle.png', (PLAYER_SIZE, PLAYER_SIZE)),
-                # "walking": load_animation(f'player_{self.player_id}_walking.png', (PLAYER_SIZE, PLAYER_SIZE), 9, 27),
-                # "standing": load_animation(f'player_{self.player_id}_standing.png', (PLAYER_SIZE, PLAYER_SIZE))
+                "walking" : load_animation('walker1.png', (64,64), (self.size, self.size), 16, 33)
+                # "idle": load_animation(f'player_{self.player_id}_idle.png', (self.size, self.size)),
+                # "walking": load_animation(f'player_{self.player_id}_walking.png', (self.size, self.size), 9, 27),
+                # "standing": load_animation(f'player_{self.player_id}_standing.png', (self.size, self.size))
         }
         self.animation_lenght = 1000 #duration of the animation in ms
         self.animation_time = 0 #time since the start of the animation in ms
@@ -39,7 +38,7 @@ class Player(pygame.sprite.Sprite):
     def move(self, dt):
         self.rect.x += self.mvt[0] * dt
         self.rect.y += self.mvt[1] * dt
-        self.rect.x = clamp(self.rect.x, 0, 1920 - PLAYER_SIZE)
+        self.rect.x = clamp(self.rect.x, 0, 1920 - self.size)
 
     def update_animation(self, dt):
         self.image.fill((0,0,0,0))

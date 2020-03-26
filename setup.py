@@ -4,5 +4,5 @@ setup (
         name = "jeu",
         version = "0.1",
         description = "casse pas la tete",
-        executables = [Executable("main.py")],
+        executables = [Executable("editor.py")],
 )

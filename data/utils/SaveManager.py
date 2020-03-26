@@ -1,6 +1,6 @@
 import os
 
-def save_to_file(rects, file_path, name, author, dialogues):
+def save_to_file(rects, file_path, name, author, dialogues, player_size):
     from data.GameObjects.SpawnPoint import SpawnPoint
     spawn_points = []
     for obj in rects:
@@ -11,10 +11,13 @@ def save_to_file(rects, file_path, name, author, dialogues):
             spawn_points.append(obj)
     if len(spawn_points) < 2:
         return "Missing {} spawn point(s)".format(2 - len(spawn_points))
+    if player_size < 32:
+        player_size = 32
 
     with open(file_path, 'w') as f:
         f.write(f'name:{name}\n')
         f.write(f'author:{author}\n')
+        f.write(f'player_size:{player_size}\n')
         f.write('map:\n')
         for obj in rects:
             if hasattr(obj, 'as_string'):
@@ -77,7 +80,7 @@ def load_map(file_name):
     print('Loading map')
     if not os.path.exists(file_name) or not os.path.isfile(file_name):
         print(f'No file named : {file_name}, creating one')
-        return {'rects': [], 'name': '', 'author': '', 'dialogues': []}
+        return {'rects': [], 'name': '', 'author': '', 'dialogues': [], 'player_size': 64}
 
     rects = []
     dialogues = []
@@ -98,6 +101,10 @@ def load_map(file_name):
 
             if l.startswith('author'):
                 author = "".join(l.split(':')[1:]).strip('\n')
+            
+            if l.startswith('player_size'):
+                player_size = int("".join(l.split(':')[1:]).strip('\n'))
+                if player_size < 32: player_size = 32
 
             if in_map:
                 parts = l.strip().split(',')
@@ -116,4 +123,4 @@ def load_map(file_name):
             if l == "dialogues:\n":
                 in_dialogue = True
     print('Map loaded')
-    return {"rects": rects, "name": name,"author": author, "dialogues": dialogues}
+    return {"rects": rects, "name": name,"author": author, "dialogues": dialogues, 'player_size': player_size}

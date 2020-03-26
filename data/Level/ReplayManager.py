@@ -14,7 +14,7 @@ class ReplayManager:
         self.action_id += 1
         if self.action_id >= len(self.replay_data):
             print('replay ended')
-            exit(0)
+            quit(0)
         self.next_action = self.replay_data[str(self.action_id)]
 
     def get_action(self, players):
