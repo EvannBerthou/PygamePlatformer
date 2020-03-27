@@ -30,9 +30,16 @@ class Player(pygame.sprite.Sprite):
                 # "walking": load_animation(f'player_{self.player_id}_walking.png', (self.size, self.size), 9, 27),
                 # "standing": load_animation(f'player_{self.player_id}_standing.png', (self.size, self.size))
         }
+
+        #Looking direction :
+        # 0 : left
+        # 1 : right
+        self.looking_direction = 1
+
         self.animation_lenght = 1000 #duration of the animation in ms
         self.animation_time = 0 #time since the start of the animation in ms
         self.update_animation(0)
+
 
     def move(self, dt):
         self.rect.x += self.mvt[0] * dt
@@ -43,13 +50,20 @@ class Player(pygame.sprite.Sprite):
         self.image.fill((0,0,0,0))
         self.animation_time = (self.animation_time + dt) % self.animation_lenght
         animation_frame = self.animation_time * len(self.animations['walking']) // self.animation_lenght
-        self.image.blit(self.animations['walking'][animation_frame], (0,0))
+        frame_to_blit = self.animations['walking'][animation_frame]
+        if self.looking_direction == 0:
+            flipped_image = pygame.transform.flip(frame_to_blit, True, False)
+            self.image.blit(flipped_image, (0,0))
+        if self.looking_direction == 1:
+            self.image.blit(frame_to_blit, (0,0))
 
     def c_update(self, colliders, keys, dt):
         self.update_animation(dt)
         if keys:
             self.move(dt)
             self.mvt[0] = (keys[self.right_key] - keys[self.left_key]) * self.speed
+            if self.mvt[0] > 0: self.looking_direction = 1
+            if self.mvt[0] < 0: self.looking_direction = 0
         collisions = self.rect.collidelistall(colliders)
         dx = 0
         dy = 0
