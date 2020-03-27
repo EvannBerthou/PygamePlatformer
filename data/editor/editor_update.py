@@ -79,8 +79,9 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
             hover_objs = pygame.Rect(*world_pos, 1,1).collidelistall(editor.rects.sprites())
             if len(hover_objs) > 1: #There is always the background but we don't want it to be linked
                 obj = hover_objs[1]
-                editor.rects.sprites()[editor.selected_rect].linked_to_id = obj
-                print("linked to", obj)
+                if isinstance(editor.rects.sprites()[obj], Door):
+                    editor.rects.sprites()[editor.selected_rect].linked_to_id = obj
+                    print("linked to", obj)
             else:
                 print("no link")
             editor.property_panel.linking = False
