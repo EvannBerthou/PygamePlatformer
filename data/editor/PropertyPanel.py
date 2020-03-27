@@ -20,7 +20,7 @@ class PropertyPanel:
             if p == "Player_Id":
                 text = f"player : {selected_obj.player_id}"
                 b = Button(self.x+5,self.y+self.h,
-                            150,35,text, (170,170,170), selected_obj.switch_player_id, [])
+                            150,35,text, (170,170,170), selected_obj.switch_player_id, [], center_text=True)
                 UIManager.add(b)
                 self.properties_obj[p] = b
                 self.h += b.rect.h + self.padding

@@ -111,11 +111,12 @@ class Game:
         self.game_state = GameState.IN_GAME
         self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_name, self, replay = replay_path)
 
-game = Game()
-if len(sys.argv) > 1:
-    file_path = sys.argv[1]
-    splitted = file_path.split('.')
-    if splitted[1] == 'json':
-        map_path = os.path.join('maps', splitted[0])
-        game.start_replay(map_path, file_path)
-game.run()
+if __name__ == '__main__':
+    game = Game()
+    if len(sys.argv) > 1:
+        file_path = sys.argv[1]
+        splitted = file_path.split('.')
+        if splitted[1] == 'json':
+            map_path = os.path.join('maps', splitted[0])
+            game.start_replay(map_path, file_path)
+    game.run()

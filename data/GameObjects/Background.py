@@ -12,5 +12,8 @@ class Background(pygame.sprite.Sprite):
     def on_collision(self, collider):
         return
 
+    def on_collision_exit(self, collider):
+        return
+
     def has_collision(self, player_id):
         return False

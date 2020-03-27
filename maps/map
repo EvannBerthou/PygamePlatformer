@@ -9,5 +9,6 @@ Spawn, 652,650, 1
 Door, 1088,481,372,248, 0
 endmap
 dialogues:
-p1, salut
+p1, Salut, on peut mettre des dialogues au debut
+p2, Chaque joueur a sa propre couleur !
 enddialogues

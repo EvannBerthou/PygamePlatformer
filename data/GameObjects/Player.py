@@ -21,8 +21,6 @@ class Player(pygame.sprite.Sprite):
 
         self.player_id = player_id
         self.image = pygame.Surface((self.size,self.size), SRCALPHA)
-        color = (255,0,0) if self.player_id == 1 else (0,0,255)
-        self.image.fill(color)
 
         self.prev_colliders = []
 
@@ -34,6 +32,7 @@ class Player(pygame.sprite.Sprite):
         }
         self.animation_lenght = 1000 #duration of the animation in ms
         self.animation_time = 0 #time since the start of the animation in ms
+        self.update_animation(0)
 
     def move(self, dt):
         self.rect.x += self.mvt[0] * dt
@@ -157,4 +156,4 @@ class Player(pygame.sprite.Sprite):
         return
 
     def set_position(self, position):
-        self.rect.center = position
+        self.rect = pygame.Rect(*position, self.size, self.size)

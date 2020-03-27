@@ -48,7 +48,7 @@ class LevelManager:
         size = (map_data['player_size'], map_data['player_size'])
 
         self.player_1 = Player(game.config['p1_left'], game.config['p1_right'], game.config['p1_jump'],
-                               0, pygame.Rect(*p2_pos, *size))
+                               0, pygame.Rect(*p1_pos, *size))
         self.player_2 = Player(game.config['p2_left'], game.config['p2_right'], game.config['p2_jump'], 
                                1, pygame.Rect(*p2_pos, *size))
 
@@ -193,7 +193,19 @@ class LevelManager:
         self.all_colliders.empty()
         self.player_1.prev_colliders.clear()
         self.player_2.prev_colliders.clear()
-        self.load_map(self.map_path)
+        map_data, colliders, p1_pos, p2_pos = self.load_map(self.map_path)
+
+        self.all_colliders = pygame.sprite.Group()
+        self.all_colliders.add([self.background, self.player_1, self.player_2])
+        self.all_colliders.add(colliders)
+
+        self.player_1.set_position(p1_pos)
+        self.player_2.set_position(p2_pos)
+
+        self.dialogues = map_data['dialogues']
+        self.level_state = LevelState.DIALOGUE if len(self.dialogues) > 0 else LevelState.IN_GAME
+        self.dialogues_index = -1
+        self.line = self.next_dialogue()
 
     def next_dialogue(self):
         if self.level_state != LevelState.DIALOGUE:

@@ -6,6 +6,9 @@ import UI
 from data.utils import *
 from data.editor import *
 
+from tkinter import filedialog
+from tkinter import *
+
 DESING_W, DESING_H = 1920,1080
 
 class Game:
@@ -17,6 +20,10 @@ class Game:
 
     def map_options(self, btn, args):
         #toggle between save_options_ui and editor_ui
+        self.selected_rect = -1
+        if self.property_panel:
+            self.property_panel.destroy(self.ui_to_draw)
+            self.property_panel = None
         self.ui_to_draw = self.save_options_ui if self.ui_to_draw == self.editor_ui else self.editor_ui
 
     def save_to_file(self, btn, args):
@@ -28,6 +35,11 @@ class Game:
             print(save_to_file(self.rects.sprites(), self.map_path, name, author, self.dialogues, player_size))
         else:
             print('You need to provide a map name and an author name in order to save')
+
+    def open_map(self, btn, args):
+        root = Tk().withdraw()
+        filename = filedialog.askopenfilename(initialdir = '.', title = 'Select map to open')
+        self.load_map(filename)
 
     def __init__(self, map_path):
         self.w, self.h = 1152,648
@@ -88,6 +100,9 @@ class Game:
         self.save_button = UI.Button(self.w / 2 + 125,self.h - 125,100,30,
                                             "Save",(150,150,150),self.save_to_file,[],center_text=True)
 
+        self.open_button = UI.Button(self.w / 2,self.h - 125,100,30,
+                                            "Open",(150,150,150),self.open_map,[],center_text=True)
+
         self.map_name_text = UI.Text(self.w / 2 - 225, self.h / 2 - 225, "Map name", 36, (255,255,255))
         self.map_name = UI.InputField(self.w / 2 - 225, self.h / 2 - 200, 400,30, None, None, 50)
         self.map_author_text = UI.Text(self.w / 2 - 225, self.h / 2 - 150, "Map author", 36, (255,255,255))
@@ -106,6 +121,7 @@ class Game:
         self.save_options_ui.add(self.map_author)
         self.save_options_ui.add(self.player_size_text)
         self.save_options_ui.add(self.player_size)
+        self.save_options_ui.add(self.open_button)
 
         self.ui_to_draw = self.editor_ui
 
@@ -151,7 +167,7 @@ class Game:
                 self.camera.y += dy * (1 / self.camera.zoom)
 
             #UPDATE
-            self.ui_to_draw.update(mouse_position, mouse_pressed, 0, events)
+            self.ui_to_draw.update(mouse_position, 0, 0, events)
 
             self.rects.update(cam = self.camera)
 
@@ -179,7 +195,7 @@ class Game:
             if self.property_panel:
                 if self.property_panel.linking:
                     self.camera.draw_line(self.blitting_surface, (0,255,0),
-                                            (self.rects.sprites()[self.selected_rect].rect.center[:2]),
+                                            (self.rects.sprites()[self.selected_rect].org_rect.center[:2]),
                                             self.camera.screen_to_world(mouse_position), 10)
 
             self.camera.draw_rect(self.blitting_surface, (255,255,255), (0,0, DESING_W, DESING_H), 3)
@@ -204,6 +220,7 @@ class Game:
         self.map_author.set_text(map_data['author'])
         self.player_size.set_text(map_data['player_size'])
         self.dialogues = map_data['dialogues']
+        self.ui_to_draw = self.editor_ui
 
 
     def check_arrow(self, mouse_position):
@@ -223,6 +240,7 @@ class Game:
         pygame.draw.rect(self.blitting_surface, (0,255,0), self.horizontal_arrow)
 
 
-path = None if len(sys.argv) < 2 else sys.argv[1]
-game = Game(path)
-game.run()
+if __name__ == '__main__':
+    path = None if len(sys.argv) < 2 else sys.argv[1]
+    game = Game(path)
+    game.run()

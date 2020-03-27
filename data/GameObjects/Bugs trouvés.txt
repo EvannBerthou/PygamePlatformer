@@ -1,0 +1,7 @@
+Bugs trouvés
+
+[ ] Problemes de collision sur le haut
+[ ] SpawnPoints qui se téléportent
+[x] Problemes de build (trouver un moyen de build le main et l'éditeur en meme temps) 
+[ ] Flip le sprite en fonction de là où il va
+[x] Ecran noir quand on relance le niveau (R ou replay)
