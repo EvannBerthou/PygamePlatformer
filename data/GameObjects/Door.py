@@ -4,14 +4,6 @@ from data.editor import *
 from data.utils.SpriteLoader import load_sprite
 
 class Door(pygame.sprite.Sprite):
-    def get_lines(self):
-        return [
-                ((0, 0), (self.rect.w, 0)),
-                ((0, 0), (0, self.rect.h)),
-                ((0, self.rect.h), (self.rect.w, self.rect.h)),
-                ((self.rect.w, 0), (self.rect.w, self.rect.h))
-        ]
-
     def __init__(self, x,y,w,h, color, player_id = 0):
         super().__init__()
         self.rect = pygame.Rect(int(x),int(y),int(w),int(h))
@@ -20,7 +12,6 @@ class Door(pygame.sprite.Sprite):
         self.color = (255,0,0) if self.player_id == 1 else (0,0,255)
         self.collide = False
         self.border = 10
-        self.lines = self.get_lines()
         self.background = load_sprite('wall.png', (w,h))
         self.door_size = (88,122)
         self.door_sprite_blue = load_sprite('door_blue.png', self.door_size)

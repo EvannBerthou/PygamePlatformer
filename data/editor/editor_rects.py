@@ -36,51 +36,6 @@ def get_corner_point(rect, point):
         if sr.collidepoint(point):
             return i
 
-def resize_rect(rect, corner, dx,dy, zoom):
-    """
-    Create a new rect offseting the position of a rect's corner
-
-    :param rect: rect to resize
-    :param corner: corner of the rect to move
-    :param dx: x offset
-    :param dy: y offset
-    :param zoom: Camera's zoom (only used in editor)
-    :type rect: pygame.Rect
-    :type corner: int
-    :type dx: int
-    :type dy: int
-    :type zoom: int
-    :rtype: pygame.Rect
-    """
-    AREA_LIMIT = 2000
-    new_rect = None
-    if corner == 0:
-        new_rect = (rect[0] + dx * (1 / zoom),
-                    rect[1] + dy * (1 / zoom),
-                    rect[2] - dx * (1 / zoom),
-                    rect[3] - dy * (1 / zoom))
-
-    elif corner == 1:
-        new_rect = (rect[0],
-                    rect[1] + dy * (1 / zoom),
-                    rect[2] + dx * (1 / zoom),
-                    rect[3] - dy * (1 / zoom))
-
-    elif corner == 2:
-        new_rect = (rect[0] + dx * (1 / zoom),
-                    rect[1],
-                    rect[2] - dx * (1 / zoom),
-                    rect[3] + dy * (1 / zoom))
-
-    elif corner == 3:
-        new_rect = (rect[0],
-                    rect[1],
-                    rect[2] + dx * (1 / zoom),
-                    rect[3] + dy * (1 / zoom))
-    area = new_rect[2] * new_rect[3]
-    if area < AREA_LIMIT:
-        return rect
-    return pygame.Rect(new_rect)
 
 def inside_rect(rects, mouse_position, camera):
     """

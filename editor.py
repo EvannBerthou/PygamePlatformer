@@ -92,6 +92,8 @@ class Game:
         self.selected_arrow = ""
         self.vertical_arrow = None
         self.horizontal_arrow = None
+        self.moving_offset = None
+        self.fixed_point = None
 
 
         self.save_options_ui = UI.UIManager()
@@ -145,6 +147,9 @@ class Game:
             if mouse_pressed[0] and self.selected_rect != -1 and self.property_panel == None:
                 move_rect(self, mouse_position)
 
+            if mouse_pressed[2] and self.selected_rect != -1 and self.property_panel == None:
+                on_resize_rect(self, mouse_position)
+
             events = pygame.event.get()
             for event in events:
                 if event.type == QUIT:
@@ -160,8 +165,6 @@ class Game:
                 if event.type == KEYDOWN:
                     on_key_down(self, event, mouse_position)
 
-            if mouse_pressed[2] and self.selected_rect != -1 and self.property_panel == None:
-                on_resize_rect(self, mouse_position)
 
             if self.camera.mouse_moving:
                 dx,dy = pygame.mouse.get_rel()

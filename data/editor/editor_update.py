@@ -107,6 +107,8 @@ def mode_editor_mouse_up(editor, mouse_position):
     editor.selected_arrow = ""
     pygame.mouse.get_rel()
     editor.property_panel_recently_closed = False
+    editor.fixed_point = None
+    editor.moving_offset = None
 
 def on_key_down(editor, event, mouse_position):
     """
@@ -176,9 +178,6 @@ def move_rect(editor, mouse_position):
         else:
             editor.selected_rect = -1
 
-        if isinstance(r, Door):
-            r.lines = r.get_lines()
-
 def on_resize_rect(editor, mouse_position):
     """
     Resize the selected rect
@@ -196,8 +195,17 @@ def on_resize_rect(editor, mouse_position):
 
     r = editor.rects.sprites()[editor.selected_rect]
     corner = get_corner_point(r, editor.camera.screen_to_world(mouse_position))
+
     if corner != None and r.resizable:
-        dx,dy = tuple(l*r for l,r in zip(pygame.mouse.get_rel(), editor.camera.ratio))
+        rect_corners = [r.org_rect.topleft, r.org_rect.topright, r.org_rect.bottomleft, r.org_rect.bottomright]
+        mouse_position = editor.camera.screen_to_world(mouse_position)
+
+        if editor.fixed_point == None:
+            moving_corner = rect_corners[corner]
+            editor.moving_offset = (mouse_position[0] - moving_corner[0], mouse_position[1] - moving_corner[1])
+
+            opposed_corner_id = {0:3, 3:0, 1:2, 2:1}[corner]
+            editor.fixed_point = rect_corners[opposed_corner_id]
 
         if isinstance(r, Plate):
             if corner == 0 or corner == 2:
@@ -209,9 +217,15 @@ def on_resize_rect(editor, mouse_position):
                 r.rect = (r.rect[0], r.rect[1],
                             r.rect[2] + dx * (1 / editor.camera.zoom), r.rect[3])
         else:
-            r.org_rect = resize_rect(r.org_rect, corner, dx,dy, editor.camera.zoom)
-            if isinstance(r, Door):
-                r.lines = r.get_lines()
+            pos = (mouse_position[0] - editor.moving_offset[0], mouse_position[1] - editor.moving_offset[1])
+            size = (editor.fixed_point[0] - mouse_position[0] + editor.moving_offset[0],
+                    editor.fixed_point[1] - mouse_position[1] + editor.moving_offset[1])
+
+            new_rect = pygame.Rect(pos, size)
+            new_rect.normalize()
+            AREA_LIMIT = 2000
+            if new_rect.w * new_rect.h > AREA_LIMIT:
+                r.org_rect = new_rect
 
 def resize_arrow(editor, arrow):
     """
