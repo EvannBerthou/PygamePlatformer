@@ -31,7 +31,8 @@ class Game:
         author = self.map_author.text.strip(' ')
         player_size = 32 if self.player_size.text == "" else int(self.player_size.text)
         if name and author:
-            self.map_path = os.path.join('custom_maps', name)
+            if self.map_path == None:
+                self.map_path = os.path.join('custom_maps', name)
             print(save_to_file(self.rects.sprites(), self.map_path, name, author, self.dialogues, player_size))
         else:
             print('You need to provide a map name and an author name in order to save')
@@ -64,6 +65,7 @@ class Game:
 
         self.editor_ui = UI.UIManager()
         self.property_panel = None
+        self.property_panel_recently_closed = False
 
         self.selected_object = Wall
 

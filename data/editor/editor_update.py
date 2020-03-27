@@ -5,6 +5,8 @@ from data.editor import *
 from data.GameObjects import *
 
 
+import random
+
 pygame.font.init()
 MODE_TEXT = pygame.font.SysFont(pygame.font.get_default_font(), 46)
 
@@ -56,6 +58,7 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
         if editor.property_panel and not editor.property_panel.linking:
             editor.property_panel.destroy(editor.ui_to_draw)
             editor.property_panel = None
+            editor.property_panel_recently_closed = True
     else:
         #If the selected object is a spawn point, don't drag and create the spawnpoint
         if editor.selected_object == SpawnPoint:
@@ -102,6 +105,7 @@ def mode_editor_mouse_up(editor, mouse_position):
     editor.drag_start = None
     editor.selected_arrow = ""
     pygame.mouse.get_rel()
+    editor.property_panel_recently_closed = False
 
 def on_key_down(editor, event, mouse_position):
     """
@@ -161,6 +165,8 @@ def move_rect(editor, mouse_position):
     r = editor.rects.sprites()[editor.selected_rect]
     mp = editor.camera.screen_to_world(mouse_position)
     if isinstance(r, SpawnPoint):
+        if editor.property_panel_recently_closed:
+            return
         r.move(mp)
         r.points = r.get_points()
     else:
