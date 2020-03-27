@@ -224,7 +224,7 @@ def on_resize_rect(editor, mouse_position):
             new_rect = pygame.Rect(pos, size)
             new_rect.normalize()
             AREA_LIMIT = 2000
-            if new_rect.w * new_rect.h > AREA_LIMIT:
+            if new_rect.w > 30 and new_rect.h > 30:
                 r.org_rect = new_rect
 
 def resize_arrow(editor, arrow):

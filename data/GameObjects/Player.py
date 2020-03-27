@@ -64,7 +64,10 @@ class Player(pygame.sprite.Sprite):
             self.mvt[0] = (keys[self.right_key] - keys[self.left_key]) * self.speed
             if self.mvt[0] > 0: self.looking_direction = 1
             if self.mvt[0] < 0: self.looking_direction = 0
+
+        
         collisions = self.rect.collidelistall(colliders)
+        collided_with = 0
         dx = 0
         dy = 0
 
@@ -73,48 +76,49 @@ class Player(pygame.sprite.Sprite):
                 colliders[col].on_collision_exit(self)
                 self.prev_colliders.remove(col)
 
+        for i in collisions:
+            col = colliders[i]
+            if col == self: #don't collide with itself
+                continue
+            if not i in self.prev_colliders:
+                self.prev_colliders.append(i)
+                col.on_collision(self)
 
-        if len(collisions) > 2:
-            for i in collisions:
-                col = colliders[i]
-                if col == self: #don't collide with itself
-                    continue
-                if not i in self.prev_colliders:
-                    self.prev_colliders.append(i)
-                    col.on_collision(self)
-                #If the collider is traversable don't check collisions
-                if not col.has_collision(self.player_id):
-                    continue
+            if not col.has_collision(self.player_id):
+                continue
 
-                rect = col.rect
-                #Collision en dessous du joueur
-                if self.collision_bottom(rect):
-                    dy -= (self.rect.bottom - rect.top) #Correction pour éviter que le joueur traverse le sol
-                    self.grounded = True
-                    self.mvt[1] = 0
-                elif self.collision_top(rect) and rect.w > self.rect.w:
-                    dy -= (self.rect.top - rect.bottom) #Correction pour éviter que le joueur traverse le plafond
-                    self.grounded = False
-                    self.mvt[1] = 0
-                elif self.collision_right(rect):
-                    self.mvt[0] = 0
-                    #check if only the topright corner is colliding in order to avoid teleporting
-                    #the player when there is no need to
-                    tr = rect.collidepoint(self.rect.topright)
-                    mr = rect.collidepoint(self.rect.midright)
-                    if tr and not mr:
-                        continue
-                    dx -= (self.rect.right - rect.left)
-                elif self.collision_left(rect) and not self.collision_top(rect):
-                    self.mvt[0] = 0
-                    #check if only the topleft corner is colliding in order to avoid teleporting
-                    #the player when there is no need to
-                    tl = rect.collidepoint(self.rect.topleft)
-                    ml = rect.collidepoint(self.rect.midleft)
-                    if tl and not ml:
-                        continue
-                    dx -= (self.rect.left - rect.right)
-        else:
+            rect = col.rect
+            #Collision en dessous du joueur
+            if self.collision_bottom(rect):
+                dy -= (self.rect.bottom - rect.top) #Correction pour éviter que le joueur traverse le sol
+                self.grounded = True
+                self.mvt[1] = 0
+            if self.collision_top(rect) and rect.w > self.rect.w:
+                dy -= (self.rect.top - rect.bottom) #Correction pour éviter que le joueur traverse le plafond
+                self.grounded = False
+                self.mvt[1] = 0
+            if self.collision_right(rect):
+                self.mvt[0] = 0
+                #check if only the topright corner is colliding in order to avoid teleporting
+                #the player when there is no need to
+                tr = rect.collidepoint(self.rect.topright)
+                mr = rect.collidepoint(self.rect.midright)
+                if tr and not mr:
+                    continue
+                dx -= (self.rect.right - rect.left)
+            if self.collision_left(rect):
+                self.mvt[0] = 0
+                #check if only the topleft corner is colliding in order to avoid teleporting
+                #the player when there is no need to
+                tl = rect.collidepoint(self.rect.topleft)
+                ml = rect.collidepoint(self.rect.midleft)
+                if tl and not ml:
+                    continue
+                dx -= (self.rect.left - rect.right)
+            
+            collided_with += 1
+        
+        if collided_with == 0:
             self.grounded = False
 
         self.rect.x += dx
