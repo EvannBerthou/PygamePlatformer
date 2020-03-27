@@ -2,31 +2,14 @@ import pygame
 
 class DragRect(pygame.sprite.Sprite):
     def __init__(self, x,y,w,h, color):
-        pos, scl = convert_rect(x,y,w,h)
-        self.rect = pygame.Rect(*pos, *scl)
+        #pos, scl = convert_rect(x,y,w,h)
+        self.rect = pygame.Rect(x,y,w,h)
+        self.rect.normalize()
         self.color = color
-        self.image = pygame.Surface(scl)
+        self.image = pygame.Surface(self.rect.size)
 
     def draw(self,camera,surface):
         camera.draw_rect(surface, self.color, self.rect)
-
-def convert_rect(x,y,w,h):
-    pos = [x,y]
-    scl = [w,h]
-
-    if w >= 0 and h <= 0:
-        pos = [x,y + h]
-        scl = [w, abs(h)]
-
-    if w <= 0 and h <= 0:
-        pos = [x + w, y + h]
-        scl = [abs(w), abs(h)]
-
-    if w <= 0 and h >= 0:
-        pos = [x + w, y]
-        scl = [abs(w), h]
-
-    return pos, scl
 
 def get_corner_point(rect, point):
     """
@@ -130,8 +113,9 @@ def create_rect(rect_start, mouse_end, obj):
     :rtype: obj typed object
     """
     size = ((mouse_end[0] - rect_start[0]), (mouse_end[1] - rect_start[1]))
-    pos, scl = convert_rect(*rect_start, *size)
-    r = obj(*pos, *scl, color=(255,0,0))
+    rect = pygame.Rect(*rect_start, *size)
+    rect.normalize()
+    r = obj(*rect, color=(255,0,0))
 
     if abs(r.rect[2]) < 16 or abs(r.rect[3]) < 16:
         print ("The rect is too smol")
