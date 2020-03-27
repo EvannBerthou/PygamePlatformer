@@ -149,6 +149,12 @@ def on_key_down(editor, event, mouse_position):
         editor.change_object(editor.wall_button, Wall)
     if event.key == K_F2:
         editor.change_object(editor.door_button, Door)
+    if event.key == K_F3:
+        editor.change_object(editor.door_button, SpawnPoint)
+    if event.key == K_F4:
+        editor.change_object(editor.door_button, Plate)
+    if event.key == K_F5:
+        editor.change_object(editor.door_button, Goal)
     if event.key == K_s and event.mod & KMOD_LALT:
         editor.save_to_file(None, None)
     if event.key == K_l:

@@ -1,8 +1,26 @@
 Bugs trouvés
 
-[ ] Problemes de collision sur le haut
+[x] Problemes de collision sur le haut (Partiellement réduit)
 [x] SpawnPoints qui se téléportent
 [x] Problemes de build (trouver un moyen de build le main et l'éditeur en meme temps) 
 [x] Flip le sprite en fonction de là où il va
 [x] Ecran noir quand on relance le niveau (R ou replay)
 [x] Les plates peuvent être relier à tous les objets
+
+[ ] Les joueurs gardent leur vitesse au respawn
+[ ] Systeme de respawn quand les joueurs sont trop bas
+[ ] Objets : 
+    [ ] Piques qui tuent
+    [ ] Téléporteur
+    [ ] Echangeur de position
+
+[ ] Quadrillage dans l'éditeur
+[ ] Editeur de transform
+[ ] Plaque pour respawn un joueur mort
+[ ] Ouvrir l'éditeur depuis le main
+[ ] Les sliders ne marchent plus
+[ ] Plate qui fait disparaitre des murs
+[ ] Ne pas détecter les fleches quand le carré est deja en train d'être resize
+[ ] Menu pour lancer un replay
+[ ] Regler le probleme de fullscreen
+[ ] Trouver un nom de jeu
