@@ -118,7 +118,7 @@ class Button(UIElement):
     def update(self, mouse_position, mouse_pressed, mouse_rel, events):
         for event in events:
             if event.type == MOUSEBUTTONDOWN:
-                if mouse_pressed[0]:
+                if event.button == 1:
                     self.callback(self, self.args)
 
     def is_hovered(self, mouse_position):
@@ -150,7 +150,7 @@ class ScrollView(UIElement):
         return self.rect.collidepoint(mouse_position)
 
     def update(self, mouse_position, mouse_pressed, mouse_rel, events):
-        if mouse_pressed[0][0] == 1:
+        if mouse_pressed[0] == 1:
             self.update_surface(mouse_rel[1])
 
         for el in self.grid.ui_manager.elements:

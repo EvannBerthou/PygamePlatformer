@@ -41,6 +41,14 @@ class Game:
         filename = filedialog.askopenfilename(initialdir = '.', title = 'Select map to open')
         self.load_map(filename)
 
+    def generate_grid(self, x_size, y_size):
+        surface = pygame.Surface((DESING_W, DESING_H), SRCALPHA)
+        n_x, n_y = DESING_W // x_size, DESING_H // y_size
+        for col in range(n_x):
+            for row in range(n_y):
+                pygame.draw.rect(surface, (255,255,255), (col * x_size, row * y_size, x_size, y_size), 3)
+        return surface
+
     def __init__(self, map_path):
         self.w, self.h = 1152,648
         # self.w, self.h = 1920,1080
@@ -135,6 +143,8 @@ class Game:
             self.map_data = self.load_map(map_path)
         self.dialogues = []        
 
+        self.grid = self.generate_grid(DESING_W // 16, DESING_H // 9)
+
     def run(self):
         while self.running:
             tick = self.clock.tick()
@@ -205,6 +215,7 @@ class Game:
                                             self.camera.screen_to_world(mouse_position), 10)
 
             self.camera.draw_rect(self.blitting_surface, (255,255,255), (0,0, DESING_W, DESING_H), 3)
+            self.blitting_surface.blit(self.camera.scale_to_zoom(self.grid), self.camera.get_offset(self.grid.get_rect()))
             blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
             self.win.blit(blit, blit.get_rect())
 

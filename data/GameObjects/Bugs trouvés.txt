@@ -28,3 +28,4 @@ Bugs trouvés
 [ ] Accents dans les dialogues
 [ ] Dialogues avec plusieurs lignes
 [ ] Améliorer la parsing des maps
+[ ] Snapping a la grille

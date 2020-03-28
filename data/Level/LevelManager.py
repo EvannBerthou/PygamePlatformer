@@ -72,7 +72,7 @@ class LevelManager:
         self.players_positions = {}
         self.replay = replay
         if self.replay:
-            self.replay_manager = ReplayManager('test.json')
+            self.replay_manager = ReplayManager(self.replay)
 
         self.line_index = -1
         self.dialogues_background = UI.Image(0, game.DESING_H - 300, game.DESING_W, 300, color = (150,150,150))
@@ -178,13 +178,9 @@ class LevelManager:
         self.ui_manager.add(main_menu_button)
         self.ui_manager.add(save_replay_button)
 
-        #saves recorded actions
-        with open('test.json', 'w') as f:
-            f.write(json.dumps(self.players_positions))
-
     def save_replay(self, btn, args):
         file_name = os.path.basename(self.map_path) + '.json'
-        print(file_name)
+        print('saving in :', file_name)
         with open(file_name, 'w') as f:
             f.write(json.dumps(self.players_positions))
 

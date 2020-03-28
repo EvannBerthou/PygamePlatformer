@@ -12,6 +12,10 @@ class Camera:
         self.ratio = (ds[0] / ws[0], ds[1] / ws[1])
         self.last_offset = (0,0)
 
+    def scale_to_zoom(self, surface):
+        size = self.get_zoomed(surface.get_size())
+        return pygame.transform.scale(surface, size)
+
     def get_zoomed(self, size):
         return (int(size[0] * self.zoom), int(size[1] * self.zoom))
 
