@@ -31,8 +31,7 @@ class Game:
         author = self.map_author.text.strip(' ')
         player_size = 32 if self.player_size.text == "" else int(self.player_size.text)
         if name and author:
-            if self.map_path == None:
-                self.map_path = os.path.join('custom_maps', name)
+            self.map_path = os.path.join('custom_maps', name)
             print(save_to_file(self.rects.sprites(), self.map_path, name, author, self.dialogues, player_size))
         else:
             print('You need to provide a map name and an author name in order to save')
@@ -62,6 +61,7 @@ class Game:
         self.rect_start = None
         self.rect_started = False
         self.drag_start = None
+        self.resizing = False
 
         self.editor_ui = UI.UIManager()
         self.property_panel = None
@@ -115,6 +115,7 @@ class Game:
         self.player_size = UI.InputField(self.w / 2 - 220 + self.player_size_text.get_width(),
                                          self.h / 2 - 75, 50,30, None, None, 50,
                                          text_type = int, char_limit=2)
+        self.player_size.set_text('64')
 
         self.save_options_ui.add(UI.Image(self.w / 2 - 250, self.h / 2 - 250,500,500, color = (200,200,200,200)))
         self.save_options_ui.add(self.back_button)
@@ -147,7 +148,7 @@ class Game:
             if mouse_pressed[0] and self.selected_rect != -1 and self.property_panel == None:
                 move_rect(self, mouse_position)
 
-            if mouse_pressed[2] and self.selected_rect != -1 and self.property_panel == None:
+            if self.resizing:
                 on_resize_rect(self, mouse_position)
 
             events = pygame.event.get()
@@ -172,7 +173,7 @@ class Game:
                 self.camera.y += dy * (1 / self.camera.zoom)
 
             #UPDATE
-            self.ui_to_draw.update(mouse_position, 0, 0, events)
+            self.ui_to_draw.update(mouse_position, mouse_pressed, 0, events)
 
             self.rects.update(cam = self.camera)
 

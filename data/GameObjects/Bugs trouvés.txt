@@ -7,20 +7,24 @@ Bugs trouvés
 [x] Ecran noir quand on relance le niveau (R ou replay)
 [x] Les plates peuvent être relier à tous les objets
 
-[ ] Les joueurs gardent leur vitesse au respawn
-[ ] Systeme de respawn quand les joueurs sont trop bas
+[x] Les joueurs gardent leur vitesse au respawn
+[x] Systeme de respawn quand les joueurs sont trop bas
 [ ] Objets : 
     [ ] Piques qui tuent
     [ ] Téléporteur
     [ ] Echangeur de position
+    [ ] Plaque pour respawn un joueur mort
+    [ ] Plate qui fait disparaitre des murs
+    [ ] Texte en jeu
 
 [ ] Quadrillage dans l'éditeur
 [ ] Editeur de transform
-[ ] Plaque pour respawn un joueur mort
 [ ] Ouvrir l'éditeur depuis le main
-[ ] Les sliders ne marchent plus
-[ ] Plate qui fait disparaitre des murs
-[ ] Ne pas détecter les fleches quand le carré est deja en train d'être resize
+[x] Les sliders ne marchent plus en drag
+[x] Ne pas détecter les fleches quand le carré est deja en train d'être resize
 [ ] Menu pour lancer un replay
-[ ] Regler le probleme de fullscreen
+[ ] Regler le probleme de fullscreen (topbar qui sort de l'écran)
 [ ] Trouver un nom de jeu
+[ ] Accents dans les dialogues
+[ ] Dialogues avec plusieurs lignes
+[ ] Améliorer la parsing des maps

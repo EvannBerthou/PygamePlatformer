@@ -105,6 +105,8 @@ class LevelManager:
         keyboard_input = pygame.key.get_pressed()
 
         self.all_colliders.update()
+        if self.player_1.rect.top > self.game.DESING_H or self.player_2.rect.top > self.game.DESING_H:
+            self.reload_level(0,0)
 
         #UPDATE
         if self.replay:
@@ -201,6 +203,8 @@ class LevelManager:
 
         self.player_1.set_position(p1_pos)
         self.player_2.set_position(p2_pos)
+        self.player_1.mvt = [0,0]
+        self.player_2.mvt = [0,0]
 
         self.dialogues = map_data['dialogues']
         self.level_state = LevelState.DIALOGUE if len(self.dialogues) > 0 else LevelState.IN_GAME

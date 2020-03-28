@@ -39,7 +39,7 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
     :rtype: None
     """
     pygame.mouse.get_rel()
-    if editor.ui_to_draw.update(mouse_position, event.button == 1, 0, events) > 0:
+    if editor.ui_to_draw.update(mouse_position, (event.button == 1,0), 0, events) > 0:
         return
     if editor.ui_to_draw == editor.save_options_ui:
         return
@@ -55,6 +55,8 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
             editor.draw_arrows(rect.rect)
             editor.selected_arrow = editor.check_arrow(mouse_position)
             pygame.mouse.get_rel()
+        if event.button == 3 and editor.selected_rect != -1 and editor.property_panel == None:
+            start_resize(editor, mouse_position)
         if editor.property_panel and not editor.property_panel.linking:
             editor.property_panel.destroy(editor.ui_to_draw)
             editor.property_panel = None
@@ -109,6 +111,7 @@ def mode_editor_mouse_up(editor, mouse_position):
     editor.property_panel_recently_closed = False
     editor.fixed_point = None
     editor.moving_offset = None
+    editor.resizing = False
 
 def on_key_down(editor, event, mouse_position):
     """
@@ -184,6 +187,29 @@ def move_rect(editor, mouse_position):
         else:
             editor.selected_rect = -1
 
+def start_resize(editor, mouse_position):
+    selected_arrow = editor.check_arrow(mouse_position)
+    if selected_arrow != "":
+        editor.selected_arrow = selected_arrow
+        editor.resizing = True
+        return
+
+    mouse_position = editor.camera.screen_to_world(mouse_position)
+    r = editor.rects.sprites()[editor.selected_rect]
+    corner = get_corner_point(r, mouse_position)
+
+    if corner != None and r.resizable:
+        editor.resizing = True
+        rect_corners = [r.org_rect.topleft, r.org_rect.topright, r.org_rect.bottomleft, r.org_rect.bottomright]
+
+        if editor.fixed_point == None:
+            moving_corner = rect_corners[corner]
+            editor.moving_offset = (mouse_position[0] - moving_corner[0], mouse_position[1] - moving_corner[1])
+
+            opposed_corner_id = {0:3, 3:0, 1:2, 2:1}[corner]
+            editor.fixed_point = rect_corners[opposed_corner_id]
+
+
 def on_resize_rect(editor, mouse_position):
     """
     Resize the selected rect
@@ -194,44 +220,31 @@ def on_resize_rect(editor, mouse_position):
     :type mouse_position: (int,int)
     :rtype: None
     """
-    arrow_selected = editor.check_arrow(mouse_position)
-    if arrow_selected != "" or editor.selected_arrow != "":
-        resize_arrow(editor, arrow_selected)
+    if editor.selected_arrow != "":
+        resize_arrow(editor, editor.selected_arrow)
         return
 
     r = editor.rects.sprites()[editor.selected_rect]
-    corner = get_corner_point(r, editor.camera.screen_to_world(mouse_position))
+    mouse_position = editor.camera.screen_to_world(mouse_position)
+    if isinstance(r, Plate):
+        if corner == 0 or corner == 2:
+            r.rect = (r.rect[0] + dx * (1 / editor.camera.zoom),
+                        r.rect[1],
+                        r.rect[2] - dx * (1 / editor.camera.zoom), r.rect[3])
 
-    if corner != None and r.resizable:
-        rect_corners = [r.org_rect.topleft, r.org_rect.topright, r.org_rect.bottomleft, r.org_rect.bottomright]
-        mouse_position = editor.camera.screen_to_world(mouse_position)
+        if corner == 1 or corner == 3:
+            r.rect = (r.rect[0], r.rect[1],
+                        r.rect[2] + dx * (1 / editor.camera.zoom), r.rect[3])
+    else:
+        pos = (mouse_position[0] - editor.moving_offset[0], mouse_position[1] - editor.moving_offset[1])
+        size = (editor.fixed_point[0] - mouse_position[0] + editor.moving_offset[0],
+                editor.fixed_point[1] - mouse_position[1] + editor.moving_offset[1])
 
-        if editor.fixed_point == None:
-            moving_corner = rect_corners[corner]
-            editor.moving_offset = (mouse_position[0] - moving_corner[0], mouse_position[1] - moving_corner[1])
-
-            opposed_corner_id = {0:3, 3:0, 1:2, 2:1}[corner]
-            editor.fixed_point = rect_corners[opposed_corner_id]
-
-        if isinstance(r, Plate):
-            if corner == 0 or corner == 2:
-                r.rect = (r.rect[0] + dx * (1 / editor.camera.zoom),
-                            r.rect[1],
-                            r.rect[2] - dx * (1 / editor.camera.zoom), r.rect[3])
-
-            if corner == 1 or corner == 3:
-                r.rect = (r.rect[0], r.rect[1],
-                            r.rect[2] + dx * (1 / editor.camera.zoom), r.rect[3])
-        else:
-            pos = (mouse_position[0] - editor.moving_offset[0], mouse_position[1] - editor.moving_offset[1])
-            size = (editor.fixed_point[0] - mouse_position[0] + editor.moving_offset[0],
-                    editor.fixed_point[1] - mouse_position[1] + editor.moving_offset[1])
-
-            new_rect = pygame.Rect(pos, size)
-            new_rect.normalize()
-            AREA_LIMIT = 2000
-            if new_rect.w > 30 and new_rect.h > 30:
-                r.org_rect = new_rect
+        new_rect = pygame.Rect(pos, size)
+        new_rect.normalize()
+        AREA_LIMIT = 2000
+        if new_rect.w > 30 and new_rect.h > 30:
+            r.org_rect = new_rect
 
 def resize_arrow(editor, arrow):
     """

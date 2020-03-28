@@ -1,0 +1,10 @@
+name:aa
+author:aaaa
+player_size:64
+map:
+Wall, -70,752,692,367, 255,0,0
+Spawn, 162,659, 0
+Spawn, 323,660, 1
+endmap
+dialogues:
+enddialogues

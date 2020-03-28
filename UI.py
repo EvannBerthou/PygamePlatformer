@@ -31,7 +31,7 @@ class UIManager:
             self.selected = -1
 
         if self.selected != -1:
-            self.elements[self.selected].update(mouse_position, (mouse_pressed, 0), mouse_rel, events)
+            self.elements[self.selected].update(mouse_position, mouse_pressed, mouse_rel, events)
         return self.selected
 
     def draw(self, surface):
@@ -213,7 +213,7 @@ class InputField(UIElement):
             print('Incorrect type')
             return
         if self.char_limit == 0 or len(self.text) < self.char_limit:
-            if char.isalnum():
+            if char.isalnum() or char == ' ':
                 self.text += char
                 self.cursor += 1
                 self.text_to_render = self.font.render(self.text, 1, (255,255,255))
