@@ -17,7 +17,7 @@ Bugs trouvés
     [ ] Plate qui fait disparaitre des murs
     [ ] Texte en jeu
 
-[ ] Quadrillage dans l'éditeur
+[x] Quadrillage dans l'éditeur
 [ ] Editeur de transform
 [ ] Ouvrir l'éditeur depuis le main
 [x] Les sliders ne marchent plus en drag
@@ -28,4 +28,8 @@ Bugs trouvés
 [ ] Accents dans les dialogues
 [ ] Dialogues avec plusieurs lignes
 [ ] Améliorer la parsing des maps
-[ ] Snapping a la grille
+[x] Snapping a la grille :
+    [x] Moving
+    [x] Resizing
+[x] Sliders pour changer la taille de grille 
+[x] Touche pour recentrer au centre de la map

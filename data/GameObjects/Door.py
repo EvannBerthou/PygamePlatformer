@@ -39,8 +39,18 @@ class Door(pygame.sprite.Sprite):
         color = invert_color(self.color)
         camera.draw_rect(surface, color, border, 5)
 
-    def move(self, mp, drag_start, constraint):
-        if constraint == "vertical":
+    def move(self, mp, drag_start, constraint, x_grid_size, y_grid_size):
+        if constraint == 'snapping':
+            x_cell = mp[0] // x_grid_size
+            y_cell = mp[1] // y_grid_size
+            corner_x = self.before_drag[0] // x_grid_size
+            corner_y = self.org_rect.y // y_grid_size
+
+            delta_x = (drag_start[0] - self.before_drag[0]) // x_grid_size
+            delta_y = (drag_start[1] - self.before_drag[1]) // x_grid_size
+            self.org_rect.x = (x_cell - delta_x) * x_grid_size
+            self.org_rect.y = (y_cell - delta_y) * y_grid_size
+        elif constraint == "vertical":
             self.org_rect.x = self.before_drag[0] + mp[0] - drag_start[0]
         elif constraint == "horizontal":
             self.org_rect.y = self.before_drag[1] + mp[1] - drag_start[1]

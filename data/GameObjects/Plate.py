@@ -5,7 +5,7 @@ class Plate(pygame.sprite.Sprite):
     def __init__(self, x,y,w,h, color = (255,0,0), linked_to_id = -1):
         super().__init__()
         self.org_rect = pygame.Rect(int(x),int(y),int(w),int(h))
-        self.rect = pygame.Rect(x,y,w,30)
+        self.rect = self.org_rect.copy()
         self.color = color
         self.collide = False
         self.linked_to_id = linked_to_id
@@ -14,7 +14,7 @@ class Plate(pygame.sprite.Sprite):
         self.image = pygame.Surface((w,h))
         self.image.fill(self.color)
         self.selectable = True
-        self.resizable = False
+        self.resizable = True
         self.before_drag = None
 
     def update(self, cam = None):
@@ -28,8 +28,18 @@ class Plate(pygame.sprite.Sprite):
         color = invert_color(self.color)
         camera.draw_rect(surface, color, border, 5)
 
-    def move(self, mp, drag_start, constraint):
-        if constraint == "vertical":
+    def move(self, mp, drag_start, constraint, x_grid_size, y_grid_size):
+        if constraint == 'snapping':
+            x_cell = mp[0] // x_grid_size
+            y_cell = mp[1] // y_grid_size
+            corner_x = self.before_drag[0] // x_grid_size
+            corner_y = self.org_rect.y // y_grid_size
+
+            delta_x = (drag_start[0] - self.before_drag[0]) // x_grid_size
+            delta_y = (drag_start[1] - self.before_drag[1]) // x_grid_size
+            self.org_rect.x = (x_cell - delta_x) * x_grid_size
+            self.org_rect.y = (y_cell - delta_y) * y_grid_size
+        elif constraint == "vertical":
             self.org_rect.x = self.before_drag[0] + mp[0] - drag_start[0]
         elif constraint == "horizontal":
             self.org_rect.y = self.before_drag[1] + mp[1] - drag_start[1]

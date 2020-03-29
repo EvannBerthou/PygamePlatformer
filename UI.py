@@ -53,7 +53,7 @@ class UIElement:
         raise NotImplementedError("UI Element draw")
 
 class Slider(UIElement):
-    def __init__(self, x,y,w,h, min_value,max_value, bg_color, fg_color):
+    def __init__(self, x,y,w,h, min_value,max_value, bg_color, fg_color, callback, linked_text = None):
         super().__init__(x,y)
         self.w,self.h = w,h
         self.min_value, self.max_value = min_value, max_value
@@ -63,6 +63,8 @@ class Slider(UIElement):
         self.w_ratio = self.w / self.max_value
         self.bg_color = bg_color
         self.fg_color = fg_color
+        self.callback = callback
+        self.linked_text = linked_text
 
         if self.min_value > self.max_value:
             raise ValueError(f"Min value can't be superior to max value : {self}")
@@ -90,6 +92,14 @@ class Slider(UIElement):
 
         #clamp self.value in [self.min_value; self.max_value]
         self.value = max(self.min_value, min(self.value, self.max_value))
+
+        if self.callback: self.callback()
+        if self.linked_text: self.linked_text.set_text(str(int(self.value)))
+    
+    def update_value(self, value):
+        if value < self.min_value or value > self.max_value: return
+        self.value = value
+        self.draw_w = (self.value / self.max_value) * self.w
 
 
 class Button(UIElement):
@@ -426,6 +436,7 @@ class Image(UIElement):
 
 class Text(UIElement):
     def set_text(self, text):
+        text = str(text)
         self.text = self.font.render(text, 1, self.color)
 
     def __init__(self, x,y, text, size, color):

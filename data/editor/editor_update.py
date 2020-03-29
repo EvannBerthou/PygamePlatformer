@@ -163,6 +163,8 @@ def on_key_down(editor, event, mouse_position):
     if event.key == K_l:
         editor.selected_rect = -1
         editor.load_map(editor.map_path)
+    if event.key == K_f:
+        editor.camera.reset()
 
 def update_mode(editor):
     editor.selected_rect = -1
@@ -183,22 +185,31 @@ def move_rect(editor, mouse_position):
         r.points = r.get_points()
     else:
         if editor.drag_start:
-            r.move(mp, editor.drag_start, editor.selected_arrow)
+            constraint = ""
+            if editor.selected_arrow: constraint = editor.selected_arrow
+            if pygame.key.get_mods() & pygame.KMOD_LALT: constraint = 'snapping'
+            r.move(mp, editor.drag_start, constraint, *(editor.grid_sizes))
         else:
             editor.selected_rect = -1
 
 def start_resize(editor, mouse_position):
+    r = editor.rects.sprites()[editor.selected_rect]
+    if not r.resizable: return
+
     selected_arrow = editor.check_arrow(mouse_position)
     if selected_arrow != "":
         editor.selected_arrow = selected_arrow
         editor.resizing = True
         return
 
-    mouse_position = editor.camera.screen_to_world(mouse_position)
-    r = editor.rects.sprites()[editor.selected_rect]
-    corner = get_corner_point(r, mouse_position)
+    if pygame.key.get_mods() & pygame.KMOD_LALT:
+        editor.selected_arrow = 'snapping'
+        editor.resizing = True
 
-    if corner != None and r.resizable:
+    mouse_position = editor.camera.screen_to_world(mouse_position)
+    corner = get_corner_point(r.org_rect, mouse_position)
+
+    if corner != None:
         editor.resizing = True
         rect_corners = [r.org_rect.topleft, r.org_rect.topright, r.org_rect.bottomleft, r.org_rect.bottomright]
 
@@ -220,31 +231,23 @@ def on_resize_rect(editor, mouse_position):
     :type mouse_position: (int,int)
     :rtype: None
     """
+    if editor.selected_arrow == 'snapping':
+        resize_to_grid(editor, mouse_position)
     if editor.selected_arrow != "":
         resize_arrow(editor, editor.selected_arrow)
         return
 
     r = editor.rects.sprites()[editor.selected_rect]
     mouse_position = editor.camera.screen_to_world(mouse_position)
-    if isinstance(r, Plate):
-        if corner == 0 or corner == 2:
-            r.rect = (r.rect[0] + dx * (1 / editor.camera.zoom),
-                        r.rect[1],
-                        r.rect[2] - dx * (1 / editor.camera.zoom), r.rect[3])
+    pos = (mouse_position[0] - editor.moving_offset[0], mouse_position[1] - editor.moving_offset[1])
+    size = (editor.fixed_point[0] - mouse_position[0] + editor.moving_offset[0],
+            editor.fixed_point[1] - mouse_position[1] + editor.moving_offset[1])
 
-        if corner == 1 or corner == 3:
-            r.rect = (r.rect[0], r.rect[1],
-                        r.rect[2] + dx * (1 / editor.camera.zoom), r.rect[3])
-    else:
-        pos = (mouse_position[0] - editor.moving_offset[0], mouse_position[1] - editor.moving_offset[1])
-        size = (editor.fixed_point[0] - mouse_position[0] + editor.moving_offset[0],
-                editor.fixed_point[1] - mouse_position[1] + editor.moving_offset[1])
-
-        new_rect = pygame.Rect(pos, size)
-        new_rect.normalize()
-        AREA_LIMIT = 2000
-        if new_rect.w > 30 and new_rect.h > 30:
-            r.org_rect = new_rect
+    new_rect = pygame.Rect(pos, size)
+    new_rect.normalize()
+    AREA_LIMIT = 2000
+    if new_rect.w > 30 and new_rect.h > 30:
+        r.org_rect = new_rect
 
 def resize_arrow(editor, arrow):
     """
@@ -265,3 +268,28 @@ def resize_arrow(editor, arrow):
     if editor.selected_arrow == "horizontal":
         resize_rect_arrow(rect, 0, mouse_rel[1])
 
+def resize_to_grid(editor, mouse_position):
+    r = editor.rects.sprites()[editor.selected_rect]
+    mouse_position = editor.camera.screen_to_world(mouse_position)
+    mouse_x_cell = mouse_position[0] // editor.grid_sizes[0] 
+    mouse_y_cell = mouse_position[1] // editor.grid_sizes[1]
+    fixed_x_cell = editor.fixed_point[0] // editor.grid_sizes[0]
+    fixed_y_cell = editor.fixed_point[1] // editor.grid_sizes[1]
+
+    delta_x = fixed_x_cell - mouse_x_cell
+    delta_y = fixed_y_cell - mouse_y_cell
+
+    mouse_x_cell += delta_x < 0
+    delta_x -= delta_x < 0 
+
+    mouse_y_cell += delta_y < 0
+    delta_y -= delta_y < 0
+
+
+    pos  = (mouse_x_cell * editor.grid_sizes[0], mouse_y_cell * editor.grid_sizes[1])
+    size = (delta_x * editor.grid_sizes[0], delta_y * editor.grid_sizes[1])
+
+    new_rect = pygame.Rect(pos, size)
+    new_rect.normalize()
+    if new_rect.w >= 30 and new_rect.h >= 30:
+        r.org_rect = new_rect

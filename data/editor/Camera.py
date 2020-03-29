@@ -10,7 +10,6 @@ class Camera:
         self.mouse_moving = 0
 
         self.ratio = (ds[0] / ws[0], ds[1] / ws[1])
-        self.last_offset = (0,0)
 
     def scale_to_zoom(self, surface):
         size = self.get_zoomed(surface.get_size())
@@ -84,3 +83,7 @@ class Camera:
         """
         return (int(((pos[0] * self.ratio[0] / self.zoom) - self.x)),
                 int(((pos[1] * self.ratio[1] / self.zoom) - self.y)))
+
+    def reset(self):
+        self.x, self.y = 0,0
+        self.zoom = 1

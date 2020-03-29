@@ -95,5 +95,5 @@ def resize_rect_arrow(rect, x,y):
     new_w = rect.org_rect.w + x * 2
     new_y = rect.org_rect.y - y
     new_h = rect.org_rect.h + y * 2
-    if new_w <= 10 or new_h <= 10: return
+    if new_w < 30 or new_h < 30: return
     rect.org_rect = pygame.Rect(new_x, new_y, new_w, new_h)

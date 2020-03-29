@@ -40,14 +40,22 @@ class Game:
         root = Tk().withdraw()
         filename = filedialog.askopenfilename(initialdir = '.', title = 'Select map to open')
         self.load_map(filename)
+        self.map_path = filename
 
     def generate_grid(self, x_size, y_size):
+        self.grid_x, self.grid_y = x_size, y_size
+        self.grid_sizes = (DESING_W // self.grid_x, DESING_H // self.grid_y)
         surface = pygame.Surface((DESING_W, DESING_H), SRCALPHA)
-        n_x, n_y = DESING_W // x_size, DESING_H // y_size
-        for col in range(n_x):
-            for row in range(n_y):
-                pygame.draw.rect(surface, (255,255,255), (col * x_size, row * y_size, x_size, y_size), 3)
+        for col in range(self.grid_x):
+            for row in range(self.grid_y):
+                pygame.draw.rect(surface, (255,255,255), (col * self.grid_sizes[0], row * self.grid_sizes[1],
+                                                          self.grid_sizes[0], self.grid_sizes[1]), 3)
         return surface
+
+    def update_grid(self):
+        x_size = int(self.x_grid_slider.value)
+        y_size = int(self.y_grid_slider.value)
+        self.grid = self.generate_grid(x_size, y_size)
 
     def __init__(self, map_path):
         self.w, self.h = 1152,648
@@ -77,12 +85,20 @@ class Game:
 
         self.selected_object = Wall
 
+        self.grid = self.generate_grid(16,9)
+
         self.wall_button = UI.Button(2,100,100,30, "Wall", (255,0,0), self.change_object, Wall)
         self.door_button = UI.Button(2,140,100,30, "Door", (150,150,150), self.change_object, Door)
         self.spawn_button= UI.Button(2,180,100,30, "Spawn", (150,150,150), self.change_object, SpawnPoint)
         self.plate_button= UI.Button(2,220,100,30, "Plate", (150,150,150), self.change_object, Plate)
         self.goal_button = UI.Button(2,260,100,30, "Goal", (150,150,150), self.change_object, EndGoal)
         self.option_button = UI.Button(5, self.h - 55, 50,50, "O", (150,150,150), self.map_options, [], center_text=True)
+        self.x_grid_text = UI.Text(370, self.h - 55, self.grid_x, 36, (255,255,255))
+        self.y_grid_text = UI.Text(370, self.h - 25, self.grid_y, 36, (255,255,255))
+        self.x_grid_slider = UI.Slider(65, self.h - 55, 300,20, 1,33, (150,150,150), (200,200,200), self.update_grid, self.x_grid_text)
+        self.y_grid_slider = UI.Slider(65, self.h - 25, 300,20, 1,33, (150,150,150), (200,200,200), self.update_grid, self.y_grid_text)
+        self.x_grid_slider.update_value(self.grid_x)
+        self.y_grid_slider.update_value(self.grid_y)
 
         self.selected_button = self.wall_button
 
@@ -92,6 +108,10 @@ class Game:
         self.editor_ui.add(self.plate_button)
         self.editor_ui.add(self.goal_button)
         self.editor_ui.add(self.option_button)
+        self.editor_ui.add(self.x_grid_text)
+        self.editor_ui.add(self.y_grid_text)
+        self.editor_ui.add(self.x_grid_slider)
+        self.editor_ui.add(self.y_grid_slider)
 
         self.spawn_points_count = 0
 
@@ -143,7 +163,6 @@ class Game:
             self.map_data = self.load_map(map_path)
         self.dialogues = []        
 
-        self.grid = self.generate_grid(DESING_W // 16, DESING_H // 9)
 
     def run(self):
         while self.running:
