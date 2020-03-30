@@ -18,15 +18,19 @@ class MainScreenMenu(Menu):
         super().__init__(main_menu)
         x_pos = self.main_menu.game.DESING_W / 2 - 150
         y_center = self.main_menu.game.DESING_H / 2
-        self.ui_manager.add(UI.Button(x_pos, y_center - 120, 300, 70,
+        self.ui_manager.add(UI.Button(x_pos, y_center - 150, 300, 70,
                             "Load Map", (150,150,150),
                             self.main_menu.play, 'maps/map',
                             center_text = True, font_size = 64))
-        self.ui_manager.add(UI.Button(x_pos, y_center, 300, 70,
+        self.ui_manager.add(UI.Button(x_pos, y_center - 50, 300, 70,
+                            "Editor", (150,150,150),
+                            self.main_menu.start_editor, '',
+                            center_text = True, font_size = 64))
+        self.ui_manager.add(UI.Button(x_pos, y_center + 50, 300, 70,
                             "Options", (150,150,150),
                             self.main_menu.options, '',
                             center_text = True, font_size = 64))
-        self.ui_manager.add(UI.Button(x_pos, y_center + 120, 300, 70,
+        self.ui_manager.add(UI.Button(x_pos, y_center + 150, 300, 70,
                             "Quit", (150,150,150),
                             self.main_menu.exit, '',
                             center_text = True, font_size = 64))
@@ -248,3 +252,6 @@ class MainMenu:
 
     def load_map(self, btn, args):
         self.game.load_map(args)
+    
+    def start_editor(self, btn, args):
+        self.game.start_editor()

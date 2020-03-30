@@ -5,10 +5,10 @@ from UI import Slider
 class ColorPicker:
     def __init__(self, x,y, UIManager):
         self.x, self.y = x,y
-        self.w, self.h = 160,95
-        self.r = Slider(self.x + 5, self.y + 5, self.w - 10, 25, 0,255, (150,150,150), (255,0,0))
-        self.g = Slider(self.x + 5, self.y + 35, self.w - 10, 25, 0,255, (150,150,150), (0,255,0))
-        self.b = Slider(self.x + 5, self.y + 65, self.w - 10, 25, 0,255, (150,150,150), (0,0,255))
+        self.w, self.h = 320,190
+        self.r = Slider(self.x + 10, self.y + 10, self.w - 20, 50, 0,255, (150,150,150), (255,0,0))
+        self.g = Slider(self.x + 10, self.y + 70, self.w - 20, 50, 0,255, (150,150,150), (0,255,0))
+        self.b = Slider(self.x + 10, self.y + 130, self.w - 20, 50, 0,255, (150,150,150), (0,0,255))
         UIManager.add(self.r)
         UIManager.add(self.g)
         UIManager.add(self.b)

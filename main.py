@@ -3,6 +3,7 @@ from pygame.locals import *
 from data.Level import LevelManager
 from data.MainMenu import MainMenu
 from data.utils.ConfigManager import load_config, save_config
+from editor import Editor
 
 def convert_to_ratio(pos, ratio):
     """
@@ -19,6 +20,7 @@ def convert_to_ratio(pos, ratio):
 class GameState:
     MAIN_MENU = 0
     IN_GAME = 1
+    EDITOR = 2
 
 class Game:
     def __init__(self):
@@ -39,7 +41,8 @@ class Game:
         self.main_menu = MainMenu(self)
 
         self.game_state = GameState.MAIN_MENU
-        self.draw_function = [self.draw_main_menu, self.draw_in_game]
+        self.draw_function = [self.draw_main_menu, self.draw_in_game, self.draw_editor]
+        self.editor = None
 
 
     def run(self):
@@ -72,6 +75,9 @@ class Game:
                 self.level_manager.update(fixed_delta_time)
                 self.level_manager.ui_manager.update(mouse_position, mouse_pressed, mouse_rel, events)
 
+            if self.editor != None:
+                self.editor.update(mouse_position, mouse_pressed, mouse_rel, events)
+
             render_time -= fixed_delta_time
             if render_time <= 0:
                 self.draw_function[self.game_state]()
@@ -88,6 +94,9 @@ class Game:
     def draw_in_game(self):
         self.level_manager.draw(self.blitting_surface)
         self.level_manager.draw_ui(self.blitting_surface)
+
+    def draw_editor(self):
+        self.editor.draw(self.blitting_surface)
 
     def load_map(self, map_name):
         self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_name, self)
@@ -110,6 +119,14 @@ class Game:
     def start_replay(self, map_name, replay_path):
         self.game_state = GameState.IN_GAME
         self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_name, self, replay = replay_path)
+    
+    def start_editor(self):
+        self.game_state = GameState.EDITOR
+        self.editor = Editor(self)
+    
+    def start_main_menu(self, *args):
+        self.game_state = GameState.MAIN_MENU
+        #self.main_menu = MainMenu(self)
 
 if __name__ == '__main__':
     game = Game()

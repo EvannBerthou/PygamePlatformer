@@ -53,7 +53,7 @@ class UIElement:
         raise NotImplementedError("UI Element draw")
 
 class Slider(UIElement):
-    def __init__(self, x,y,w,h, min_value,max_value, bg_color, fg_color, callback, linked_text = None):
+    def __init__(self, x,y,w,h, min_value,max_value, bg_color, fg_color, callback = None, linked_text = None):
         super().__init__(x,y)
         self.w,self.h = w,h
         self.min_value, self.max_value = min_value, max_value
@@ -106,7 +106,7 @@ class Button(UIElement):
     def set_text(self, text):
         self.text = self.font.render(text, 1, (255,255,255))
 
-    def __init__(self, x,y,w,h, text, color, callback, args, center_text = False, font_size = 46):
+    def __init__(self, x,y,w,h, text, color, callback, args, center_text = False, font_size = 86):
         self.font = pygame.font.SysFont(pygame.font.get_default_font(), font_size)
         super().__init__(x,y)
         self.rect = pygame.Rect(self.x, self.y, w, h)

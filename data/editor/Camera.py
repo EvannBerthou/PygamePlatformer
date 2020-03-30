@@ -81,9 +81,21 @@ class Camera:
         :type pos: (int,int)
         :rtype: (int,int)
         """
-        return (int(((pos[0] * self.ratio[0] / self.zoom) - self.x)),
-                int(((pos[1] * self.ratio[1] / self.zoom) - self.y)))
+        return (int(((pos[0] / self.zoom) - self.x)),
+                int(((pos[1] / self.zoom) - self.y)))
 
     def reset(self):
         self.x, self.y = 0,0
         self.zoom = 1
+
+    def convert_to_ratio(self, pos):
+        """
+        Convert screen position to game position
+
+        :param pos: on screen position
+        :param ratio: ratio of the window
+        :type pos: (int,int)
+        :type ratio: (int,int)
+        :rtype: (int,int)
+        """
+        return (pos[0] * self.ratio[0], pos[1] * self.ratio[1])

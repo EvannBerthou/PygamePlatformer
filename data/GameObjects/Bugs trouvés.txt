@@ -19,7 +19,7 @@ Bugs trouvés
 
 [x] Quadrillage dans l'éditeur
 [ ] Editeur de transform
-[ ] Ouvrir l'éditeur depuis le main
+[x] Ouvrir l'éditeur depuis le main
 [x] Les sliders ne marchent plus en drag
 [x] Ne pas détecter les fleches quand le carré est deja en train d'être resize
 [ ] Menu pour lancer un replay
@@ -27,9 +27,11 @@ Bugs trouvés
 [ ] Trouver un nom de jeu
 [ ] Accents dans les dialogues
 [ ] Dialogues avec plusieurs lignes
+[ ] Entrer les dialogues dans l'éditeur
 [ ] Améliorer la parsing des maps
 [x] Snapping a la grille :
     [x] Moving
     [x] Resizing
 [x] Sliders pour changer la taille de grille 
 [x] Touche pour recentrer au centre de la map
+[ ] Message d'avertissement à la fermeture de l'éditeur pour éviter la perte de la progression (demander a sauvegarder)

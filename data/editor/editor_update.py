@@ -2,13 +2,13 @@ import pygame, copy
 from pygame.locals import *
 
 from data.editor import *
-from data.GameObjects import *
-
+from data.GameObjects.SpawnPoint import SpawnPoint
+from data.GameObjects.Door import Door
 
 import random
 
 pygame.font.init()
-MODE_TEXT = pygame.font.SysFont(pygame.font.get_default_font(), 46)
+MODE_TEXT = pygame.font.SysFont(pygame.font.get_default_font(), 82)
 
 class MODE:
     Camera = 0
@@ -39,7 +39,7 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
     :rtype: None
     """
     pygame.mouse.get_rel()
-    if editor.ui_to_draw.update(mouse_position, (event.button == 1,0), 0, events) > 0:
+    if editor.cliked_on_ui > -1:
         return
     if editor.ui_to_draw == editor.save_options_ui:
         return
@@ -173,6 +173,7 @@ def update_mode(editor):
     if editor.mode == MODE.Editor:
         editor.mode_text = MODE_TEXT.render("Editor", 1, (255,255,255))
     editor.rect_started = False
+    editor.camera.mouse_moving = False
 
 
 def move_rect(editor, mouse_position):

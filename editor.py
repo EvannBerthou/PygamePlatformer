@@ -5,13 +5,14 @@ import UI
 
 from data.utils import *
 from data.editor import *
+from data.GameObjects import *
 
 from tkinter import filedialog
 from tkinter import *
 
-DESING_W, DESING_H = 1920,1080
+DESIGN_W, DESIGN_H = 1920,1080
 
-class Game:
+class Editor:
     def change_object(self, button, obj):
         self.selected_object = obj
         self.selected_button.color = (150,150,150)
@@ -44,8 +45,8 @@ class Game:
 
     def generate_grid(self, x_size, y_size):
         self.grid_x, self.grid_y = x_size, y_size
-        self.grid_sizes = (DESING_W // self.grid_x, DESING_H // self.grid_y)
-        surface = pygame.Surface((DESING_W, DESING_H), SRCALPHA)
+        self.grid_sizes = (DESIGN_W // self.grid_x, DESIGN_H // self.grid_y)
+        surface = pygame.Surface((DESIGN_W, DESIGN_H), SRCALPHA)
         for col in range(self.grid_x):
             for row in range(self.grid_y):
                 pygame.draw.rect(surface, (255,255,255), (col * self.grid_sizes[0], row * self.grid_sizes[1],
@@ -57,18 +58,11 @@ class Game:
         y_size = int(self.y_grid_slider.value)
         self.grid = self.generate_grid(x_size, y_size)
 
-    def __init__(self, map_path):
-        self.w, self.h = 1152,648
-        # self.w, self.h = 1920,1080
-        self.win = pygame.display.set_mode((self.w,self.h))
-        self.blitting_surface = pygame.Surface((DESING_W,DESING_H))
-        self.running = True
-
-        self.clock = pygame.time.Clock()
-
+    def __init__(self, game):
+        self.game = game
+        self.custom_blitting = pygame.Surface((DESIGN_W, DESIGN_H))
         self.mouse_moving = 0
-
-        self.camera = Camera((self.w,self.h), (DESING_W, DESING_H))
+        self.camera = Camera((self.game.w, self.game.h), (DESIGN_W, DESIGN_H))
 
         self.mode_text = None
         self.mode = MODE.Camera
@@ -87,18 +81,20 @@ class Game:
 
         self.grid = self.generate_grid(16,9)
 
-        self.wall_button = UI.Button(2,100,100,30, "Wall", (255,0,0), self.change_object, Wall)
-        self.door_button = UI.Button(2,140,100,30, "Door", (150,150,150), self.change_object, Door)
-        self.spawn_button= UI.Button(2,180,100,30, "Spawn", (150,150,150), self.change_object, SpawnPoint)
-        self.plate_button= UI.Button(2,220,100,30, "Plate", (150,150,150), self.change_object, Plate)
-        self.goal_button = UI.Button(2,260,100,30, "Goal", (150,150,150), self.change_object, EndGoal)
-        self.option_button = UI.Button(5, self.h - 55, 50,50, "O", (150,150,150), self.map_options, [], center_text=True)
-        self.x_grid_text = UI.Text(370, self.h - 55, self.grid_x, 36, (255,255,255))
-        self.y_grid_text = UI.Text(370, self.h - 25, self.grid_y, 36, (255,255,255))
-        self.x_grid_slider = UI.Slider(65, self.h - 55, 300,20, 1,33, (150,150,150), (200,200,200), self.update_grid, self.x_grid_text)
-        self.y_grid_slider = UI.Slider(65, self.h - 25, 300,20, 1,33, (150,150,150), (200,200,200), self.update_grid, self.y_grid_text)
+        self.wall_button = UI.Button(2,200,200,60, "Wall", (255,0,0), self.change_object, Wall)
+        self.door_button = UI.Button(2,280,200,60, "Door", (150,150,150), self.change_object, Door)
+        self.spawn_button= UI.Button(2,360,200,60, "Spawn", (150,150,150), self.change_object, SpawnPoint)
+        self.plate_button= UI.Button(2,440,200,60, "Plate", (150,150,150), self.change_object, Plate)
+        self.goal_button = UI.Button(2,520,200,60, "Goal", (150,150,150), self.change_object, EndGoal)
+        self.option_button = UI.Button(5, DESIGN_H - 110, 100,100, "O", (150,150,150), self.map_options, [], center_text=True)
+        self.x_grid_text = UI.Text(740, DESIGN_H - 110, self.grid_x, 72, (255,255,255))
+        self.y_grid_text = UI.Text(740, DESIGN_H - 50, self.grid_y, 72, (255,255,255))
+        self.x_grid_slider = UI.Slider(130, DESIGN_H - 110, 600,40, 1,33, (150,150,150), (200,200,200), self.update_grid, self.x_grid_text)
+        self.y_grid_slider = UI.Slider(130, DESIGN_H - 50, 600,40, 1,33, (150,150,150), (200,200,200), self.update_grid, self.y_grid_text)
         self.x_grid_slider.update_value(self.grid_x)
         self.y_grid_slider.update_value(self.grid_y)
+
+        self.exit_button = UI.Button(DESIGN_W - 110, 5, 100,100, "X", (150,150,150), self.game.start_main_menu, '', center_text=True)
 
         self.selected_button = self.wall_button
 
@@ -112,10 +108,11 @@ class Game:
         self.editor_ui.add(self.y_grid_text)
         self.editor_ui.add(self.x_grid_slider)
         self.editor_ui.add(self.y_grid_slider)
+        self.editor_ui.add(self.exit_button)
 
         self.spawn_points_count = 0
 
-        self.rects = pygame.sprite.Group(Background((DESING_W, DESING_H)))
+        self.rects = pygame.sprite.Group(Background((DESIGN_W, DESIGN_H)))
         self.selected_rect = -1
         self.selected_arrow = ""
         self.vertical_arrow = None
@@ -126,26 +123,26 @@ class Game:
 
         self.save_options_ui = UI.UIManager()
 
-        self.back_button = UI.Button(self.w / 2 - 225,self.h - 125,100,30,
+        self.back_button = UI.Button(DESIGN_W / 2 - 480,DESIGN_H - 150,200,60,
                                             "Back",(150,150,150),self.map_options,[],center_text=True)
 
-        self.save_button = UI.Button(self.w / 2 + 125,self.h - 125,100,30,
+        self.save_button = UI.Button(DESIGN_W / 2 + 250,DESIGN_H - 150,200,60,
                                             "Save",(150,150,150),self.save_to_file,[],center_text=True)
 
-        self.open_button = UI.Button(self.w / 2,self.h - 125,100,30,
+        self.open_button = UI.Button(DESIGN_W / 2,DESIGN_H - 150,200,60,
                                             "Open",(150,150,150),self.open_map,[],center_text=True)
 
-        self.map_name_text = UI.Text(self.w / 2 - 225, self.h / 2 - 225, "Map name", 36, (255,255,255))
-        self.map_name = UI.InputField(self.w / 2 - 225, self.h / 2 - 200, 400,30, None, None, 50)
-        self.map_author_text = UI.Text(self.w / 2 - 225, self.h / 2 - 150, "Map author", 36, (255,255,255))
-        self.map_author = UI.InputField(self.w / 2 - 225, self.h / 2 - 125, 400,30, None, None, 50)
-        self.player_size_text = UI.Text(self.w / 2 - 225, self.h / 2 - 75, "Player size", 36, (255,255,255))
-        self.player_size = UI.InputField(self.w / 2 - 220 + self.player_size_text.get_width(),
-                                         self.h / 2 - 75, 50,30, None, None, 50,
+        self.map_name_text = UI.Text(DESIGN_W / 2 - 500, DESIGN_H / 2 - 450, "Map name", 72, (255,255,255))
+        self.map_name = UI.InputField(DESIGN_W / 2 - 500, DESIGN_H / 2 - 400, 800,60, None, None, 100)
+        self.map_author_text = UI.Text(DESIGN_W / 2 - 500, DESIGN_H / 2 - 300, "Map author", 72, (255,255,255))
+        self.map_author = UI.InputField(DESIGN_W / 2 - 500, DESIGN_H / 2 - 250, 800,60, None, None, 100)
+        self.player_size_text = UI.Text(DESIGN_W / 2 - 500, DESIGN_H / 2 - 150, "Player size", 72, (255,255,255))
+        self.player_size = UI.InputField(DESIGN_W / 2 - 440 + self.player_size_text.get_width(),
+                                         DESIGN_H / 2 - 150, 100,60, None, None, 100,
                                          text_type = int, char_limit=2)
         self.player_size.set_text('64')
 
-        self.save_options_ui.add(UI.Image(self.w / 2 - 250, self.h / 2 - 250,500,500, color = (200,200,200,200)))
+        self.save_options_ui.add(UI.Image(DESIGN_W / 2 - 510, DESIGN_H / 2 - 510,1000,1000, color = (200,200,200,240)))
         self.save_options_ui.add(self.back_button)
         self.save_options_ui.add(self.save_button)
         self.save_options_ui.add(self.map_name_text)
@@ -158,97 +155,85 @@ class Game:
 
         self.ui_to_draw = self.editor_ui
 
-        self.map_path = map_path
-        if self.map_path:
-            self.map_data = self.load_map(map_path)
+        #self.map_path = map_path
+        #if self.map_path:
+            #self.map_data = self.load_map(map_path)
         self.dialogues = []        
 
 
-    def run(self):
-        while self.running:
-            tick = self.clock.tick()
+    def update(self, mouse_position, mouse_pressed, mouse_rel, events):
+        if mouse_pressed[0] and self.selected_rect != -1 and self.property_panel == None:
+            move_rect(self, mouse_position)
 
-            mouse_position = pygame.mouse.get_pos()
-            mouse_pressed  = pygame.mouse.get_pressed()
+        if self.resizing:
+            on_resize_rect(self, mouse_position)
 
-            self.win.fill((0,0,0,))
-            self.blitting_surface.fill((0,0,0))
+        for event in events:
+            if event.type == MOUSEBUTTONDOWN:
+                if self.mode == MODE.Camera: mode_camera_mouse_down(self, event, mouse_position)
+                if self.mode == MODE.Editor: mode_editor_mouse_down(self, event, events, mouse_position)
 
-            if mouse_pressed[0] and self.selected_rect != -1 and self.property_panel == None:
-                move_rect(self, mouse_position)
+            if event.type == MOUSEBUTTONUP:
+                if self.mode == MODE.Camera: mode_camera_mouse_up(self, event, mouse_position)
+                if self.mode == MODE.Editor: mode_editor_mouse_up(self, mouse_position)
 
-            if self.resizing:
-                on_resize_rect(self, mouse_position)
-
-            events = pygame.event.get()
-            for event in events:
-                if event.type == QUIT:
-                    self.running = False
-                if event.type == MOUSEBUTTONDOWN:
-                    if self.mode == MODE.Camera: mode_camera_mouse_down(self, event, mouse_position)
-                    if self.mode == MODE.Editor: mode_editor_mouse_down(self, event, events, mouse_position)
-
-                if event.type == MOUSEBUTTONUP:
-                    if self.mode == MODE.Camera: mode_camera_mouse_up(self, event, mouse_position)
-                    if self.mode == MODE.Editor: mode_editor_mouse_up(self, mouse_position)
-
-                if event.type == KEYDOWN:
-                    on_key_down(self, event, mouse_position)
+            if event.type == KEYDOWN:
+                on_key_down(self, event, mouse_position)
 
 
-            if self.camera.mouse_moving:
-                dx,dy = pygame.mouse.get_rel()
-                self.camera.x += dx * (1 / self.camera.zoom)
-                self.camera.y += dy * (1 / self.camera.zoom)
+        if self.camera.mouse_moving:
+            dx,dy = pygame.mouse.get_rel()
+            self.camera.x += dx * (1 / self.camera.zoom)
+            self.camera.y += dy * (1 / self.camera.zoom)
 
-            #UPDATE
-            self.ui_to_draw.update(mouse_position, mouse_pressed, 0, events)
+        #UPDATE
+        self.cliked_on_ui = self.ui_to_draw.update(mouse_position, mouse_pressed, 0, events)
 
-            self.rects.update(cam = self.camera)
+        self.rects.update(cam = self.camera)
 
-            self.rects.draw(self.blitting_surface)
+        self.rects.draw(self.custom_blitting)
 
-            if self.selected_rect != -1:
-                rect = self.rects.sprites()[self.selected_rect]
-                rect.outline(self.blitting_surface, self.camera)
-                self.draw_arrows(rect.rect)
-                self.check_arrow(mouse_position)
-                if self.property_panel:
-                    if "ColorPicker" in self.property_panel.properties_obj:
-                        color = self.property_panel.get_color()
-                        rect.color = color
-
-            if self.selected_rect != -1 and isinstance(rect, Plate) and rect.linked_to_id != -1:
-                self.camera.draw_line(self.blitting_surface, (0,0,255),
-                                        (rect.org_rect.center[:2]),
-                                        (self.rects.sprites()[rect.linked_to_id].org_rect.center[:2]), 10)
-            if self.rect_started:
-                mp = self.camera.screen_to_world(mouse_position)
-                size = ((mp[0] - self.rect_start[0]), (mp[1] - self.rect_start[1]))
-                DragRect(*self.rect_start, *size, (0,255,0)).draw(self.camera, self.blitting_surface)
-
+        if self.selected_rect != -1:
+            rect = self.rects.sprites()[self.selected_rect]
+            rect.outline(self.custom_blitting, self.camera)
+            self.draw_arrows(rect.rect)
+            self.check_arrow(mouse_position)
             if self.property_panel:
-                if self.property_panel.linking:
-                    self.camera.draw_line(self.blitting_surface, (0,255,0),
-                                            (self.rects.sprites()[self.selected_rect].org_rect.center[:2]),
-                                            self.camera.screen_to_world(mouse_position), 10)
+                if "ColorPicker" in self.property_panel.properties_obj:
+                    color = self.property_panel.get_color()
+                    rect.color = color
 
-            self.camera.draw_rect(self.blitting_surface, (255,255,255), (0,0, DESING_W, DESING_H), 3)
-            self.blitting_surface.blit(self.camera.scale_to_zoom(self.grid), self.camera.get_offset(self.grid.get_rect()))
-            blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
-            self.win.blit(blit, blit.get_rect())
+        if self.selected_rect != -1 and isinstance(rect, Plate) and rect.linked_to_id != -1:
+            self.camera.draw_line(self.custom_blitting, (0,0,255),
+                                    (rect.org_rect.center[:2]),
+                                    (self.rects.sprites()[rect.linked_to_id].org_rect.center[:2]), 10)
+        if self.rect_started:
+            mp = self.camera.screen_to_world(mouse_position)
+            size = ((mp[0] - self.rect_start[0]), (mp[1] - self.rect_start[1]))
+            DragRect(*self.rect_start, *size, (0,255,0)).draw(self.camera, self.custom_blitting)
 
-            if self.mode == MODE.Editor:
-                self.ui_to_draw.draw(self.win)
-                if self.property_panel:
-                    self.property_panel.draw(self.win)
+        if self.property_panel:
+            if self.property_panel.linking:
+                self.camera.draw_line(self.custom_blitting, (0,255,0),
+                                        (self.rects.sprites()[self.selected_rect].org_rect.center[:2]),
+                                        self.camera.screen_to_world(mouse_position), 10)
 
-            self.win.blit(self.mode_text,(0,0))
-            pygame.display.update()
+        self.camera.draw_rect(self.custom_blitting, (255,255,255), (0,0, DESIGN_W, DESIGN_H), 3)
+        self.custom_blitting.blit(self.camera.scale_to_zoom(self.grid), self.camera.get_offset(self.grid.get_rect()))
+        if self.mode == MODE.Editor:
+            self.ui_to_draw.draw(self.custom_blitting)
+            if self.property_panel:
+                self.property_panel.draw(self.custom_blitting)
+        self.custom_blitting.blit(self.mode_text,(0,0))
+
+
+    def draw(self, surface):
+        blit = pygame.transform.scale(self.custom_blitting, surface.get_size())
+        surface.blit(blit, (0,0))
 
     def load_map(self, map_path):
         self.rects.empty()
-        self.rects.add(Background((DESING_W, DESING_H)))
+        self.rects.add(Background((DESIGN_W, DESIGN_H)))
         map_data = load_map(map_path)
         self.spawn_points_count = 2 if map_data['rects'] else 0
         self.rects.add(map_data['rects'])
@@ -272,11 +257,5 @@ class Game:
     def draw_arrows(self, rect):
         self.vertical_arrow = pygame.Rect(rect.center[0] + 40, rect.center[1], 140,40)
         self.horizontal_arrow = pygame.Rect(rect.center[0], rect.center[1], 40,140)
-        pygame.draw.rect(self.blitting_surface, (0,0,255), self.vertical_arrow)
-        pygame.draw.rect(self.blitting_surface, (0,255,0), self.horizontal_arrow)
-
-
-if __name__ == '__main__':
-    path = None if len(sys.argv) < 2 else sys.argv[1]
-    game = Game(path)
-    game.run()
+        pygame.draw.rect(self.custom_blitting, (0,0,255), self.vertical_arrow)
+        pygame.draw.rect(self.custom_blitting, (0,255,0), self.horizontal_arrow)
