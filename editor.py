@@ -89,10 +89,10 @@ class Editor:
         self.option_button = UI.Button(5, DESIGN_H - 110, 100,100, "O", (150,150,150), self.map_options, [], center_text=True)
         self.x_grid_text = UI.Text(740, DESIGN_H - 110, self.grid_x, 72, (255,255,255))
         self.y_grid_text = UI.Text(740, DESIGN_H - 50, self.grid_y, 72, (255,255,255))
-        self.x_grid_slider = UI.Slider(130, DESIGN_H - 110, 600,40, 1,33, (150,150,150), (200,200,200), self.update_grid, self.x_grid_text)
-        self.y_grid_slider = UI.Slider(130, DESIGN_H - 50, 600,40, 1,33, (150,150,150), (200,200,200), self.update_grid, self.y_grid_text)
-        self.x_grid_slider.update_value(self.grid_x)
-        self.y_grid_slider.update_value(self.grid_y)
+        self.x_grid_slider = UI.Slider(130, DESIGN_H - 110, 600,40, 1,33, (150,150,150), (200,200,200), self.update_grid, self.x_grid_text, value_type='int')
+        self.y_grid_slider = UI.Slider(130, DESIGN_H - 50, 600,40, 1,33, (150,150,150), (200,200,200), self.update_grid, self.y_grid_text, value_type='int')
+        self.x_grid_slider.set_value(self.grid_x / 33)
+        self.y_grid_slider.set_value(self.grid_y / 33)
 
         self.exit_button = UI.Button(DESIGN_W - 110, 5, 100,100, "X", (150,150,150), self.game.start_main_menu, '', center_text=True)
 

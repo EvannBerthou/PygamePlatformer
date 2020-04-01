@@ -42,3 +42,7 @@ Bugs trouvés
     [x] pygame.sprite.Group pour l'UI Manager
 [ ] Compteur de FPS
 [ ] Pouvoir écrire dans les inputfield uniquement quand on clique dessus et même si on la souris quitte le rect
+[ ] Options graphique : 
+    [ ] Qualité des sprites
+[ ] Sliders avec des valeurs entières
+[ ] Keybind pour l'editeur

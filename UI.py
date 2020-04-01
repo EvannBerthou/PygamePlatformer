@@ -27,7 +27,7 @@ class UIElement(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x,y,1,1)
 
 class Slider(UIElement):
-    def __init__(self, x,y,w,h, min_value,max_value, bg_color, fg_color, callback = None, linked_text = None):
+    def __init__(self, x,y,w,h, min_value,max_value, bg_color, fg_color, callback = None, linked_text = None, whole_numbers = False
         super().__init__(x,y)
         self.w,self.h = w,h
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
@@ -41,6 +41,7 @@ class Slider(UIElement):
         self.callback = callback
         self.linked_text = linked_text
         self.draw()
+        self.whole_numbers = whole_numbers
 
         if self.min_value > self.max_value:
             raise ValueError(f"Min value can't be superior to max value : {self}")
@@ -56,27 +57,27 @@ class Slider(UIElement):
             x = (mouse_position[0] - self.x) / self.w
             self.set_value(x)
             self.draw()
+            if self.callback: self.callback()
+            if self.linked_text: self.linked_text.set_text(str(int(self.value)))
 
     def is_hovered(self, mouse_position):
         return self.rect.collidepoint(mouse_position)
 
     def set_value(self, value):
-        #clamp self.draw_w in [0, self.w]
-        self.draw_w = max(0, min(value * self.w, self.w))
+        if self.whole_numbers:
+            ceiled_value = round(value * (self.max_value - self.min_value) + self.min_value)
+            self.draw_w = max(0, min(ceiled_value / self.max_value* self.w, self.w))
+            self.value = max(self.min_value, min(ceiled_value, self.max_value))
+        else:
+            #clamp self.draw_w in [0, self.w]
+            self.draw_w = max(0, min(value * self.w, self.w))
 
-        #denormalize
-        self.value = (value * (self.max_value - self.min_value) + self.min_value)
+            #denormalize
+            self.value = (value * (self.max_value - self.min_value) + self.min_value)
 
-        #clamp self.value in [self.min_value; self.max_value]
-        self.value = max(self.min_value, min(self.value, self.max_value))
-
-        if self.callback: self.callback()
-        if self.linked_text: self.linked_text.set_text(str(int(self.value)))
-    
-    def update_value(self, value):
-        if value < self.min_value or value > self.max_value: return
-        self.value = value
-        self.draw_w = (self.value / self.max_value) * self.w
+            #clamp self.value in [self.min_value; self.max_value]
+            self.value = max(self.min_value, min(self.value, self.max_value))
+        self.draw()
 
 
 class Button(UIElement):
