@@ -25,7 +25,8 @@ Bugs trouvés
 [ ] Menu pour lancer un replay
 [ ] Regler le probleme de fullscreen (topbar qui sort de l'écran)
 [ ] Trouver un nom de jeu
-[ ] Accents dans les dialogues
+[ ] Accents dans les dialogues:
+    [ ] Trouver une meilleure font
 [ ] Dialogues avec plusieurs lignes
 [ ] Entrer les dialogues dans l'éditeur
 [ ] Améliorer la parsing des maps
@@ -35,3 +36,9 @@ Bugs trouvés
 [x] Sliders pour changer la taille de grille 
 [x] Touche pour recentrer au centre de la map
 [ ] Message d'avertissement à la fermeture de l'éditeur pour éviter la perte de la progression (demander a sauvegarder)
+[ ] Besoin d'optimiser l'éditeur
+    [ ] Blit, transform.scale (surtout le scale de la grille)
+    [x] pygame.sprite.Sprite pour les UI
+    [x] pygame.sprite.Group pour l'UI Manager
+[ ] Compteur de FPS
+[ ] Pouvoir écrire dans les inputfield uniquement quand on clique dessus et même si on la souris quitte le rect

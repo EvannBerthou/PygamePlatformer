@@ -119,7 +119,7 @@ class LevelSelectorMenu(Menu):
                 self.scrollview.add(UI.LevelButton,
                                     [infos['name'], infos['author'], (150,150,150),
                                     self.main_menu.load_map, self.paths[i],
-                                    True, 64])
+                                    True, 46])
                 total += 1
         self.scrollview.update_surface(0)
 
