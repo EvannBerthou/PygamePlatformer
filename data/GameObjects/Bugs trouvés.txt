@@ -40,7 +40,7 @@ Bugs trouvés
     [ ] Blit, transform.scale (surtout le scale de la grille)
     [x] pygame.sprite.Sprite pour les UI
     [x] pygame.sprite.Group pour l'UI Manager
-[ ] Compteur de FPS
+[x] Compteur de FPS
 [ ] Pouvoir écrire dans les inputfield uniquement quand on clique dessus et même si on la souris quitte le rect
 [ ] Options graphique : 
     [ ] Qualité des sprites

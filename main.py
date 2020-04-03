@@ -44,6 +44,8 @@ class Game:
         self.draw_function = [self.draw_main_menu, self.draw_in_game, self.draw_editor]
         self.editor = None
 
+        self.show_fps = self.config.get('fps_counter', False)
+        self.fps_font = pygame.font.SysFont(pygame.font.get_default_font(), 56)
 
     def run(self):
         render_time = 0
@@ -81,9 +83,17 @@ class Game:
             render_time -= fixed_delta_time
             if render_time <= 0:
                 self.draw_function[self.game_state]()
+
+                if self.show_fps:
+                    fps_counter = int(self.clock.get_fps())
+                    color = (0,255,0)
+                    if fps_counter < 45: color = (255,165,0)
+                    if fps_counter < 30: color = (255,0,0)
+                    fps_text = self.fps_font.render(str(fps_counter), 1, color)
+                    self.blitting_surface.blit(fps_text, (self.DESING_W - fps_text.get_width(),0))
+
                 blit = pygame.transform.scale(self.blitting_surface, (self.w, self.h))
                 self.win.blit(blit, blit.get_rect())
-
                 pygame.display.update()
                 render_time = round(1000 / fps)
 
@@ -114,6 +124,7 @@ class Game:
     def save_config(self):
         self.config['fullscreen'] = self.fullscreen
         self.config['resolution'] = f'{self.w}x{self.h}'
+        self.config['fps_counter'] = self.show_fps
         save_config(self.config)
 
     def start_replay(self, map_name, replay_path):
@@ -126,7 +137,6 @@ class Game:
     
     def start_main_menu(self, *args):
         self.game_state = GameState.MAIN_MENU
-        #self.main_menu = MainMenu(self)
 
 if __name__ == '__main__':
     game = Game()

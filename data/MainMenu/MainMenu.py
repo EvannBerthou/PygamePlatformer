@@ -157,6 +157,10 @@ class OptionMenu(Menu):
 
         self.ui_manager.add(self.resolution_dropdown)
 
+        self.fps_counter_toggle = UI.Toggle(20, 180, 400,64, "FPS Counter", self.toggle_fps)
+        self.ui_manager.add(self.fps_counter_toggle)
+
+
         self.ui_manager.add(UI.Button(main_menu.game.DESING_W - 250, main_menu.game.DESING_H - 100, 200,60,
                                         "Back", (200,200,200), main_menu.main_menu, [],
                                         center_text = True, font_size = 70))
@@ -183,6 +187,8 @@ class OptionMenu(Menu):
         self.ui_manager.add(keybind_grid)
 
         self.fullscreen_toggle.activated = main_menu.game.config['fullscreen'] == 1
+        self.fps_counter_toggle.activated = main_menu.game.config['fps_counter']
+        self.fps_counter_toggle.update_surface()
         self.fullscreen_toggle.update_surface()
         self.resolution_dropdown.set_choice(None, "{}x{}".format(main_menu.game.w, main_menu.game.h))
 
@@ -220,6 +226,9 @@ class OptionMenu(Menu):
         fullscreen = FULLSCREEN if self.main_menu.game.fullscreen else 0
         self.main_menu.game.display = pygame.display.set_mode((w,h), fullscreen, HWSURFACE)
         self.main_menu.game.win.fill((0,0,0))
+
+    def toggle_fps(self, active):
+        self.main_menu.game.show_fps = active
 
 class MainMenu:
     def __init__(self, game):

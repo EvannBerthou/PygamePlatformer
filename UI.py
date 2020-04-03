@@ -27,7 +27,7 @@ class UIElement(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x,y,1,1)
 
 class Slider(UIElement):
-    def __init__(self, x,y,w,h, min_value,max_value, bg_color, fg_color, callback = None, linked_text = None, whole_numbers = False
+    def __init__(self, x,y,w,h, min_value,max_value, bg_color, fg_color, callback = None, linked_text = None, whole_numbers = False):
         super().__init__(x,y)
         self.w,self.h = w,h
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)

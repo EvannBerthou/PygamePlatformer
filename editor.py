@@ -89,8 +89,8 @@ class Editor:
         self.option_button = UI.Button(5, DESIGN_H - 110, 100,100, "O", (150,150,150), self.map_options, [], center_text=True)
         self.x_grid_text = UI.Text(740, DESIGN_H - 110, self.grid_x, 72, (255,255,255))
         self.y_grid_text = UI.Text(740, DESIGN_H - 50, self.grid_y, 72, (255,255,255))
-        self.x_grid_slider = UI.Slider(130, DESIGN_H - 110, 600,40, 1,33, (150,150,150), (200,200,200), self.update_grid, self.x_grid_text, value_type='int')
-        self.y_grid_slider = UI.Slider(130, DESIGN_H - 50, 600,40, 1,33, (150,150,150), (200,200,200), self.update_grid, self.y_grid_text, value_type='int')
+        self.x_grid_slider = UI.Slider(130, DESIGN_H - 110, 600,40, 1,33, (150,150,150), (200,200,200), self.update_grid, self.x_grid_text, whole_numbers=True)
+        self.y_grid_slider = UI.Slider(130, DESIGN_H - 50, 600,40, 1,33, (150,150,150), (200,200,200), self.update_grid, self.y_grid_text, whole_numbers=True)
         self.x_grid_slider.set_value(self.grid_x / 33)
         self.y_grid_slider.set_value(self.grid_y / 33)
 

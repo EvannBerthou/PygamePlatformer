@@ -1,1 +1,1 @@
-{"fullscreen": false, "resolution": "1152x664", "p1_left": 97, "p1_right": 100, "p1_jump": 32, "p2_left": 1073741904, "p2_right": 1073741903, "p2_jump": 1073741906}
+{"fullscreen": 0, "resolution": "1152x648", "p1_left": 113, "p1_right": 100, "p1_jump": 32, "p2_left": 1073741904, "p2_right": 1073741903, "p2_jump": 1073741906, "fps_counter": false}

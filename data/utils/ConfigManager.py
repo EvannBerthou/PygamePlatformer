@@ -9,7 +9,8 @@ def save_config(config):
 def get_default_config():
     return {"fullscreen": 0, "resolution": "1152x648",
             "p1_left": 113, "p1_right": 100, "p1_jump": 32, #K_q, K_d, K_SPACE
-            "p2_left": 1073741904, "p2_right": 1073741903, "p2_jump": 1073741906 #K_LEFT, K_RIGHT, K_UP
+            "p2_left": 1073741904, "p2_right": 1073741903, "p2_jump": 1073741906, #K_LEFT, K_RIGHT, K_UP
+            "fps_counter": False
     }
 
 def load_config():
