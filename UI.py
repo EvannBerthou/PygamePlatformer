@@ -81,15 +81,18 @@ class Slider(UIElement):
 
 
 class Button(UIElement):
-    def set_text(self, text):
-        self.text = self.font.render(text, 1, (255,255,255))
-        w,h = self.rect.size
+    def redraw(self):
         self.image.fill(self.color)
+        w,h = self.rect.size
         if self.center_text:
             rect = ((w - self.text.get_width()) / 2, (h - self.text.get_height()) / 2)
             self.image.blit(self.text, rect)
         else:
             self.image.blit(self.text, (0,0))
+
+    def set_text(self, text):
+        self.text = self.font.render(text, 1, (255,255,255))
+        self.redraw()
 
     def __init__(self, x,y,w,h, text, color, callback, args, center_text = False, font_size = 86, offset = None):
         self.font = pygame.font.SysFont(pygame.font.get_default_font(), font_size)
@@ -368,8 +371,10 @@ class Grid(UIElement):
 
         x = self.row  * (self.w_size + self.w_gap) + self.w_gap
         y = self.line * (self.h_size + self.h_gap) + self.h_gap
-
-        ui_element = ui_class(x,y,self.w_size,self.h_size, *ui_params, offset = (self.rect.x, self.rect.y))
+        if ui_class != Text:
+            ui_element = ui_class(x,y,self.w_size,self.h_size, *ui_params, offset = (self.rect.x, self.rect.y))
+        else:
+            ui_element = ui_class(x,y, *ui_params)
         self.ui_manager.add(ui_element)
         self.row += 1
         self.ui_manager.draw(self.image)
@@ -420,7 +425,7 @@ class Text(UIElement):
         text = str(text)
         self.image = self.font.render(text, 1, self.color)
 
-    def __init__(self, x,y, text, size, color):
+    def __init__(self, x,y, text, size, color, offset = None):
         super().__init__(x,y)
         self.font = pygame.font.SysFont(pygame.font.get_default_font(), size)
         self.color = color

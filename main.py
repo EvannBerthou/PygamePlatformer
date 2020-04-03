@@ -77,7 +77,7 @@ class Game:
                 self.level_manager.update(fixed_delta_time)
                 self.level_manager.ui_manager.update(mouse_position, mouse_pressed, mouse_rel, events)
 
-            if self.editor != None:
+            if self.game_state == GameState.EDITOR:
                 self.editor.update(mouse_position, mouse_pressed, mouse_rel, events)
 
             render_time -= fixed_delta_time

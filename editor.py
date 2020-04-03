@@ -16,7 +16,9 @@ class Editor:
     def change_object(self, button, obj):
         self.selected_object = obj
         self.selected_button.color = (150,150,150)
+        self.selected_button.redraw()
         button.color = (255,0,0)
+        button.redraw()
         self.selected_button = button
 
     def map_options(self, btn, args):

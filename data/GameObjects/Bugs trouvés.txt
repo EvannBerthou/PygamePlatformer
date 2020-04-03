@@ -46,3 +46,10 @@ Bugs trouvés
     [ ] Qualité des sprites
 [ ] Sliders avec des valeurs entières
 [ ] Keybind pour l'editeur
+    [x] Mode switch : Tab
+    [x] Property panel : C
+    [x] Reset : R
+    [x] Reload : L
+    [x] Delete : del
+    [x] Camera reset : f
+    [ ] Raccourcis : Fx

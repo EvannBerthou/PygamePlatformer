@@ -130,16 +130,29 @@ class OptionMenu(Menu):
         self.btn = btn
 
     def key_to_char(self, key):
-        str_key = str(key)
         specials = {
-            "32": "Space",
-            "1073741903": "Right",
-            "1073741904": "Left",
-            "1073741905": "Down",
-            "1073741906": "Up",
+            K_SPACE: "Space",
+            K_RIGHT: "Right",
+            K_LEFT: "Left",
+            K_DOWN: "Down",
+            K_UP: "Up",
+            K_TAB: "Tab",
+            K_DELETE: "Delete",
+            K_F1: "F1",
+            K_F2: "F2",
+            K_F3: "F3",
+            K_F4: "F4",
+            K_F5: "F5",
+            K_F6: "F6",
+            K_F7: "F7",
+            K_F8: "F8",
+            K_F9: "F9",
+            K_F10: "F10",
+            K_F11: "F11",
+            K_F12: "F12",
         }
-        if str_key in specials:
-            return specials[str_key]
+        if key in specials:
+            return specials[key]
         if key < 0 or key > 0x10FFFF:
             print('Key out of chr range')
             return None
@@ -185,6 +198,31 @@ class OptionMenu(Menu):
         keybind_grid.add(UI.Button, [self.key_to_char(cfg["p1_jump"]), (200,200,200), self.set_keybind, ['p1_jump'], True])
         keybind_grid.add(UI.Button, [self.key_to_char(cfg["p2_jump"]), (200,200,200), self.set_keybind, ['p2_jump'], True])
         self.ui_manager.add(keybind_grid)
+
+        editor_grid = UI.Grid(1200,70,600,900,200,60,20,20)
+        editor_grid.add(UI.Text, ["Mode", 56, (255,255,255)])
+        editor_grid.add(UI.Button, [self.key_to_char(cfg['ed_mode']), (200,200,200), self.set_keybind, ['ed_mode'], True])
+        editor_grid.add(UI.Text, ["Panel", 56, (255,255,255)])
+        editor_grid.add(UI.Button, [self.key_to_char(cfg['ed_panel']), (200,200,200), self.set_keybind, ['ed_panel'], True])
+        editor_grid.add(UI.Text, ["Clear", 56, (255,255,255)])
+        editor_grid.add(UI.Button, [self.key_to_char(cfg['ed_clear']), (200,200,200), self.set_keybind, ['ed_clear'], True])
+        editor_grid.add(UI.Text, ["Reload", 56, (255,255,255)])
+        editor_grid.add(UI.Button, [self.key_to_char(cfg['ed_reload']), (200,200,200), self.set_keybind, ['ed_reload'], True])
+        editor_grid.add(UI.Text, ["Camera reset", 46, (255,255,255)])
+        editor_grid.add(UI.Button, [self.key_to_char(cfg['ed_camera_reset']), (200,200,200), self.set_keybind, ['ed_camera_reset'], True])
+        editor_grid.add(UI.Text, ["Delete", 46, (255,255,255)])
+        editor_grid.add(UI.Button, [self.key_to_char(cfg['ed_delete']), (200,200,200), self.set_keybind, ['ed_delete'], True])
+        editor_grid.add(UI.Text, ["Wall", 46, (255,255,255)])
+        editor_grid.add(UI.Button, [self.key_to_char(cfg['ed_wall']), (200,200,200), self.set_keybind, ['ed_wall'], True])
+        editor_grid.add(UI.Text, ["Door", 46, (255,255,255)])
+        editor_grid.add(UI.Button, [self.key_to_char(cfg['ed_door']), (200,200,200), self.set_keybind, ['ed_door'], True])
+        editor_grid.add(UI.Text, ["Spawn", 46, (255,255,255)])
+        editor_grid.add(UI.Button, [self.key_to_char(cfg['ed_spawn']), (200,200,200), self.set_keybind, ['ed_spawn'], True])
+        editor_grid.add(UI.Text, ["Plate", 46, (255,255,255)])
+        editor_grid.add(UI.Button, [self.key_to_char(cfg['ed_plate']), (200,200,200), self.set_keybind, ['ed_plate'], True])
+        editor_grid.add(UI.Text, ["Goal", 46, (255,255,255)])
+        editor_grid.add(UI.Button, [self.key_to_char(cfg['ed_goal']), (200,200,200), self.set_keybind, ['ed_goal'], True])
+        self.ui_manager.add(editor_grid)
 
         self.fullscreen_toggle.activated = main_menu.game.config['fullscreen'] == 1
         self.fps_counter_toggle.activated = main_menu.game.config['fps_counter']

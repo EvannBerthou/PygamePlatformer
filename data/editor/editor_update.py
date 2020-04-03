@@ -2,8 +2,9 @@ import pygame, copy
 from pygame.locals import *
 
 from data.editor import *
-from data.GameObjects.SpawnPoint import SpawnPoint
+
 from data.GameObjects.Door import Door
+from data.GameObjects.SpawnPoint import SpawnPoint
 
 import random
 
@@ -125,10 +126,11 @@ def on_key_down(editor, event, mouse_position):
     :type mouse_position: (int,int)
     :rtype: None
     """
-    if event.key == K_TAB:
+    config = editor.game.config
+    if event.key == config['ed_mode']:
         editor.mode = (editor.mode + 1) % 2
         update_mode(editor)
-    if event.key == K_r and event.mod & KMOD_LSHIFT:
+    if event.key == config['ed_clear'] and event.mod & KMOD_LSHIFT:
         bg = copy.copy(editor.rects.sprites()[0])
         editor.rects.empty()
         editor.selected_rect = -1
@@ -138,7 +140,7 @@ def on_key_down(editor, event, mouse_position):
             editor.spawn_points_count -= 1
         editor.rects.remove(editor.rects.sprites()[editor.selected_rect])
         editor.selected_rect = -1
-    if event.key == K_c and editor.mode == MODE.Editor and editor.selected_rect != -1:
+    if event.key == config['ed_panel'] and editor.mode == MODE.Editor and editor.selected_rect != -1:
         if editor.property_panel:
             editor.property_panel.destroy(editor.ui_to_draw)
             editor.property_panel = None
@@ -148,22 +150,22 @@ def on_key_down(editor, event, mouse_position):
                                                 editor.ui_to_draw, editor.rects.sprites()[editor.selected_rect])
             if "ColorPicker" in editor.property_panel.properties_obj:
                 editor.property_panel.set_color(editor.rects.sprites()[editor.selected_rect].color)
-    if event.key == K_F1:
-        editor.change_object(editor.wall_button, Wall)
-    if event.key == K_F2:
-        editor.change_object(editor.door_button, Door)
-    if event.key == K_F3:
-        editor.change_object(editor.door_button, SpawnPoint)
-    if event.key == K_F4:
-        editor.change_object(editor.door_button, Plate)
-    if event.key == K_F5:
-        editor.change_object(editor.door_button, Goal)
+    if event.key == config['ed_wall']:
+        editor.wall_button.callback(editor.wall_button, editor.wall_button.args)
+    if event.key == config['ed_door']:
+        editor.door_button.callback(editor.door_button, editor.door_button.args)
+    if event.key == config['ed_spawn']:
+        editor.spawn_button.callback(editor.spawn_button, editor.spawn_button.args)
+    if event.key == config['ed_plate']:
+        editor.plate_button.callback(editor.plate_button, editor.plate_button.args)
+    if event.key == config['ed_goal']:
+        editor.goal_button.callback(editor.goal_button, editor.goal_button.args)
     if event.key == K_s and event.mod & KMOD_LALT:
         editor.save_to_file(None, None)
-    if event.key == K_l:
+    if event.key == config['ed_reload']:
         editor.selected_rect = -1
         editor.load_map(editor.map_path)
-    if event.key == K_f:
+    if event.key == config['ed_camera_reset']:
         editor.camera.reset()
 
 def update_mode(editor):
