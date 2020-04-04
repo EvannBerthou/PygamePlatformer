@@ -16,5 +16,5 @@ setup (
         version = "0.1",
         description = "casse pas la tete",
         options = dict(build_exe = buildOptions),
-        executables = [Executable("main.py"), Executable('editor.py')],
+        executables = [Executable("main.py")]
 )

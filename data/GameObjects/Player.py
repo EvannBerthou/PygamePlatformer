@@ -9,9 +9,10 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.rect = rect
         self.size = self.rect.w
-        self.grounded = True
+        self.grounded = False
         self.mvt = [0,0]
-        self.speed = 0.5
+        self.vertical_speed = 0
+        self.speed = self.size / 100
         self.gravity = 0.0035
         self.jump_force = self.size / 55
 
@@ -41,9 +42,54 @@ class Player(pygame.sprite.Sprite):
         self.update_animation(0)
 
 
-    def move(self, dt):
+    def collision_test(self, colliders):
+        collisions = []
+        for col in colliders:
+            if self.rect.colliderect(col):
+                collisions.append(col)
+        return collisions
+
+    
+    def x_collisions(self, colliders):
+        collisions = self.collision_test(colliders)
+        for col in collisions:
+            if col == self: continue
+            if not col.has_collision(self.player_id):
+                continue
+
+            if self.mvt[0] > 0:
+                self.rect.right = col.rect.left
+            if self.mvt[0] < 0:
+                self.rect.left = col.rect.right
+
+    def y_collisions(self, colliders):
+        collided_with = 0
+        collisions = self.collision_test(colliders)
+        set_grounded = False
+        for col in collisions:
+            if col == self:
+                continue
+            if not col.has_collision(self.player_id):
+                continue
+            collided_with += 1
+            if self.mvt[1] > 0:
+                self.rect.bottom = col.rect.top
+                self.vertical_speed = 0
+            if self.mvt[1] < 0:
+                self.vertical_speed = 0
+                self.rect.top = col.rect.bottom
+                set_grounded = True
+
+        self.grounded = collided_with != 0
+        if set_grounded: self.grounded = False
+
+    def move(self, colliders, dt):
         self.rect.x += self.mvt[0] * dt
+        self.x_collisions(colliders)
+
         self.rect.y += self.mvt[1] * dt
+        self.y_collisions(colliders)
+
         self.rect.x = clamp(self.rect.x, 0, 1920 - self.size)
 
     def update_animation(self, dt):
@@ -58,111 +104,35 @@ class Player(pygame.sprite.Sprite):
             self.image.blit(frame_to_blit, (0,0))
 
     def c_update(self, colliders, keys, dt):
+        self.mvt = [0,0]
+        self.mvt[1] = self.vertical_speed
+
+        if not self.grounded:
+            self.vertical_speed += self.gravity * dt
+
+        if keys and keys[self.jump_key] and self.grounded:
+            self.vertical_speed = -self.jump_force
+            self.grounded = False
+        
         self.update_animation(dt)
         if keys:
-            self.move(dt)
             self.mvt[0] = (keys[self.right_key] - keys[self.left_key]) * self.speed
             if self.mvt[0] > 0: self.looking_direction = 1
             if self.mvt[0] < 0: self.looking_direction = 0
+            self.move(colliders, dt)
 
-        
-        collisions = self.rect.collidelistall(colliders)
-        collided_with = 0
-        dx = 0
-        dy = 0
-
+        collisions = self.collision_test(colliders)
+        #Detect when the player is no longuer in collision with an object
         for col in self.prev_colliders.copy():
             if not col in collisions: #si le joueur n'a plus de collision avec un objet qu'il touchait avant
-                colliders[col].on_collision_exit(self)
+                col.on_collision_exit(self)
                 self.prev_colliders.remove(col)
 
-        for i in collisions:
-            col = colliders[i]
-            if col == self: #don't collide with itself
-                continue
-            if not i in self.prev_colliders:
-                self.prev_colliders.append(i)
+        #Detect when the player enters in collisions for the first time
+        for col in collisions:
+            if not col in self.prev_colliders:
+                self.prev_colliders.append(col)
                 col.on_collision(self)
-
-            if not col.has_collision(self.player_id):
-                continue
-
-            rect = col.rect
-            #Collision en dessous du joueur
-            if self.collision_bottom(rect):
-                dy -= (self.rect.bottom - rect.top) #Correction pour éviter que le joueur traverse le sol
-                self.grounded = True
-                self.mvt[1] = 0
-            if self.collision_top(rect) and rect.w > self.rect.w:
-                dy -= (self.rect.top - rect.bottom) #Correction pour éviter que le joueur traverse le plafond
-                self.grounded = False
-                self.mvt[1] = 0
-            if self.collision_right(rect):
-                self.mvt[0] = 0
-                #check if only the topright corner is colliding in order to avoid teleporting
-                #the player when there is no need to
-                tr = rect.collidepoint(self.rect.topright)
-                mr = rect.collidepoint(self.rect.midright)
-                if tr and not mr:
-                    continue
-                dx -= (self.rect.right - rect.left)
-            if self.collision_left(rect):
-                self.mvt[0] = 0
-                #check if only the topleft corner is colliding in order to avoid teleporting
-                #the player when there is no need to
-                tl = rect.collidepoint(self.rect.topleft)
-                ml = rect.collidepoint(self.rect.midleft)
-                if tl and not ml:
-                    continue
-                dx -= (self.rect.left - rect.right)
-            
-            collided_with += 1
-        
-        if collided_with == 0:
-            self.grounded = False
-
-        self.rect.x += dx
-        self.rect.y += dy
-
-        if not self.grounded:
-            self.mvt[1] += self.gravity * dt
-
-        if keys and keys[self.jump_key] and self.grounded:
-            self.mvt[1] -= self.jump_force
-            self.grounded = False
-
-    def collision_bottom(self, col):
-        bl = col.collidepoint(self.rect.bottomleft)
-        bm = col.collidepoint(self.rect.midbottom)
-        br = col.collidepoint(self.rect.bottomright)
-        ml = col.collidepoint(self.rect.midleft)
-        mr = col.collidepoint(self.rect.midright)
-        return (bl or br or bm) and not ml and not mr
-
-    def collision_top(self, col):
-        tl = col.collidepoint(self.rect.topleft)
-        tm = col.collidepoint(self.rect.midtop)
-        tr = col.collidepoint(self.rect.topright)
-        ml = col.collidepoint(self.rect.midleft)
-        mr = col.collidepoint(self.rect.midright)
-        return (tl or tr or tm) and not ml and not mr
-
-
-    def collision_left(self, col):
-        t = col.collidepoint(self.rect.topleft)
-        m = col.collidepoint(self.rect.midleft)
-        b = col.collidepoint(self.rect.bottomleft)
-        bm = col.collidepoint(self.rect.midbottom)
-        br = col.collidepoint(self.rect.bottomright)
-        return (t or m or b) and not bm and not br
-
-    def collision_right(self, col):
-        t = col.collidepoint(self.rect.topright)
-        m = col.collidepoint(self.rect.midright)
-        b = col.collidepoint(self.rect.bottomright)
-        bm = col.collidepoint(self.rect.midbottom)
-        bl = col.collidepoint(self.rect.bottomleft)
-        return (t or m or b) and not bm and not bl
 
     def has_collision(self, player_id):
         return True

@@ -44,12 +44,17 @@ Bugs trouvés
 [ ] Pouvoir écrire dans les inputfield uniquement quand on clique dessus et même si on la souris quitte le rect
 [ ] Options graphique : 
     [ ] Qualité des sprites
-[ ] Sliders avec des valeurs entières
-[ ] Keybind pour l'editeur
+[x] Sliders avec des valeurs entières
+[x] Keybind pour l'editeur
     [x] Mode switch : Tab
     [x] Property panel : C
     [x] Reset : R
     [x] Reload : L
     [x] Delete : del
     [x] Camera reset : f
-    [ ] Raccourcis : Fx
+    [x] Raccourcis : Fx
+[x] Refaire le systeme de collision
+[ ] Ne pas créer un wall avec la molette
+[ ] Afficher le joueur et sa hauteur en saut dans l'éditeur
+[x] Vitesse proportionelle à la taille
+[x] Les sliders ne se dessinent pas dans le property panel

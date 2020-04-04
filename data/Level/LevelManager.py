@@ -187,7 +187,7 @@ class LevelManager:
     def reload_level(self, btn, args):
         self.start_time = 0.0
         self.level_completed = False
-        self.ui_manager.clear()
+        self.ui_manager.empty()
         self.all_colliders.empty()
         self.player_1.prev_colliders.clear()
         self.player_2.prev_colliders.clear()

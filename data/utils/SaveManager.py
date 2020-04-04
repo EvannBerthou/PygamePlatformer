@@ -11,8 +11,8 @@ def save_to_file(rects, file_path, name, author, dialogues, player_size):
             spawn_points.append(obj)
     if len(spawn_points) < 2:
         return "Missing {} spawn point(s)".format(2 - len(spawn_points))
-    if player_size < 32:
-        player_size = 32
+    #if player_size < 32:
+        #player_size = 32
 
     with open(file_path, 'w') as f:
         f.write(f'name:{name}\n')
@@ -104,7 +104,7 @@ def load_map(file_name):
             
             if l.startswith('player_size'):
                 player_size = int("".join(l.split(':')[1:]).strip('\n'))
-                if player_size < 32: player_size = 32
+                #if player_size < 32: player_size = 32
 
             if in_map:
                 parts = l.strip().split(',')

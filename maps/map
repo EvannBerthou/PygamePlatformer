@@ -1,6 +1,6 @@
 name:ytuyt
 author:456
-player_size:64
+player_size:32
 map:
 Wall, -164,726,2137,400, 45,146,0
 Goal, 1563,697,150,30

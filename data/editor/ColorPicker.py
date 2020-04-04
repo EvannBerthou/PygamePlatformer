@@ -14,9 +14,9 @@ class ColorPicker:
         UIManager.add(self.b)
 
     def draw(self, surface):
-        self.r.draw(surface)
-        self.g.draw(surface)
-        self.b.draw(surface)
+        surface.blit(self.r.image, (self.r.rect.topleft))
+        surface.blit(self.g.image, (self.g.rect.topleft))
+        surface.blit(self.b.image, (self.b.rect.topleft))
 
     def get_color(self):
         return (self.r.value,self.g.value,self.b.value)

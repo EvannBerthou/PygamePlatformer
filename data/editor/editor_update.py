@@ -72,8 +72,9 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
             else:
                 print('Already 2 spawn points on the map')
         else:
-            editor.rect_started = True
-            editor.rect_start = editor.camera.screen_to_world(mouse_position)
+            if event.button == 1:
+                editor.rect_started = True
+                editor.rect_start = editor.camera.screen_to_world(mouse_position)
 
 
     if editor.property_panel != None:
