@@ -40,13 +40,19 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
     :rtype: None
     """
     pygame.mouse.get_rel()
+    editor.camera.event_zoom(event, mouse_position)
+    editor.camera.mouse_moving = 0
     if editor.cliked_on_ui > -1:
+        destroy_properties_panel(editor, mouse_position)
         return
     if editor.ui_to_draw == editor.save_options_ui:
         return
-    if editor.property_panel == None:
-        if not (editor.selected_rect > -1 and editor.check_arrow(mouse_position)):
-            editor.selected_rect = inside_rect(editor.rects, mouse_position, editor.camera)
+    if not (editor.selected_rect > -1 and editor.check_arrow(mouse_position)) and event.button == 1:
+        editor.selected_rect = inside_rect(editor.rects, mouse_position, editor.camera)
+        if editor.selected_rect > -1:
+            create_properties_panel(editor, editor.rects.sprites()[editor.selected_rect])
+        else:
+            destroy_properties_panel(editor, mouse_position)
     if editor.selected_rect > -1:
         if event.button == 1:
             mp = editor.camera.screen_to_world(mouse_position)
@@ -56,12 +62,8 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
             editor.draw_arrows(rect.rect)
             editor.selected_arrow = editor.check_arrow(mouse_position)
             pygame.mouse.get_rel()
-        if event.button == 3 and editor.selected_rect != -1 and editor.property_panel == None:
+        if event.button == 3 and editor.selected_rect != -1:
             start_resize(editor, mouse_position)
-        if editor.property_panel and not editor.property_panel.linking:
-            editor.property_panel.destroy(editor.ui_to_draw)
-            editor.property_panel = None
-            editor.property_panel_recently_closed = True
     else:
         #If the selected object is a spawn point, don't drag and create the spawnpoint
         if editor.selected_object == SpawnPoint:
@@ -141,16 +143,6 @@ def on_key_down(editor, event, mouse_position):
             editor.spawn_points_count -= 1
         editor.rects.remove(editor.rects.sprites()[editor.selected_rect])
         editor.selected_rect = -1
-    if event.key == config['ed_panel'] and editor.mode == MODE.Editor and editor.selected_rect != -1:
-        if editor.property_panel:
-            editor.property_panel.destroy(editor.ui_to_draw)
-            editor.property_panel = None
-        else:
-            editor.property_panel = PropertyPanel(*mouse_position,
-                                                editor.rects.sprites()[editor.selected_rect].get_properties(),
-                                                editor.ui_to_draw, editor.rects.sprites()[editor.selected_rect])
-            if "ColorPicker" in editor.property_panel.properties_obj:
-                editor.property_panel.set_color(editor.rects.sprites()[editor.selected_rect].color)
     if event.key == config['ed_wall']:
         editor.wall_button.callback(editor.wall_button, editor.wall_button.args)
     if event.key == config['ed_door']:
@@ -187,14 +179,15 @@ def move_rect(editor, mouse_position):
             return
         r.move(mp)
         r.points = r.get_points()
+        editor.property_panel.set_transform(r.org_rect)
     else:
         if editor.drag_start:
             constraint = ""
             if editor.selected_arrow: constraint = editor.selected_arrow
             if pygame.key.get_mods() & pygame.KMOD_LALT: constraint = 'snapping'
             r.move(mp, editor.drag_start, constraint, *(editor.grid_sizes))
-        else:
-            editor.selected_rect = -1
+        editor.property_panel.set_transform(r.org_rect)
+
 
 def start_resize(editor, mouse_position):
     r = editor.rects.sprites()[editor.selected_rect]
@@ -252,6 +245,7 @@ def on_resize_rect(editor, mouse_position):
     AREA_LIMIT = 2000
     if new_rect.w > 30 and new_rect.h > 30:
         r.org_rect = new_rect
+    editor.property_panel.set_transform(r.org_rect)
 
 def resize_arrow(editor, arrow):
     """
@@ -271,6 +265,7 @@ def resize_arrow(editor, arrow):
         resize_rect_arrow(rect, mouse_rel[0], 0)
     if editor.selected_arrow == "horizontal":
         resize_rect_arrow(rect, 0, mouse_rel[1])
+    editor.property_panel.set_transform(rect.org_rect)
 
 def resize_to_grid(editor, mouse_position):
     r = editor.rects.sprites()[editor.selected_rect]
@@ -297,3 +292,25 @@ def resize_to_grid(editor, mouse_position):
     new_rect.normalize()
     if new_rect.w >= 30 and new_rect.h >= 30:
         r.org_rect = new_rect
+
+    editor.property_panel.set_transform(r.org_rect)
+
+def create_properties_panel(editor, rect):
+    if editor.property_panel:
+        editor.property_panel.destroy(editor.ui_to_draw)
+    property_panel = PropertyPanel(editor.game.DESING_W - 330, 130, rect.get_properties(),
+                                   editor.ui_to_draw, rect)
+
+    if "ColorPicker" in property_panel.properties_obj:
+        property_panel.set_color(rect.color)
+
+    property_panel.set_transform(rect.org_rect)
+
+    editor.property_panel = property_panel
+
+def destroy_properties_panel(editor, mouse_position):
+    if editor.property_panel == None: return
+    if editor.property_panel.is_hovered(mouse_position): return
+    editor.selected_rect = -1 #Unselect rect when UI other than property panel is clicked
+    editor.property_panel.destroy(editor.ui_to_draw)
+    editor.property_panel = None

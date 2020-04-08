@@ -51,7 +51,7 @@ class Wall(pygame.sprite.Sprite):
         return self.collide
 
     def get_properties(self):
-        return ["ColorPicker"]
+        return ['Transform', "ColorPicker"]
 
     def on_collision(self, collider):
         return

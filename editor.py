@@ -16,9 +16,9 @@ class Editor:
     def change_object(self, button, obj):
         self.selected_object = obj
         self.selected_button.color = (150,150,150)
-        self.selected_button.redraw()
+        self.selected_button.draw()
         button.color = (255,0,0)
-        button.redraw()
+        button.draw()
         self.selected_button = button
 
     def map_options(self, btn, args):
@@ -91,8 +91,8 @@ class Editor:
         self.option_button = UI.Button(5, DESIGN_H - 110, 100,100, "O", (150,150,150), self.map_options, [], center_text=True)
         self.x_grid_text = UI.Text(740, DESIGN_H - 110, self.grid_x, 72, (255,255,255))
         self.y_grid_text = UI.Text(740, DESIGN_H - 50, self.grid_y, 72, (255,255,255))
-        self.x_grid_slider = UI.Slider(130, DESIGN_H - 110, 600,40, 1,33, (150,150,150), (200,200,200), self.update_grid, self.x_grid_text, whole_numbers=True)
-        self.y_grid_slider = UI.Slider(130, DESIGN_H - 50, 600,40, 1,33, (150,150,150), (200,200,200), self.update_grid, self.y_grid_text, whole_numbers=True)
+        self.x_grid_slider = UI.Slider(130, DESIGN_H - 110, 600,40, 1,32, (150,150,150), (200,200,200), self.update_grid, self.x_grid_text, whole_numbers=True)
+        self.y_grid_slider = UI.Slider(130, DESIGN_H - 50, 600,40, 1,32, (150,150,150), (200,200,200), self.update_grid, self.y_grid_text, whole_numbers=True)
         self.x_grid_slider.set_value(self.grid_x / 33)
         self.y_grid_slider.set_value(self.grid_y / 33)
 
@@ -164,7 +164,7 @@ class Editor:
 
 
     def update(self, mouse_position, mouse_pressed, mouse_rel, events):
-        if mouse_pressed[0] and self.selected_rect != -1 and self.property_panel == None:
+        if mouse_pressed[0] and self.selected_rect != -1:
             move_rect(self, mouse_position)
 
         if self.resizing:
@@ -194,13 +194,17 @@ class Editor:
         self.rects.update(cam = self.camera)
 
         self.rects.draw(self.custom_blitting)
-
         if self.selected_rect != -1:
             rect = self.rects.sprites()[self.selected_rect]
             rect.outline(self.custom_blitting, self.camera)
             self.draw_arrows(rect.rect)
             self.check_arrow(mouse_position)
             if self.property_panel:
+                new_rect = self.property_panel.get_transform()
+                if not rect.resizable:
+                    new_rect.w, new_rect.h = rect.rect.size
+                    rect.org_rect.topleft = new_rect.topleft
+                    self.property_panel.set_transform(rect.org_rect)
                 if "ColorPicker" in self.property_panel.properties_obj:
                     color = self.property_panel.get_color()
                     rect.color = color

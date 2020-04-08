@@ -44,7 +44,7 @@ class SpawnPoint(pygame.sprite.Sprite):
                                     self.org_rect[2], self.org_rect[3])
 
     def get_properties(self):
-        return ["Player_Id"]
+        return ["Transform", "Player_Id"]
 
     def switch_player_id(self, btn, args):
         self.player_id = (self.player_id + 1) % 2

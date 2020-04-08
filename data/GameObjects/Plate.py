@@ -51,7 +51,7 @@ class Plate(pygame.sprite.Sprite):
         return self.collide
 
     def get_properties(self):
-        return ["Linker"]
+        return ["Transform", "Linker"]
 
     def on_collision(self, collider):
         if not self.players_on: #s'il n'y a aucun joueur sur la plaque

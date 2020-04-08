@@ -81,7 +81,7 @@ class Slider(UIElement):
 
 
 class Button(UIElement):
-    def redraw(self):
+    def draw(self, surface = None):
         self.image.fill(self.color)
         w,h = self.rect.size
         if self.center_text:
@@ -89,10 +89,12 @@ class Button(UIElement):
             self.image.blit(self.text, rect)
         else:
             self.image.blit(self.text, (0,0))
+        if surface:
+            surface.blit(self.image, (self.rect))
 
     def set_text(self, text):
         self.text = self.font.render(text, 1, (255,255,255))
-        self.redraw()
+        self.draw()
 
     def __init__(self, x,y,w,h, text, color, callback, args, center_text = False, font_size = 86, offset = None):
         self.font = pygame.font.SysFont(pygame.font.get_default_font(), font_size)
@@ -126,7 +128,7 @@ class Button(UIElement):
 
     def destroy(self, UIManager):
         UIManager.remove(self)
-
+    
 class ScrollView(UIElement):
     def __init__(self, x,y,w,h, bg_color, w_size, h_size, w_gap, h_gap):
         super().__init__(x,y)

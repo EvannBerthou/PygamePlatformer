@@ -1,5 +1,5 @@
 import pygame
-from . import ColorPicker
+from . import ColorPicker, Transform
 from UI import Button
 
 class PropertyPanel:
@@ -13,8 +13,12 @@ class PropertyPanel:
         self.linking = False
 
         for p in properties:
+            if p == "Transform":
+                transform = Transform(self.x,self.y + self.h, UIManager)
+                self.properties_obj[p] = transform
+                self.h += transform.h + self.padding
             if p == "ColorPicker":
-                cp = ColorPicker(self.x,self.y, UIManager)
+                cp = ColorPicker(self.x,self.y + self.h, UIManager)
                 self.properties_obj[p] = cp
                 self.h += cp.h + self.padding
             if p == "Player_Id":
@@ -30,6 +34,7 @@ class PropertyPanel:
                 UIManager.add(b)
                 self.properties_obj[p] = b
                 self.h += b.rect.h + self.padding
+        self.rect = pygame.Rect(self.x,self.y,self.w,self.h)
 
     def draw(self, surface):
         pygame.draw.rect(surface, (100,100,100), (self.x, self.y, self.w, self.h))
@@ -48,5 +53,15 @@ class PropertyPanel:
         if "ColorPicker" in self.properties_obj:
             return self.properties_obj["ColorPicker"].get_color()
 
+    def set_transform(self, rect):
+        self.properties_obj["Transform"].set_transform(rect)
+    
+    def get_transform(self):
+        if "Transform" in self.properties_obj:
+            return self.properties_obj["Transform"].get_transform()
+
     def toggle_linker(self, btn, player_id):
         self.linking = not self.linking
+
+    def is_hovered(self, mouse_position):
+        return self.rect.collidepoint(mouse_position)

@@ -62,7 +62,7 @@ class Door(pygame.sprite.Sprite):
         return not self.player_id == player_id
 
     def get_properties(self):
-        return ["Player_Id"]
+        return ["Transform","Player_Id"]
 
     def switch_player_id(self, btn, args):
         self.switch_status()

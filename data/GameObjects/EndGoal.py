@@ -26,7 +26,7 @@ class EndGoal(pygame.sprite.Sprite):
         return self.collide
 
     def get_properties(self):
-        return []
+        return ['Transform']
 
     def outline(self, surface, camera):
         border = (self.org_rect[0],self.org_rect[1],self.org_rect[2],self.org_rect[3])
