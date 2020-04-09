@@ -200,9 +200,7 @@ class OptionMenu(Menu):
         self.ui_manager.add(keybind_grid)
 
         editor_grid = UI.Grid(1200,70,600,900,200,60,20,20)
-        editor_grid.add(UI.Text, ["Mode", 56, (255,255,255)])
-        editor_grid.add(UI.Button, [self.key_to_char(cfg['ed_mode']), (200,200,200), self.set_keybind, ['ed_mode'], True])
-        editor_grid.add(UI.Text, ["Panel", 56, (255,255,255)])
+        editor_grid.add(UI.Text, ["Clear", 56, (255,255,255)])
         editor_grid.add(UI.Button, [self.key_to_char(cfg['ed_clear']), (200,200,200), self.set_keybind, ['ed_clear'], True])
         editor_grid.add(UI.Text, ["Reload", 56, (255,255,255)])
         editor_grid.add(UI.Button, [self.key_to_char(cfg['ed_reload']), (200,200,200), self.set_keybind, ['ed_reload'], True])

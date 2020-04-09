@@ -66,10 +66,6 @@ class Editor:
         self.mouse_moving = 0
         self.camera = Camera((self.game.w, self.game.h), (DESIGN_W, DESIGN_H))
 
-        self.mode_text = None
-        self.mode = MODE.Camera
-        update_mode(self)
-
         self.rect_start = None
         self.rect_started = False
         self.drag_start = None
@@ -161,6 +157,7 @@ class Editor:
         #if self.map_path:
             #self.map_data = self.load_map(map_path)
         self.dialogues = []        
+        self.clicked_on_ui = -1
 
 
     def update(self, mouse_position, mouse_pressed, mouse_rel, events):
@@ -172,16 +169,13 @@ class Editor:
 
         for event in events:
             if event.type == MOUSEBUTTONDOWN:
-                if self.mode == MODE.Camera: mode_camera_mouse_down(self, event, mouse_position)
-                if self.mode == MODE.Editor: mode_editor_mouse_down(self, event, events, mouse_position)
+                mouse_down(self, event, events, mouse_position)
 
             if event.type == MOUSEBUTTONUP:
-                if self.mode == MODE.Camera: mode_camera_mouse_up(self, event, mouse_position)
-                if self.mode == MODE.Editor: mode_editor_mouse_up(self, mouse_position)
+                mouse_up(self, event, mouse_position)
 
             if event.type == KEYDOWN:
                 on_key_down(self, event, mouse_position)
-
 
         if self.camera.mouse_moving:
             dx,dy = pygame.mouse.get_rel()
@@ -189,7 +183,7 @@ class Editor:
             self.camera.y += dy * (1 / self.camera.zoom)
 
         #UPDATE
-        self.cliked_on_ui = self.ui_to_draw.update(mouse_position, mouse_pressed, 0, events)
+        self.clicked_on_ui = self.ui_to_draw.update(mouse_position, mouse_pressed, 0, events)
 
         self.rects.update(cam = self.camera)
 
@@ -205,6 +199,7 @@ class Editor:
                     new_rect.w, new_rect.h = rect.rect.size
                     rect.org_rect.topleft = new_rect.topleft
                     self.property_panel.set_transform(rect.org_rect)
+                rect.org_rect = new_rect
                 if "ColorPicker" in self.property_panel.properties_obj:
                     color = self.property_panel.get_color()
                     rect.color = color
@@ -226,12 +221,9 @@ class Editor:
 
         self.camera.draw_rect(self.custom_blitting, (255,255,255), (0,0, DESIGN_W, DESIGN_H), 3)
         self.custom_blitting.blit(self.camera.scale_to_zoom(self.grid), self.camera.get_offset(self.grid.get_rect()))
-        if self.mode == MODE.Editor:
-            self.ui_to_draw.draw(self.custom_blitting)
-            if self.property_panel:
-                self.property_panel.draw(self.custom_blitting)
-        self.custom_blitting.blit(self.mode_text,(0,0))
-
+        self.ui_to_draw.draw(self.custom_blitting)
+        if self.property_panel:
+            self.property_panel.draw(self.custom_blitting)
 
     def draw(self, surface):
         blit = pygame.transform.scale(self.custom_blitting, surface.get_size())

@@ -11,21 +11,13 @@ import random
 pygame.font.init()
 MODE_TEXT = pygame.font.SysFont(pygame.font.get_default_font(), 82)
 
-class MODE:
-    Camera = 0
-    Editor = 1
-
 def mode_camera_mouse_down(editor, event, mouse_position):
     editor.camera.event_zoom(event, mouse_position)
 
 def mode_camera_mouse_up(editor, event, mouse_position):
     editor.camera.event_zoom(event, mouse_position)
 
-def mode_camera_key_down(editor):
-    pass
-
-
-def mode_editor_mouse_down(editor, event, events, mouse_position):
+def mouse_down(editor, event, events, mouse_position):
     """
     Handles the events when a mouse button is pressed in editor mode
 
@@ -41,8 +33,7 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
     """
     pygame.mouse.get_rel()
     editor.camera.event_zoom(event, mouse_position)
-    editor.camera.mouse_moving = 0
-    if editor.cliked_on_ui > -1:
+    if editor.clicked_on_ui > -1:
         destroy_properties_panel(editor, mouse_position)
         return
     if editor.ui_to_draw == editor.save_options_ui:
@@ -93,7 +84,7 @@ def mode_editor_mouse_down(editor, event, events, mouse_position):
             editor.property_panel.linking = False
 
 
-def mode_editor_mouse_up(editor, mouse_position):
+def mouse_up(editor, event, mouse_position):
     """
     Handles the events when a mouse button is released in editor mode
 
@@ -116,6 +107,7 @@ def mode_editor_mouse_up(editor, mouse_position):
     editor.fixed_point = None
     editor.moving_offset = None
     editor.resizing = False
+    editor.camera.event_zoom(event,mouse_position)
 
 def on_key_down(editor, event, mouse_position):
     """
@@ -130,9 +122,6 @@ def on_key_down(editor, event, mouse_position):
     :rtype: None
     """
     config = editor.game.config
-    if event.key == config['ed_mode']:
-        editor.mode = (editor.mode + 1) % 2
-        update_mode(editor)
     if event.key == config['ed_clear'] and event.mod & KMOD_LSHIFT:
         bg = copy.copy(editor.rects.sprites()[0])
         editor.rects.empty()
@@ -160,16 +149,6 @@ def on_key_down(editor, event, mouse_position):
         editor.load_map(editor.map_path)
     if event.key == config['ed_camera_reset']:
         editor.camera.reset()
-
-def update_mode(editor):
-    editor.selected_rect = -1
-    if editor.mode == MODE.Camera:
-        editor.mode_text = MODE_TEXT.render("Camera", 1, (255,255,255))
-    if editor.mode == MODE.Editor:
-        editor.mode_text = MODE_TEXT.render("Editor", 1, (255,255,255))
-    editor.rect_started = False
-    editor.camera.mouse_moving = False
-
 
 def move_rect(editor, mouse_position):
     r = editor.rects.sprites()[editor.selected_rect]

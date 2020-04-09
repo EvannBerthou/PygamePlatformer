@@ -58,4 +58,4 @@ Bugs trouvés
 [ ] Afficher le joueur et sa hauteur en saut dans l'éditeur
 [x] Vitesse proportionelle à la taille
 [x] Les sliders ne se dessinent pas dans le property panel
-[ ] Séparer les 2 modes de camera (bouger en cliquant avec la molette voire avec une touche du clavier
+[x] Séparer les 2 modes de camera (bouger en cliquant avec la molette voire avec une touche du clavier

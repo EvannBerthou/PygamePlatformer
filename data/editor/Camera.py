@@ -65,12 +65,12 @@ class Camera:
             self.x += new_pos[0] - prev_pos[0]
             self.y += new_pos[1] - prev_pos[1]
 
-            if event.button == 1:
+            if event.button == 2:
                 self.mouse_moving = 1
                 pygame.mouse.get_rel()
 
         if event.type == MOUSEBUTTONUP:
-            if event.button == 1:
+            if event.button == 2:
                 self.mouse_moving = 0
 
     def screen_to_world(self, pos):

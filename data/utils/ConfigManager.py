@@ -12,7 +12,7 @@ def get_default_config():
     return {"fullscreen": 0, "resolution": "1152x648",
             "p1_left": K_q, "p1_right": K_d, "p1_jump": K_SPACE, 
             "p2_left": K_LEFT, "p2_right": K_RIGHT, "p2_jump": K_UP, 
-            "ed_mode": K_TAB, "ed_clear": K_r, "ed_reload": K_l, 
+            "ed_clear": K_r, "ed_reload": K_l, 
             "ed_delete": K_DELETE, "ed_camera_reset": K_f,
             "ed_wall": K_F1, "ed_door": K_F2, "ed_spawn": K_F3, "ed_plate": K_F4, "ed_goal": K_F5,
             "fps_counter": False
