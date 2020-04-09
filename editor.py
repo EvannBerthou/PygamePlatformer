@@ -199,7 +199,8 @@ class Editor:
                     new_rect.w, new_rect.h = rect.rect.size
                     rect.org_rect.topleft = new_rect.topleft
                     self.property_panel.set_transform(rect.org_rect)
-                rect.org_rect = new_rect
+                else:
+                    rect.org_rect
                 if "ColorPicker" in self.property_panel.properties_obj:
                     color = self.property_panel.get_color()
                     rect.color = color

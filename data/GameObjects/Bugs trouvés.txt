@@ -30,6 +30,8 @@ Bugs trouvés
 [ ] Dialogues avec plusieurs lignes
 [ ] Entrer les dialogues dans l'éditeur
 [ ] Améliorer la parsing des maps
+    [ ] Vérifier que le nom du fichier n'a pas été modifié (pose probleme pour les replays)
+    [ ] Vérifier que le contenue de la map n'a pas été modifié
 [x] Snapping a la grille :
     [x] Moving
     [x] Resizing

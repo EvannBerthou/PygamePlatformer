@@ -1,4 +1,4 @@
-import pygame, sys, os
+import pygame, sys, os, json
 from pygame.locals import *
 from data.Level import LevelManager
 from data.MainMenu import MainMenu
@@ -127,9 +127,12 @@ class Game:
         self.config['fps_counter'] = self.show_fps
         save_config(self.config)
 
-    def start_replay(self, map_name, replay_path):
+    def start_replay(self, replay_path):
         self.game_state = GameState.IN_GAME
-        self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_name, self, replay = replay_path)
+        with open(replay_path, 'r') as f:
+            replay_data = json.loads(f.read())
+            map_path = replay_data['filepath']
+            self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_path, self, replay = replay_data['players_positions'])
     
     def start_editor(self):
         self.game_state = GameState.EDITOR
@@ -140,10 +143,4 @@ class Game:
 
 if __name__ == '__main__':
     game = Game()
-    if len(sys.argv) > 1:
-        file_path = sys.argv[1]
-        splitted = file_path.split('.')
-        if splitted[1] == 'json':
-            map_path = os.path.join('maps', splitted[0])
-            game.start_replay(map_path, file_path)
     game.run()

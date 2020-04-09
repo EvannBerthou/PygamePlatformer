@@ -1,11 +1,8 @@
-import json
 import sys
 
 class ReplayManager:
-    def __init__(self, replay_path):
-        with open (replay_path, 'r') as f:
-            self.replay_data = json.loads(f.read())
-
+    def __init__(self, replay_data):
+        self.replay_data = replay_data
         self.new_action = True
         self.action_id = -1
         self.get_next_action()

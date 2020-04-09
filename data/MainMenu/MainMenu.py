@@ -1,5 +1,7 @@
 import UI
 import os
+from tkinter import filedialog
+from tkinter import *
 import pygame
 from data.utils.ConfigManager import load_config
 from data.utils.SpriteLoader import load_sprite
@@ -45,17 +47,20 @@ class LevelSelectorMenu(Menu):
     def __init__(self, main_menu):
         super().__init__(main_menu)
         self.category_selector_ui = UI.UIManager()
+        self.category_selector_ui.add(UI.Button(15,15,300,60, "Load replay", (150,150,150),
+                                                self.load_replay, [], center_text=True,
+                                                font_size=46))
         self.category_selector_ui.add(UI.Button(self.main_menu.game.DESING_W / 2 - 450,
                                                 self.main_menu.game.DESING_H / 2 - 200,
                                                 400,400,
                                                 "Official", (150,150,150),
-                                                self.open_categorie, "official"))
+                                                self.open_categorie, "official", center_text=True))
 
         self.category_selector_ui.add(UI.Button(self.main_menu.game.DESING_W / 2,
                                                 self.main_menu.game.DESING_H / 2 - 200,
                                                 400,400,
                                                 "Community", (150,150,150),
-                                                self.open_categorie, "community"))
+                                                self.open_categorie, "community", center_text=True))
 
         BUTTON_WIDTH = 800
         BUTTON_HEIGHT = 100
@@ -122,6 +127,13 @@ class LevelSelectorMenu(Menu):
                                     True, 46])
                 total += 1
         self.scrollview.update_surface(0)
+
+    def load_replay(self, btn, args):
+        root = Tk().withdraw()
+        filepath = filedialog.askopenfilename(initialdir = '.', title = 'Select replay to load',
+                                              filetypes=[('JSON', '.json')])
+        if filepath == '': return
+        self.main_menu.game.start_replay(filepath)
 
 class OptionMenu(Menu):
     def set_keybind(self, btn, key):

@@ -181,8 +181,9 @@ class LevelManager:
     def save_replay(self, btn, args):
         file_name = os.path.basename(self.map_path) + '.json'
         print('saving in :', file_name)
+        data = {'filepath': self.map_path, 'players_positions': self.players_positions}
         with open(file_name, 'w') as f:
-            f.write(json.dumps(self.players_positions))
+            f.write(json.dumps(data))
 
     def reload_level(self, btn, args):
         self.start_time = 0.0
