@@ -2,14 +2,19 @@ import pygame
 
 from UI import InputField
 
+
 class Transform:
-    def __init__(self, x,y, UIManager):
-        self.x, self.y = x,y
-        self.w, self.h = 320,110
-        self.x_if = InputField(x,y, 150, 50, None, None, text_type=int, char_limit=4)
-        self.y_if = InputField(x+160,y, 150, 50, None, None, text_type=int, char_limit=4)
-        self.w_if = InputField(x,y+60, 150, 50, None, None, text_type=int, char_limit=4)
-        self.h_if = InputField(x+160,y+60, 150, 50, None, None, text_type=int, char_limit=4)
+    def __init__(self, x, y, UIManager):
+        self.x, self.y = x, y
+        self.w, self.h = 320, 110
+        self.x_if = InputField(x, y, 150, 50, None, None,
+                               text_type=int, char_limit=4)
+        self.y_if = InputField(x + 160, y, 150, 50, None,
+                               None, text_type=int, char_limit=4)
+        self.w_if = InputField(x, y + 60, 150, 50, None,
+                               None, text_type=int, char_limit=4)
+        self.h_if = InputField(x + 160, y + 60, 150, 50, None,
+                               None, text_type=int, char_limit=4)
         UIManager.add(self.x_if)
         UIManager.add(self.y_if)
         UIManager.add(self.w_if)
@@ -34,7 +39,7 @@ class Transform:
         h = self.h_if.text
         if h == '':
             h = 0
-        return pygame.Rect(int(x),int(y),int(w),int(h))
+        return pygame.Rect(int(x), int(y), int(w), int(h))
 
     def set_transform(self, rect):
         position = rect.topleft
@@ -49,4 +54,3 @@ class Transform:
         UIManager.remove(self.y_if)
         UIManager.remove(self.w_if)
         UIManager.remove(self.h_if)
-

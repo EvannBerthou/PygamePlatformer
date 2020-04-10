@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 
+
 class Camera:
     def __init__(self, ws, ds):
         self.x = 0
@@ -37,17 +38,17 @@ class Camera:
         scl = (self.zoom * rect[2], self.zoom * rect[3])
         pygame.draw.rect(surface, color, (*pos, *scl), size)
 
-    def draw_line(self, surface, color, pt1, pt2, width = 1):
+    def draw_line(self, surface, color, pt1, pt2, width=1):
         pos_1 = ((self.x + pt1[0]) * self.zoom, (self.y + pt1[1]) * self.zoom)
         pos_2 = ((self.x + pt2[0]) * self.zoom, (self.y + pt2[1]) * self.zoom)
         pygame.draw.line(surface, color, pos_1, pos_2, width)
 
-    def draw_polygon(self, surface, color, points, width = 0):
+    def draw_polygon(self, surface, color, points, width=0):
         pts = []
         for pt in points:
-            pts.append(((self.x + pt[0]) * self.zoom, (self.y + pt[1]) * self.zoom))
+            pts.append(((self.x + pt[0]) * self.zoom,
+                        (self.y + pt[1]) * self.zoom))
         pygame.draw.polygon(surface, color, pts, width)
-
 
     def event_zoom(self, event, mouse_position):
         if event.type == MOUSEBUTTONDOWN:
@@ -85,7 +86,7 @@ class Camera:
                 int(((pos[1] / self.zoom) - self.y)))
 
     def reset(self):
-        self.x, self.y = 0,0
+        self.x, self.y = 0, 0
         self.zoom = 1
 
     def convert_to_ratio(self, pos):

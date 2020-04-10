@@ -1,30 +1,32 @@
 import pygame
 from ..editor import *
 
+
 class Plate(pygame.sprite.Sprite):
-    def __init__(self, x,y,w,h, color = (255,0,0), linked_to_id = -1):
+    def __init__(self, x, y, w, h, color=(255, 0, 0), linked_to_id=-1):
         super().__init__()
-        self.org_rect = pygame.Rect(int(x),int(y),int(w),int(h))
+        self.org_rect = pygame.Rect(int(x), int(y), int(w), int(h))
         self.rect = self.org_rect.copy()
         self.color = color
         self.collide = False
         self.linked_to_id = linked_to_id
         self.linked_to = None
         self.players_on = []
-        self.image = pygame.Surface((w,h))
+        self.image = pygame.Surface((w, h))
         self.image.fill(self.color)
         self.selectable = True
         self.resizable = True
         self.before_drag = None
 
-    def update(self, cam = None):
+    def update(self, cam=None):
         if cam:
             self.rect = pygame.Rect(*(cam.get_offset(self.org_rect)))
-            self.image = pygame.Surface((self.rect.w,self.rect.h))
+            self.image = pygame.Surface((self.rect.w, self.rect.h))
             self.image.fill(self.color)
 
     def outline(self, surface, camera):
-        border = (self.org_rect[0],self.org_rect[1],self.org_rect[2],self.org_rect[3])
+        border = (self.org_rect[0], self.org_rect[1],
+                  self.org_rect[2], self.org_rect[3])
         color = invert_color(self.color)
         camera.draw_rect(surface, color, border, 5)
 
@@ -54,9 +56,9 @@ class Plate(pygame.sprite.Sprite):
         return ["Transform", "Linker"]
 
     def on_collision(self, collider):
-        if not self.players_on: #s'il n'y a aucun joueur sur la plaque
+        if not self.players_on:  # s'il n'y a aucun joueur sur la plaque
             self.linked_to.switch_status()
-        if not collider in self.players_on:
+        if collider not in self.players_on:
             self.players_on.append(collider)
 
     def on_collision_exit(self, collider):
@@ -65,5 +67,6 @@ class Plate(pygame.sprite.Sprite):
             self.linked_to.switch_status()
 
     def as_string(self):
-        rect_int = [ int(self.org_rect.x), int(self.org_rect.y), int(self.org_rect.w), int(self.org_rect.h) ]
+        rect_int = [int(self.org_rect.x), int(self.org_rect.y),
+                    int(self.org_rect.w), int(self.org_rect.h)]
         return 'Plate, {},{},{},{}, {}\n'.format(*rect_int, self.linked_to_id)

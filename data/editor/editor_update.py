@@ -1,4 +1,5 @@
-import pygame, copy
+import pygame
+import copy
 from pygame.locals import *
 
 from data.editor import *
@@ -11,11 +12,14 @@ import random
 pygame.font.init()
 MODE_TEXT = pygame.font.SysFont(pygame.font.get_default_font(), 82)
 
+
 def mode_camera_mouse_down(editor, event, mouse_position):
     editor.camera.event_zoom(event, mouse_position)
 
+
 def mode_camera_mouse_up(editor, event, mouse_position):
     editor.camera.event_zoom(event, mouse_position)
+
 
 def mouse_down(editor, event, events, mouse_position):
     """
@@ -38,10 +42,13 @@ def mouse_down(editor, event, events, mouse_position):
         return
     if editor.ui_to_draw == editor.save_options_ui:
         return
-    if not (editor.selected_rect > -1 and editor.check_arrow(mouse_position)) and event.button == 1:
-        editor.selected_rect = inside_rect(editor.rects, mouse_position, editor.camera)
+    if not (editor.selected_rect > -
+            1 and editor.check_arrow(mouse_position)) and event.button == 1:
+        editor.selected_rect = inside_rect(
+            editor.rects, mouse_position, editor.camera)
         if editor.selected_rect > -1:
-            create_properties_panel(editor, editor.rects.sprites()[editor.selected_rect])
+            create_properties_panel(editor, editor.rects.sprites()[
+                                    editor.selected_rect])
         else:
             destroy_properties_panel(editor, mouse_position)
     if editor.selected_rect > -1:
@@ -56,28 +63,32 @@ def mouse_down(editor, event, events, mouse_position):
         if event.button == 3 and editor.selected_rect != -1:
             start_resize(editor, mouse_position)
     else:
-        #If the selected object is a spawn point, don't drag and create the spawnpoint
+        # If the selected object is a spawn point, don't drag and create the
+        # spawnpoint
         if editor.selected_object == SpawnPoint:
             if editor.spawn_points_count < 2:
-                x,y = editor.camera.screen_to_world(mouse_position)
-                editor.rects.add(SpawnPoint(x,y, 50, (255,255,255), 0))
+                x, y = editor.camera.screen_to_world(mouse_position)
+                editor.rects.add(SpawnPoint(x, y, 50, (255, 255, 255), 0))
                 editor.spawn_points_count += 1
             else:
                 print('Already 2 spawn points on the map')
         else:
             if event.button == 1:
                 editor.rect_started = True
-                editor.rect_start = editor.camera.screen_to_world(mouse_position)
+                editor.rect_start = editor.camera.screen_to_world(
+                    mouse_position)
 
-
-    if editor.property_panel != None:
+    if editor.property_panel is not None:
         if editor.property_panel.linking:
             world_pos = editor.camera.screen_to_world(mouse_position)
-            hover_objs = pygame.Rect(*world_pos, 1,1).collidelistall(editor.rects.sprites())
-            if len(hover_objs) > 1: #There is always the background but we don't want it to be linked
+            hover_objs = pygame.Rect(
+                *world_pos, 1, 1).collidelistall(editor.rects.sprites())
+            if len(
+                    hover_objs) > 1:  # There is always the background but we don't want it to be linked
                 obj = hover_objs[1]
                 if isinstance(editor.rects.sprites()[obj], Door):
-                    editor.rects.sprites()[editor.selected_rect].linked_to_id = obj
+                    editor.rects.sprites()[
+                        editor.selected_rect].linked_to_id = obj
                     print("linked to", obj)
             else:
                 print("no link")
@@ -96,8 +107,9 @@ def mouse_up(editor, event, mouse_position):
     """
     # editor.ui_to_draw.selected = -1
     if editor.rect_started:
-        rect = create_rect(editor.rect_start, editor.camera.screen_to_world(mouse_position), editor.selected_object)
-        if rect != None:
+        rect = create_rect(editor.rect_start, editor.camera.screen_to_world(
+            mouse_position), editor.selected_object)
+        if rect is not None:
             editor.rects.add(rect)
         editor.rect_started = False
     editor.drag_start = None
@@ -107,7 +119,8 @@ def mouse_up(editor, event, mouse_position):
     editor.fixed_point = None
     editor.moving_offset = None
     editor.resizing = False
-    editor.camera.event_zoom(event,mouse_position)
+    editor.camera.event_zoom(event, mouse_position)
+
 
 def on_key_down(editor, event, mouse_position):
     """
@@ -128,20 +141,26 @@ def on_key_down(editor, event, mouse_position):
         editor.selected_rect = -1
         editor.rects.add(bg)
     if event.key == K_DELETE and editor.selected_rect != -1:
-        if isinstance(editor.rects.sprites()[editor.selected_rect], SpawnPoint):
+        if isinstance(editor.rects.sprites()[
+                      editor.selected_rect], SpawnPoint):
             editor.spawn_points_count -= 1
         editor.rects.remove(editor.rects.sprites()[editor.selected_rect])
         editor.selected_rect = -1
     if event.key == config['ed_wall']:
-        editor.wall_button.callback(editor.wall_button, editor.wall_button.args)
+        editor.wall_button.callback(
+            editor.wall_button, editor.wall_button.args)
     if event.key == config['ed_door']:
-        editor.door_button.callback(editor.door_button, editor.door_button.args)
+        editor.door_button.callback(
+            editor.door_button, editor.door_button.args)
     if event.key == config['ed_spawn']:
-        editor.spawn_button.callback(editor.spawn_button, editor.spawn_button.args)
+        editor.spawn_button.callback(
+            editor.spawn_button, editor.spawn_button.args)
     if event.key == config['ed_plate']:
-        editor.plate_button.callback(editor.plate_button, editor.plate_button.args)
+        editor.plate_button.callback(
+            editor.plate_button, editor.plate_button.args)
     if event.key == config['ed_goal']:
-        editor.goal_button.callback(editor.goal_button, editor.goal_button.args)
+        editor.goal_button.callback(
+            editor.goal_button, editor.goal_button.args)
     if event.key == K_s and event.mod & KMOD_LALT:
         editor.save_to_file(None, None)
     if event.key == config['ed_reload']:
@@ -149,6 +168,7 @@ def on_key_down(editor, event, mouse_position):
         editor.load_map(editor.map_path)
     if event.key == config['ed_camera_reset']:
         editor.camera.reset()
+
 
 def move_rect(editor, mouse_position):
     r = editor.rects.sprites()[editor.selected_rect]
@@ -162,15 +182,18 @@ def move_rect(editor, mouse_position):
     else:
         if editor.drag_start:
             constraint = ""
-            if editor.selected_arrow: constraint = editor.selected_arrow
-            if pygame.key.get_mods() & pygame.KMOD_LALT: constraint = 'snapping'
+            if editor.selected_arrow:
+                constraint = editor.selected_arrow
+            if pygame.key.get_mods() & pygame.KMOD_LALT:
+                constraint = 'snapping'
             r.move(mp, editor.drag_start, constraint, *(editor.grid_sizes))
         editor.property_panel.set_transform(r.org_rect)
 
 
 def start_resize(editor, mouse_position):
     r = editor.rects.sprites()[editor.selected_rect]
-    if not r.resizable: return
+    if not r.resizable:
+        return
 
     selected_arrow = editor.check_arrow(mouse_position)
     if selected_arrow != "":
@@ -185,15 +208,18 @@ def start_resize(editor, mouse_position):
     mouse_position = editor.camera.screen_to_world(mouse_position)
     corner = get_corner_point(r.org_rect, mouse_position)
 
-    if corner != None:
+    if corner is not None:
         editor.resizing = True
-        rect_corners = [r.org_rect.topleft, r.org_rect.topright, r.org_rect.bottomleft, r.org_rect.bottomright]
+        rect_corners = [r.org_rect.topleft, r.org_rect.topright,
+                        r.org_rect.bottomleft, r.org_rect.bottomright]
 
-        if editor.fixed_point == None:
+        if editor.fixed_point is None:
             moving_corner = rect_corners[corner]
-            editor.moving_offset = (mouse_position[0] - moving_corner[0], mouse_position[1] - moving_corner[1])
+            editor.moving_offset = (
+                mouse_position[0] - moving_corner[0],
+                mouse_position[1] - moving_corner[1])
 
-            opposed_corner_id = {0:3, 3:0, 1:2, 2:1}[corner]
+            opposed_corner_id = {0: 3, 3: 0, 1: 2, 2: 1}[corner]
             editor.fixed_point = rect_corners[opposed_corner_id]
 
 
@@ -215,9 +241,15 @@ def on_resize_rect(editor, mouse_position):
 
     r = editor.rects.sprites()[editor.selected_rect]
     mouse_position = editor.camera.screen_to_world(mouse_position)
-    pos = (mouse_position[0] - editor.moving_offset[0], mouse_position[1] - editor.moving_offset[1])
-    size = (editor.fixed_point[0] - mouse_position[0] + editor.moving_offset[0],
-            editor.fixed_point[1] - mouse_position[1] + editor.moving_offset[1])
+    pos = (mouse_position[0] - editor.moving_offset[0],
+           mouse_position[1] - editor.moving_offset[1])
+    size = (
+        editor.fixed_point[0] -
+        mouse_position[0] +
+        editor.moving_offset[0],
+        editor.fixed_point[1] -
+        mouse_position[1] +
+        editor.moving_offset[1])
 
     new_rect = pygame.Rect(pos, size)
     new_rect.normalize()
@@ -225,6 +257,7 @@ def on_resize_rect(editor, mouse_position):
     if new_rect.w > 30 and new_rect.h > 30:
         r.org_rect = new_rect
     editor.property_panel.set_transform(r.org_rect)
+
 
 def resize_arrow(editor, arrow):
     """
@@ -246,10 +279,11 @@ def resize_arrow(editor, arrow):
         resize_rect_arrow(rect, 0, mouse_rel[1])
     editor.property_panel.set_transform(rect.org_rect)
 
+
 def resize_to_grid(editor, mouse_position):
     r = editor.rects.sprites()[editor.selected_rect]
     mouse_position = editor.camera.screen_to_world(mouse_position)
-    mouse_x_cell = mouse_position[0] // editor.grid_sizes[0] 
+    mouse_x_cell = mouse_position[0] // editor.grid_sizes[0]
     mouse_y_cell = mouse_position[1] // editor.grid_sizes[1]
     fixed_x_cell = editor.fixed_point[0] // editor.grid_sizes[0]
     fixed_y_cell = editor.fixed_point[1] // editor.grid_sizes[1]
@@ -258,13 +292,13 @@ def resize_to_grid(editor, mouse_position):
     delta_y = fixed_y_cell - mouse_y_cell
 
     mouse_x_cell += delta_x < 0
-    delta_x -= delta_x < 0 
+    delta_x -= delta_x < 0
 
     mouse_y_cell += delta_y < 0
     delta_y -= delta_y < 0
 
-
-    pos  = (mouse_x_cell * editor.grid_sizes[0], mouse_y_cell * editor.grid_sizes[1])
+    pos = (mouse_x_cell * editor.grid_sizes[0],
+           mouse_y_cell * editor.grid_sizes[1])
     size = (delta_x * editor.grid_sizes[0], delta_y * editor.grid_sizes[1])
 
     new_rect = pygame.Rect(pos, size)
@@ -274,11 +308,16 @@ def resize_to_grid(editor, mouse_position):
 
     editor.property_panel.set_transform(r.org_rect)
 
+
 def create_properties_panel(editor, rect):
     if editor.property_panel:
         editor.property_panel.destroy(editor.ui_to_draw)
-    property_panel = PropertyPanel(editor.game.DESING_W - 330, 130, rect.get_properties(),
-                                   editor.ui_to_draw, rect)
+    property_panel = PropertyPanel(
+        editor.game.DESING_W - 330,
+        130,
+        rect.get_properties(),
+        editor.ui_to_draw,
+        rect)
 
     if "ColorPicker" in property_panel.properties_obj:
         property_panel.set_color(rect.color)
@@ -287,9 +326,12 @@ def create_properties_panel(editor, rect):
 
     editor.property_panel = property_panel
 
+
 def destroy_properties_panel(editor, mouse_position):
-    if editor.property_panel == None: return
-    if editor.property_panel.is_hovered(mouse_position): return
-    editor.selected_rect = -1 #Unselect rect when UI other than property panel is clicked
+    if editor.property_panel is None:
+        return
+    if editor.property_panel.is_hovered(mouse_position):
+        return
+    editor.selected_rect = -1  # Unselect rect when UI other than property panel is clicked
     editor.property_panel.destroy(editor.ui_to_draw)
     editor.property_panel = None

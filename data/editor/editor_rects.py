@@ -1,15 +1,17 @@
 import pygame
 
+
 class DragRect(pygame.sprite.Sprite):
-    def __init__(self, x,y,w,h, color):
+    def __init__(self, x, y, w, h, color):
         #pos, scl = convert_rect(x,y,w,h)
-        self.rect = pygame.Rect(x,y,w,h)
+        self.rect = pygame.Rect(x, y, w, h)
         self.rect.normalize()
         self.color = color
         self.image = pygame.Surface(self.rect.size)
 
-    def draw(self,camera,surface):
+    def draw(self, camera, surface):
         camera.draw_rect(surface, self.color, self.rect)
+
 
 def get_corner_point(rect, point):
     """
@@ -27,11 +29,11 @@ def get_corner_point(rect, point):
     """
     pr = pygame.Rect(rect)
     sub_rects = [
-            pygame.Rect(pr.x, pr.y, pr.w / 2, pr.h / 2),
-            pygame.Rect(pr.x + pr.w / 2, pr.y, pr.w / 2, pr.h / 2),
-            pygame.Rect(pr.x, pr.y + pr.h / 2, pr.w / 2, pr.h / 2),
-            pygame.Rect(pr.x + pr.w / 2, pr.y + pr.h / 2, pr.w / 2, pr.h / 2)
-            ]
+        pygame.Rect(pr.x, pr.y, pr.w / 2, pr.h / 2),
+        pygame.Rect(pr.x + pr.w / 2, pr.y, pr.w / 2, pr.h / 2),
+        pygame.Rect(pr.x, pr.y + pr.h / 2, pr.w / 2, pr.h / 2),
+        pygame.Rect(pr.x + pr.w / 2, pr.y + pr.h / 2, pr.w / 2, pr.h / 2)
+    ]
     for i, sr in enumerate(sub_rects):
         if sr.collidepoint(point):
             return i
@@ -49,11 +51,14 @@ def inside_rect(rects, mouse_position, camera):
     :type camera: Camera
     :return: the index from the list of the first rect which contains the point
     """
-    for i,r in enumerate(rects.sprites()):
-        if r.selectable == False: continue
-        if pygame.Rect(r.org_rect).collidepoint(camera.screen_to_world(mouse_position)):
+    for i, r in enumerate(rects.sprites()):
+        if not r.selectable:
+            continue
+        if pygame.Rect(r.org_rect).collidepoint(
+                camera.screen_to_world(mouse_position)):
             return i
     return -1
+
 
 def create_rect(rect_start, mouse_end, obj):
     """
@@ -70,15 +75,16 @@ def create_rect(rect_start, mouse_end, obj):
     size = ((mouse_end[0] - rect_start[0]), (mouse_end[1] - rect_start[1]))
     rect = pygame.Rect(*rect_start, *size)
     rect.normalize()
-    r = obj(*rect, color=(255,0,0))
+    r = obj(*rect, color=(255, 0, 0))
 
     if abs(r.rect[2]) < 16 or abs(r.rect[3]) < 16:
-        print ("The rect is too smol")
+        print("The rect is too smol")
         return None
 
     return r
 
-def resize_rect_arrow(rect, x,y):
+
+def resize_rect_arrow(rect, x, y):
     """
     Create a new rect resized with an offset by keeping the same center
 
@@ -90,10 +96,12 @@ def resize_rect_arrow(rect, x,y):
     :type y: int
     :rtype: pygame.Rect
     """
-    if not rect.resizable: return
+    if not rect.resizable:
+        return
     new_x = rect.org_rect.x - x
     new_w = rect.org_rect.w + x * 2
     new_y = rect.org_rect.y - y
     new_h = rect.org_rect.h + y * 2
-    if new_w < 30 or new_h < 30: return
+    if new_w < 30 or new_h < 30:
+        return
     rect.org_rect = pygame.Rect(new_x, new_y, new_w, new_h)

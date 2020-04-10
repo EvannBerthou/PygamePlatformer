@@ -9,15 +9,17 @@ from .ReplayManager import ReplayManager
 
 pygame.font.init()
 
+
 class LevelState:
     DIALOGUE = 0
     IN_GAME = 1
 
+
 class LevelManager:
     def load_map(self, file_path):
         colliders_list = []
-        p1_pos = (0,0)
-        p2_pos = (0,0)
+        p1_pos = (0, 0)
+        p2_pos = (0, 0)
         map_data = load_map(file_path)
         colliders = map_data['rects']
         for col in colliders:
@@ -39,7 +41,7 @@ class LevelManager:
                 colliders_list.append(col)
         return map_data, colliders_list, p1_pos, p2_pos
 
-    def __init__(self, window_size, map_path, game, replay = None):
+    def __init__(self, window_size, map_path, game, replay=None):
 
         self.background = Background(window_size)
 
@@ -47,21 +49,35 @@ class LevelManager:
         map_data, colliders, p1_pos, p2_pos = self.load_map(map_path)
         size = (map_data['player_size'], map_data['player_size'])
 
-        self.player_1 = Player(game.config['p1_left'], game.config['p1_right'], game.config['p1_jump'],
-                               0, pygame.Rect(*p1_pos, *size))
-        self.player_2 = Player(game.config['p2_left'], game.config['p2_right'], game.config['p2_jump'], 
-                               1, pygame.Rect(*p2_pos, *size))
+        self.player_1 = Player(
+            game.config['p1_left'],
+            game.config['p1_right'],
+            game.config['p1_jump'],
+            0,
+            pygame.Rect(
+                *p1_pos,
+                *size))
+        self.player_2 = Player(
+            game.config['p2_left'],
+            game.config['p2_right'],
+            game.config['p2_jump'],
+            1,
+            pygame.Rect(
+                *p2_pos,
+                *size))
 
         self.all_colliders = pygame.sprite.Group()
         self.all_colliders.add([self.background, self.player_1, self.player_2])
         self.all_colliders.add(colliders)
 
         self.dialogues = map_data['dialogues']
-        self.level_state = LevelState.DIALOGUE if len(self.dialogues) > 0 else LevelState.IN_GAME
+        self.level_state = LevelState.DIALOGUE if len(
+            self.dialogues) > 0 else LevelState.IN_GAME
         self.dialogues_index = -1
 
         self.start_time = 0.0
-        self.timer_font = pygame.font.SysFont(pygame.font.get_default_font(), 46)
+        self.timer_font = pygame.font.SysFont(
+            pygame.font.get_default_font(), 46)
         self.level_completed = False
 
         self.ui_manager = UI.UIManager()
@@ -75,8 +91,10 @@ class LevelManager:
             self.replay_manager = ReplayManager(self.replay)
 
         self.line_index = -1
-        self.dialogues_background = UI.Image(0, game.DESING_H - 300, game.DESING_W, 300, color = (150,150,150))
-        self.dialogues_text = UI.Text(5,game.DESING_H - 280, "", 70, (255,255,255))
+        self.dialogues_background = UI.Image(
+            0, game.DESING_H - 300, game.DESING_W, 300, color=(150, 150, 150))
+        self.dialogues_text = UI.Text(
+            5, game.DESING_H - 280, "", 70, (255, 255, 255))
         self.text_timer = 0
         self.next_timer = 0
         self.line = self.next_dialogue()
@@ -106,11 +124,12 @@ class LevelManager:
 
         self.all_colliders.update()
         if self.player_1.rect.top > self.game.DESING_H or self.player_2.rect.top > self.game.DESING_H:
-            self.reload_level(0,0)
+            self.reload_level(0, 0)
 
-        #UPDATE
+        # UPDATE
         if self.replay:
-            positions = self.replay_manager.get_action([self.player_1, self.player_2])
+            positions = self.replay_manager.get_action(
+                [self.player_1, self.player_2])
             self.replay_position(self.player_1, positions[0])
             self.replay_position(self.player_2, positions[1])
             self.player_1.c_update(self.all_colliders.sprites(), None, dt)
@@ -118,14 +137,16 @@ class LevelManager:
             self.player_1.update_animation(dt)
             self.player_2.update_animation(dt)
         else:
-            self.player_1.c_update(self.all_colliders.sprites(), keyboard_input, dt)
-            self.player_2.c_update(self.all_colliders.sprites(), keyboard_input, dt)
+            self.player_1.c_update(
+                self.all_colliders.sprites(), keyboard_input, dt)
+            self.player_2.c_update(
+                self.all_colliders.sprites(), keyboard_input, dt)
             self.record_position()
 
     def record_position(self):
         self.players_positions[len(self.players_positions)] = [
-                [self.player_1.rect.x, self.player_1.rect.y],
-                [self.player_2.rect.x, self.player_2.rect.y]]
+            [self.player_1.rect.x, self.player_1.rect.y],
+            [self.player_2.rect.x, self.player_2.rect.y]]
 
     def replay_position(self, player, positions):
         player.rect.x = positions[0]
@@ -137,42 +158,75 @@ class LevelManager:
         if self.level_state == LevelState.DIALOGUE:
             self.dialogue_ui.draw(surface)
         if self.level_completed:
-            surface.blit(self.end_screen, (0,0))
+            surface.blit(self.end_screen, (0, 0))
 
     def draw_ui(self, surface):
         if not self.level_completed:
-            text = self.timer_font.render('{:06.2f}'.format(self.start_time), 1, (255,255,255))
-            surface.blit(text, (0,0))
+            text = self.timer_font.render('{:06.2f}'.format(
+                self.start_time), 1, (255, 255, 255))
+            surface.blit(text, (0, 0))
 
         if self.level_completed:
             self.ui_manager.draw(surface)
 
     def end_game(self):
         self.level_completed = True
-        self.end_screen.fill((75,0,130,200))
+        self.end_screen.fill((75, 0, 130, 200))
 
-        #Texts
+        # Texts
         font = pygame.font.SysFont(pygame.font.get_default_font(), 150)
 
-        level_completed_text = font.render("Level Completed !", 1, (255,255,255))
+        level_completed_text = font.render(
+            "Level Completed !", 1, (255, 255, 255))
         x_pos = self.end_screen.get_width() / 2 - level_completed_text.get_width() / 2
         self.end_screen.blit(level_completed_text, (x_pos, 50))
 
-        timer_text = font.render('{:06.2f}'.format(self.start_time), 1, (255,255,255))
+        timer_text = font.render('{:06.2f}'.format(
+            self.start_time), 1, (255, 255, 255))
         x_pos = self.end_screen.get_width() / 2 - timer_text.get_width() / 2
         self.end_screen.blit(timer_text, (x_pos, 300))
 
-        #Buttons
+        # Buttons
         button_y_pos = self.game.DESING_H / 2 + 50
         w_center = self.game.DESING_W / 2
-        reload_button = UI.Button(w_center - 650, button_y_pos, 400,80,
-                                  "Restart", (150,150,150), self.reload_level, [], center_text = True)
+        reload_button = UI.Button(
+            w_center - 650,
+            button_y_pos,
+            400,
+            80,
+            "Restart",
+            (150,
+             150,
+             150),
+            self.reload_level,
+            [],
+            center_text=True)
 
-        save_replay_button = UI.Button(w_center - 200, button_y_pos, 400,80,
-                                      "Save Replay", (150,150,150), self.save_replay, [], center_text = True)
+        save_replay_button = UI.Button(
+            w_center - 200,
+            button_y_pos,
+            400,
+            80,
+            "Save Replay",
+            (150,
+             150,
+             150),
+            self.save_replay,
+            [],
+            center_text=True)
 
-        main_menu_button = UI.Button(w_center + 250, button_y_pos, 400,80,
-                                    "Main Menu", (150,150,150), self.game.load_main_menu, [], center_text = True)
+        main_menu_button = UI.Button(
+            w_center + 250,
+            button_y_pos,
+            400,
+            80,
+            "Main Menu",
+            (150,
+             150,
+             150),
+            self.game.load_main_menu,
+            [],
+            center_text=True)
 
         self.ui_manager.add(reload_button)
         self.ui_manager.add(main_menu_button)
@@ -181,7 +235,8 @@ class LevelManager:
     def save_replay(self, btn, args):
         file_name = os.path.basename(self.map_path) + '.json'
         print('saving in :', file_name)
-        data = {'filepath': self.map_path, 'players_positions': self.players_positions}
+        data = {'filepath': self.map_path,
+                'players_positions': self.players_positions}
         with open(file_name, 'w') as f:
             f.write(json.dumps(data))
 
@@ -200,11 +255,12 @@ class LevelManager:
 
         self.player_1.set_position(p1_pos)
         self.player_2.set_position(p2_pos)
-        self.player_1.mvt = [0,0]
-        self.player_2.mvt = [0,0]
+        self.player_1.mvt = [0, 0]
+        self.player_2.mvt = [0, 0]
 
         self.dialogues = map_data['dialogues']
-        self.level_state = LevelState.DIALOGUE if len(self.dialogues) > 0 else LevelState.IN_GAME
+        self.level_state = LevelState.DIALOGUE if len(
+            self.dialogues) > 0 else LevelState.IN_GAME
         self.dialogues_index = -1
         self.line = self.next_dialogue()
 
@@ -218,8 +274,8 @@ class LevelManager:
         dialogue = self.dialogues[self.dialogues_index]
         player = dialogue[0]
         if player == "p1":
-            self.dialogues_text.color = (0,0,255)
+            self.dialogues_text.color = (0, 0, 255)
         if player == "p2":
-            self.dialogues_text.color = (255,0,0)
+            self.dialogues_text.color = (255, 0, 0)
         text = dialogue[1]
         return text

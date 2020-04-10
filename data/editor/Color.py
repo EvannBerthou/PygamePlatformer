@@ -7,4 +7,3 @@ def invert_color(color):
     :rtype: (int,int,int)
     """
     return (255 - color[0], 255 - color[1], 255 - color[2])
-

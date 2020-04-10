@@ -9,43 +9,19 @@ Bugs trouvés
 
 [x] Les joueurs gardent leur vitesse au respawn
 [x] Systeme de respawn quand les joueurs sont trop bas
-[ ] Objets : 
-    [ ] Piques qui tuent
-    [ ] Téléporteur
-    [ ] Echangeur de position
-    [ ] Plaque pour respawn un joueur mort
-    [ ] Plate qui fait disparaitre des murs
-    [ ] Texte en jeu
 
 [x] Quadrillage dans l'éditeur
-[ ] Editeur de transform
+[x] Editeur de transform
 [x] Ouvrir l'éditeur depuis le main
 [x] Les sliders ne marchent plus en drag
 [x] Ne pas détecter les fleches quand le carré est deja en train d'être resize
-[ ] Menu pour lancer un replay
-[ ] Regler le probleme de fullscreen (topbar qui sort de l'écran)
-[ ] Trouver un nom de jeu
-[ ] Accents dans les dialogues:
-    [ ] Trouver une meilleure font
-[ ] Dialogues avec plusieurs lignes
-[ ] Entrer les dialogues dans l'éditeur
-[ ] Améliorer la parsing des maps
-    [ ] Vérifier que le nom du fichier n'a pas été modifié (pose probleme pour les replays)
-    [ ] Vérifier que le contenue de la map n'a pas été modifié
+[x] Menu pour lancer un replay
 [x] Snapping a la grille :
     [x] Moving
     [x] Resizing
 [x] Sliders pour changer la taille de grille 
 [x] Touche pour recentrer au centre de la map
-[ ] Message d'avertissement à la fermeture de l'éditeur pour éviter la perte de la progression (demander a sauvegarder)
-[ ] Besoin d'optimiser l'éditeur
-    [ ] Blit, transform.scale (surtout le scale de la grille)
-    [x] pygame.sprite.Sprite pour les UI
-    [x] pygame.sprite.Group pour l'UI Manager
 [x] Compteur de FPS
-[ ] Pouvoir écrire dans les inputfield uniquement quand on clique dessus et même si on la souris quitte le rect
-[ ] Options graphique : 
-    [ ] Qualité des sprites
 [x] Sliders avec des valeurs entières
 [x] Keybind pour l'editeur
     [x] Mode switch : Tab
@@ -57,7 +33,39 @@ Bugs trouvés
     [x] Raccourcis : Fx
 [x] Refaire le systeme de collision
 [x] Ne pas créer un wall avec la molette
-[ ] Afficher le joueur et sa hauteur en saut dans l'éditeur
 [x] Vitesse proportionelle à la taille
 [x] Les sliders ne se dessinent pas dans le property panel
 [x] Séparer les 2 modes de camera (bouger en cliquant avec la molette voire avec une touche du clavier
+
+[ ] JEU
+    [ ] Dialogues avec plusieurs lignes
+    [ ] Accents dans les dialogues:
+        [ ] Trouver une meilleure font
+    [ ] Objets : 
+        [ ] Piques qui tuent
+        [ ] Téléporteur
+        [ ] Echangeur de position
+        [ ] Plaque pour respawn un joueur mort
+        [ ] Plate qui fait disparaitre des murs
+        [ ] Texte en jeu
+
+[ ] EDITEUR
+    [ ] Afficher le joueur et sa hauteur en saut dans l'éditeur
+    [ ] Message d'avertissement à la fermeture de l'éditeur pour éviter la perte de la progression (demander a sauvegarder)
+    [ ] Entrer les dialogues dans l'éditeur
+    [ ] Besoin d'optimiser l'éditeur
+        [ ] Blit, transform.scale (surtout le scale de la grille)
+        [x] pygame.sprite.Sprite pour les UI
+        [x] pygame.sprite.Group pour l'UI Manager
+
+[ ] GLOBAL
+    [ ] Pouvoir écrire dans les inputfield uniquement quand on clique dessus et même si on la souris quitte le rect
+    [ ] Options graphique : 
+        [ ] Qualité des sprites
+    [ ] Regler le probleme de fullscreen (topbar qui sort de l'écran)
+        [ ] Pas sur de marcher (a tester sur pc portable)
+    [ ] Trouver un nom de jeu
+
+    [ ] Améliorer la parsing des maps
+        [ ] Vérifier que le nom du fichier n'a pas été modifié (pose probleme pour les replays)
+        [ ] Vérifier que le contenue de la map n'a pas été modifié
