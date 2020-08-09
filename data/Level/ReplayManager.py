@@ -1,6 +1,5 @@
 import sys
 
-
 class ReplayManager:
     def __init__(self, replay_data):
         self.replay_data = replay_data
