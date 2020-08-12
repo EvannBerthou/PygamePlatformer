@@ -136,7 +136,7 @@ class LevelSelectorMenu(Menu):
         root = Tk().withdraw()
         filepath = filedialog.askopenfilename(initialdir = '.', title = 'Select replay to load',
                                               filetypes=[('JSON', '.json')])
-        if filepath == '': return
+        if not filepath: return
         self.main_menu.game.start_replay(filepath)
 
 class OptionMenu(Menu):
