@@ -6,3 +6,6 @@
 [ ] Rearrange files
 [ ] Sprites
 [ ] Custom skin in maps
+[ ] Low FPS in the editor
+[ ] Unlock FPS limit
+[ ] Crash when no map is selected to be loaded for a replay

@@ -109,14 +109,18 @@ class LevelSelectorMenu(Menu):
 
     def update(self, mouse_position, mouse_pressed, mouse_rel, events):
         for event in events:
-            if event.type == KEYDOWN and self.ui_manager == self.LevelSelectorUI:
+            if (event.type == KEYDOWN and
+                    (self.ui_manager == self.LevelSelectorUI or self.ui_manager == self.category_selector_ui)):
                 self.search_bar.key_pressed(event)
                 if event.key == K_ESCAPE:
-                    if self.ui_manager == self.LevelSelectorUI: self.ui_manager = self.category_selector_ui
-                    else: self.main_menu.main_menu()
+                    if self.ui_manager == self.LevelSelectorUI:
+                        self.ui_manager = self.category_selector_ui
+                    else:
+                        self.main_menu.main_menu()
 
 
     def update_levels(self, search):
+        if not self.ui_manager == self.LevelSelectorUI: return
         self.scrollview.clear()
         total = 0
         for i, infos in enumerate(self.infos):
@@ -255,7 +259,7 @@ class OptionMenu(Menu):
                     self.main_menu.game.config[self.keybind] = event.key
                     self.waiting_for_key = False
                     self.btn.set_text(key)
- 
+
     def toggle_fullscreen(self, active):
         self.main_menu.game.fullscreen = active
         if active:
@@ -307,6 +311,6 @@ class MainMenu:
 
     def load_map(self, btn, args):
         self.game.load_map(args)
-    
+
     def start_editor(self, btn, args):
         self.game.start_editor()

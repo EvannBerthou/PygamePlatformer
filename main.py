@@ -6,15 +6,6 @@ from data.utils.ConfigManager import load_config, save_config
 from editor import Editor
 
 def convert_to_ratio(pos, ratio):
-    """
-    Convert screen position to game position
-
-    :param pos: on screen position
-    :param ratio: ratio of the window
-    :type pos: (int,int)
-    :type ratio: (int,int)
-    :rtype: (int,int)
-    """
     return (pos[0] * ratio[0], pos[1] * ratio[1])
 
 class GameState:
