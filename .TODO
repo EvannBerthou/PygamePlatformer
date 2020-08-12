@@ -1,5 +1,5 @@
 [ ] Rewrite UI
-[ ] Don't load replay if map is not availible
+[x] Don't load replay if map is not availible
 [ ] Map validity, check if has been modified
 [ ] Remake UI Design
 [ ] Add particules

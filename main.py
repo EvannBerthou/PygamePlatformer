@@ -128,16 +128,21 @@ class Game:
         save_config(self.config)
 
     def start_replay(self, replay_path):
-        self.game_state = GameState.IN_GAME
         with open(replay_path, 'r') as f:
             replay_data = json.loads(f.read())
             map_path = replay_data['filepath']
+
+            if not os.path.exists(map_path):
+                print(f"Map {map_path} not found")
+                return
+
             self.level_manager = LevelManager((self.DESING_W, self.DESING_H), map_path, self, replay = replay_data['players_positions'])
-    
+            self.game_state = GameState.IN_GAME
+
     def start_editor(self):
         self.game_state = GameState.EDITOR
         self.editor = Editor(self)
-    
+
     def start_main_menu(self, *args):
         self.game_state = GameState.MAIN_MENU
 
